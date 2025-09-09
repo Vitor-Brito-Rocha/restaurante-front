@@ -1,11 +1,22 @@
-<script setup lang="ts"></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <v-app class="w-100 h-100" >
+  <NavBar v-if="showNavBar" />
+  <div>
+    <LateralBar v-if="showLatBar"/>
+  <RouterView />
+  </div>
+    <AppSnackbar />
+  </v-app>
 </template>
 
-<style scoped></style>
+<script setup lang="ts">
+import { RouterView, useRoute } from 'vue-router'
+import AppSnackbar from '@/components/templates/AppSnackbar.vue'
+const route = useRoute();
+const showLatBar = computed(() => !route.meta.hideLatBar);
+const showNavBar = computed(() => !route.meta.hideNavBar);
+import { computed  } from 'vue'
+import LateralBar from "@/components/templates/LateralBar.vue";
+import NavBar from "@/components/templates/NavBar.vue";
+// Computed para texto e ícone
+</script>
