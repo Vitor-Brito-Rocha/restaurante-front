@@ -73,7 +73,7 @@ const Login = async () => {
   }
   catch (error: any) {
     console.error(error)
-    snackbar.trigger("Erro ao registrar usuário", "error")
+    snackbar.trigger("Erro ao se autenticar", "error")
   }
   finally {
     loading.value = false;
