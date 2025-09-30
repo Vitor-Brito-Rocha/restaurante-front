@@ -59,7 +59,8 @@ import { ref } from 'vue'
 const items = [
   {
     icon: 'mdi-home',
-    title: 'Dashboard',
+    title: 'Início',
+    route: 'restaurante'
   },
   {
     icon: 'mdi-folder',

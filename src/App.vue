@@ -1,11 +1,11 @@
 <template>
-  <v-app class="w-100 h-100" >
+  <v-app class="app" >
   <NavBar v-if="showNavBar" />
-  <div>
+  <div class="h-100">
     <LateralBar v-if="showLatBar"/>
   <RouterView />
   </div>
-    <AppSnackbar />
+    <AppSnackbar v-if="showLatBar" />
   </v-app>
 </template>
 
