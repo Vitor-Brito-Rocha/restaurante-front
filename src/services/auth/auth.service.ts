@@ -1,17 +1,17 @@
 import router from "@/router";
-import axios from 'axios'
+import api from "@/api-axios.ts";
 const baseUrl = import.meta.env.VITE_BASE_URL
 
 const resource = "auth"
 export const register = async (usuario: {}) => {
-    const response = await axios.post(`${baseUrl}/${resource}/register`, usuario)
+    const response = await api.post(`${baseUrl}/${resource}/register`, usuario)
     setToken(response.data.usuario.token)
     setIdUsuario(response.data.usuario.id)
     setNomeUsuario(response.data.usuario.nome)
     return response.data
 }
 export const login = async (usuario: {}) => {
-    const response =  await axios.post(`${baseUrl}/${resource}/login`, usuario)
+    const response =  await api.post(`${baseUrl}/${resource}/login`, usuario)
     setToken(response.data.usuario.token)
     setIdUsuario(response.data.usuario.id)
     setNomeUsuario(response.data.usuario.nome)

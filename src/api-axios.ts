@@ -1,0 +1,32 @@
+// api.ts
+import axios from "axios";
+import {getToken, logout} from "@/services/auth/auth.service.ts";
+
+const baseUrl = import.meta.env.VITE_BASE_URL;
+
+const api = axios.create({
+    baseURL: baseUrl,
+});
+
+// Interceptor para sempre anexar o token
+api.interceptors.request.use(
+    (config) => {
+        const token = getToken();
+        if (token) {
+            config.headers = config.headers || {};
+            config.headers["Authorization"] = `${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+api.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            logout(); // limpa storage e manda pro /login
+        }
+        return Promise.reject(error);
+    }
+);
+export default api;

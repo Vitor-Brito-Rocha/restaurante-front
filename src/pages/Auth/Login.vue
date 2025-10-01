@@ -1,6 +1,6 @@
 <template>
-  <div class="h-100 w-100" style="background: url('/public/background.JPG'); background-repeat: no-repeat; background-size: cover;">
-  <v-container class="limit d-flex justify-center text-center items-center align-center">
+  <div class="h-100 w-100" style="background: url('background.JPG'); background-repeat: no-repeat; background-size: cover;">
+  <v-container  class="limit d-flex justify-center text-center items-center align-center">
     <v-card class="d-flex justify-center text-center items-center align-center">
       <v-form class="cartao-login" @submit.prevent="Login">
         <div class="cartao-titulo">

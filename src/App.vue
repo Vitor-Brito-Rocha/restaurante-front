@@ -1,10 +1,14 @@
 <template>
   <v-app class="app" >
   <NavBar v-if="showNavBar" />
-  <div class="h-100">
-    <LateralBar v-if="showLatBar"/>
-  <RouterView />
-  </div>
+
+    <v-main class="d-flex align-center"> <!-- align-center para alinhar verticalmente -->
+      <LateralBar v-if="showLatBar" class="flex-shrink-0" />
+
+        <div class="border ml-15 w-100 h-75">
+        <RouterView />
+        </div>
+    </v-main>
     <AppSnackbar v-if="showLatBar" />
   </v-app>
 </template>
@@ -20,3 +24,5 @@ import LateralBar from "@/components/templates/LateralBar.vue";
 import NavBar from "@/components/templates/NavBar.vue";
 // Computed para texto e ícone
 </script>
+<style scoped>
+</style>

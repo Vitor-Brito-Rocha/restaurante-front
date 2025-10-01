@@ -55,33 +55,45 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-const items = [
-  {
-    icon: 'mdi-home',
-    title: 'Início',
-    route: 'restaurante'
-  },
-  {
-    icon: 'mdi-folder',
-    title: 'Projetos',
-    children: [
-      { icon: 'mdi-file-outline', title: 'Projeto A',  route: 'projA' },
-      { icon: 'mdi-file-outline', title: 'Projeto B', route: 'projB' },
-    ]
-  },
-  {
-    icon: 'mdi-cog',
-    title: 'Configurações',
-    route: 'config'
-  },
-  {
-    icon: 'mdi-logout',
-    title: 'Logout',
-    route: 'logout'
-
+import {ref, onMounted} from 'vue'
+import {getRotasMenu} from "@/services/menu/lateralMenu.service.ts";
+const items = ref<any[]>([]);
+onMounted(async ()=>{
+  const savedMenu = localStorage.getItem('menu');
+  if (savedMenu) {
+    items.value = JSON.parse(savedMenu);
+  } else {
+    const menuFromApi = await getRotasMenu();
+    items.value = menuFromApi;
+    localStorage.setItem('menu', JSON.stringify(menuFromApi));
   }
-]
+})
+// const items = [
+//   {
+//     icon: 'mdi-home',
+//     title: 'Início',
+//     route: 'restaurante'
+//   },
+//   {
+//     icon: 'mdi-folder',
+//     title: 'Projetos',
+//     children: [
+//       { icon: 'mdi-file-outline', title: 'Projeto A',  route: 'projA' },
+//       { icon: 'mdi-file-outline', title: 'Projeto B', route: 'projB' },
+//     ]
+//   },
+//   {
+//     icon: 'mdi-cog',
+//     title: 'Configurações',
+//     route: 'configuracoes'
+//   },
+//   {
+//     icon: 'mdi-logout',
+//     title: 'Logout',
+//     route: 'logout'
+//
+//   }
+// ]
 const drawer = ref(true)
 const rail = ref(true)
 </script>
