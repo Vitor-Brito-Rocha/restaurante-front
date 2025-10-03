@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar style="display: flex !important;" class="px-10 w-100 align-center h-10" color="secondary">
+  <v-app-bar style="display: flex !important;" class="px-9 w-100 align-center h-10" color="secondary">
     <v-icon icon="mdi-account-circle" size="large"></v-icon> &nbsp;
     <span class="text-h6">Olá,&nbsp;</span>
       <span class="text-h6" style="text-decoration: underline;">{{ nome.split(' ')[0] }}</span>

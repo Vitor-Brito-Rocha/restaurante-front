@@ -1,14 +1,14 @@
 <template>
   <v-app class="app" >
   <NavBar v-if="showNavBar" />
-
-    <v-main class="d-flex align-center"> <!-- align-center para alinhar verticalmente -->
       <LateralBar v-if="showLatBar" class="flex-shrink-0" />
+    <v-main v-if="route.name !== 'Login' || route.name !== 'Register'" class=" mt-3 d-flex align-center"> <!-- align-center para alinhar verticalmente -->
 
-        <div class="border ml-15 w-100 h-75">
-        <RouterView />
+        <div class="w-100 mr-2 ml-15 h-100">
+          <RouterView  />
         </div>
     </v-main>
+    <RouterView v-else />
     <AppSnackbar v-if="showLatBar" />
   </v-app>
 </template>

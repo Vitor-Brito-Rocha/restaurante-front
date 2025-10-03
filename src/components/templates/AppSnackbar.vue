@@ -3,7 +3,7 @@
       v-model="store.show"
       :color="store.snackbarColor"
       :timeout="store.timeout"
-      location="bottom center"
+      location="bottom right"
   >
     <span v-html="store.message" />
     <template #actions>

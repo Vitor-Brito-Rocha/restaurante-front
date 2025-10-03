@@ -15,6 +15,7 @@ const router = createRouter({
       {
           path: '/login',
           component: Login,
+          name: "Login",
           meta:{
                 hideLatBar: true,
                 hideNavBar: true,
@@ -24,6 +25,7 @@ const router = createRouter({
       {
           path: "/register",
           component: Register,
+          name: "Register",
           meta: {
               hideLatBar: true,
               hideNavBar: true,

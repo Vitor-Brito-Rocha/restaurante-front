@@ -5,7 +5,7 @@
       rail-width="60"
       permanent
       style="border-radius: 1dvw;"
-      class="border border-2 ml-9 mt-auto mb-auto h-75 d-flex"
+      class="border border-1 ml-4 mt-15 h-75 d-flex"
   >
     <v-list density="compact" nav>
       <!-- Loop pelos itens -->

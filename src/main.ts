@@ -17,11 +17,17 @@ import router from './router'
 import '@/styles/theme-restaurant.css'
 
 import App from './App.vue'
+import {pt} from "vuetify/locale";
 
 
 const vuetify = createVuetify({
     components,
     directives,
+    locale: {
+        locale: 'pt',
+        fallback: 'pt',
+        messages: { pt },
+    },
     icons: { defaultSet: 'mdi', aliases, sets: { mdi } },
     theme: {
         defaultTheme: 'theme_restaurant_light',
