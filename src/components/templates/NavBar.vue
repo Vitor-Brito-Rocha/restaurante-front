@@ -21,18 +21,24 @@
   </v-app-bar>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
+import {onBeforeMount, ref} from 'vue'
 import { useTheme } from 'vuetify'
 import {getNomeUsuario, logout} from "@/services/auth/auth.service.ts";
 const nome: string = getNomeUsuario()
 const theme = useTheme()
-const isDark = ref(false)
-// Computed para texto e ícone
-// const iconName = computed(() => (isDark.value ? 'mdi-moon-waxing-crescent' : 'mdi-white-balance-sunny'))
+const isDark = ref(localStorage.getItem('theme') === 'dark')
+
+// Aplica o tema ao montar
+onBeforeMount(() => {
+  theme.global.name.value = isDark.value ? 'theme_restaurant_dark' : 'theme_restaurant_light'
+})
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
-  theme.change( isDark.value ? 'theme_restaurant_dark' : 'theme_restaurant_light')
+  const themeName = isDark.value ? 'theme_restaurant_dark' : 'theme_restaurant_light'
+  theme.change(themeName)
+
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
 }
 
 </script>

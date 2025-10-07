@@ -10,8 +10,9 @@
   </div>
   <div class="h-75 w-100">
     <v-data-table-server
-        :items-per-page-options="[{value: 5, title: '5'}, {value: 10, title: '10'}]"
-        items-per-page="5" :items-length="totalItems"
+        :items-per-page-options="[{value: 5, title: '5'}, {value: 10, title: '10'}, {value: 25, title: '25'}, {value: 50, title: '50'}]"
+        :items-length="totalItems"
+        hover
         :page="page"
         disable-sort
         :headers="headers"
@@ -25,6 +26,14 @@
       </template>
       <template v-slot:item.idade="{ item }">
         {{ verifyAge(item?.data_nascimento) }}
+      </template>
+      <template  v-slot:item.actions="{ item }">
+        <v-btn size="small" class="mr-2" icon @click="openViewModal">
+        <v-icon icon="mdi-eye"></v-icon>
+        </v-btn>
+        <v-btn size="small" icon @click="editViewModal">
+        <v-icon icon="mdi-pencil"></v-icon>
+        </v-btn>
       </template>
     </v-data-table-server>
   </div>
@@ -43,6 +52,7 @@ const headers = [
     {title: "Cidade", key: "cidade"},
   {title: "Data Última Visita", key: "data_ultima_visita"},
   {title: "Idade", key: "idade"},
+  {title: "Ações", key: "actions"},
 ]
 onMounted(()=>{
   getItemsList()
@@ -76,10 +86,16 @@ function verifyGetFunction(){
     getItemsList()
   }
 }
+function openViewModal(){
+
+}
+function editViewModal(){
+
+}
 function newClient(){
 
 }
-async function search(model: {type: string, value: string}): void {
+async function search(model: {type: string, value: string}): Promise<void> {
   searchModel.value = model
 
   loadingTable.value = true
@@ -90,8 +106,8 @@ async function search(model: {type: string, value: string}): void {
     page.value = pagination.atualPagina;
     snackbar.trigger(`${message}!`, "success")
   }
-  catch (error) {
-    snackbar.trigger(`${message}!`, "error")
+  catch (error: any) {
+    snackbar.trigger(`${error.message}!`, "error")
   }
   finally {
     loadingTable.value = false
@@ -102,14 +118,14 @@ async function getItemsList(){
   loadingTable.value = true
 
   try {
-    const {clientes, pagination, count} = await getClientsPaginated()
+    const {clientes, pagination, count, message} = await getClientsPaginated()
     items.value = clientes;
     totalItems.value = count;
     page.value = pagination.atualPagina;
     snackbar.trigger(`${message}!`, "success")
   }
-  catch (error) {
-    snackbar.trigger(`${message}!`, "error")
+  catch (error: {error: {}, message: string}) {
+    snackbar.trigger(`${error.message}!`, "error")
 
   }
   finally {
@@ -117,7 +133,6 @@ async function getItemsList(){
 
   }
 }
-console.log(123)
 </script>
 <style scoped>
 

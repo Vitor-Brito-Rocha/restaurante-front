@@ -26,7 +26,6 @@
               :key="j"
               :prepend-icon="child.icon"
               :to="child.route"
-              class="pl-0"
               :title="child.title"
           />
         </v-list-group>
@@ -37,12 +36,10 @@
             :prepend-icon="item.icon"
             :title="item.title"
             :to="item.route"
-
         />
       </template>
     </v-list>
 
-    <!-- Botão que fica visível mesmo no rail -->
     <v-btn
         :icon="rail ? 'mdi-chevron-right' : 'mdi-chevron-left'"
         variant="plain"

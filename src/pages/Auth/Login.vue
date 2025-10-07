@@ -69,7 +69,7 @@ const Login = async () => {
       senha_hash: senha.value,
     }
     const response = await login(user)
-    console.log(response.data, 'resposta')
+    console.log(response, 'resposta')
     snackbar.trigger("Sucesso! Bem-vindo ao sistema Restaurante", "success")
     await router.push("/home")
   }

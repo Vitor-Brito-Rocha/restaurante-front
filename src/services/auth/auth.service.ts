@@ -4,33 +4,35 @@ const baseUrl = import.meta.env.VITE_BASE_URL
 
 const resource = "auth"
 export const register = async (usuario: {}) => {
-    const response = await api.post(`${baseUrl}/${resource}/register`, usuario)
-    setToken(response.data.usuario.token)
-    setIdUsuario(response.data.usuario.id)
-    setNomeUsuario(response.data.usuario.nome)
+    const response: {data: {usuario: {id: number, token: string, nome: string, tipo_perfil_id: number}, message: string,}} = await api.post(`${baseUrl}/${resource}/register`, usuario)
+    await Promise.all([
+        setIdUsuario(response.data.usuario.id),
+        setToken(response.data.usuario.token),
+        setNomeUsuario(response.data.usuario.nome)
+    ]);
     return response.data
 }
 export const login = async (usuario: {}) => {
-    const response =  await api.post(`${baseUrl}/${resource}/login`, usuario)
-    setToken(response.data.usuario.token)
+    const response: {data: {usuario: {id: number, token: string, nome: string, tipo_perfil_id: number}, message: string,}} =  await api.post(`${baseUrl}/${resource}/login`, usuario)
     setIdUsuario(response.data.usuario.id)
+    setToken(response.data.usuario.token)
     setNomeUsuario(response.data.usuario.nome)
     return response.data
 }
 
-export const setToken = (token: string) => {
+export const setToken = async (token: string) => {
     localStorage.setItem("token", token)
 }
 export const getToken = () => {
     return localStorage.getItem("token")
 }
-export const setIdUsuario = (idUsuario: string) => {
-    localStorage.setItem("idUsuario", idUsuario)
+export const setIdUsuario = async (idUsuario: number) => {
+    localStorage.setItem("idUsuario", String(idUsuario))
 }
 export const getIdUsuario = () => {
     return localStorage.getItem("idUsuario")
 }
-export const setNomeUsuario = (nome: string) => {
+export const setNomeUsuario = async (nome: string) => {
     localStorage.setItem("nomeUsuario", nome)
 }
 export const getNomeUsuario = () => {

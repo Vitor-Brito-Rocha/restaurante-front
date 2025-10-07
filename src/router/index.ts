@@ -4,6 +4,7 @@ import {supabase} from "@/supabase.ts";
 import Register from "@/pages/Auth/Register.vue";
 import Client from "@/pages/Client/Client.vue";
 import {getToken} from "@/services/auth/auth.service.ts";
+import Mesa from "@/pages/Mesas/Mesa.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -35,6 +36,15 @@ const router = createRouter({
       {
           path: "/cliente",
           component: Client,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/mesa",
+          component: Mesa,
           meta: {
               hideLatBar: false,
               hideNavBar: false,

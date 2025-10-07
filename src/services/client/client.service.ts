@@ -1,11 +1,15 @@
 import api from "@/api-axios.ts";
 const baseUrl = import.meta.env.VITE_BASE_URL
 const resource = "cliente"
-export const getClientsPaginated = async (): Promise<any[]> => {
+export const getClientsPaginated = async (): Promise<{clientes: any[], pagination: {
+        atualPagina: number;
+    }, count: number, message: string}> => {
     const response =  await api.get(`${baseUrl}/${resource}/?page=1&limit=10`)
     return response.data
 }
-export const searchClientsPaginated = async (model?: {type: string, value: string}): Promise<any[]> => {
+export const searchClientsPaginated = async (model?: {type: string, value: string}): Promise<{clientes: any[], pagination: {
+        atualPagina: number;
+    }, count: number, message: string}> => {
     const response =  await api.get(`${baseUrl}/${resource}/?page=1&limit=10&${model?.type}=${model?.value}`)
     return response.data
 }
