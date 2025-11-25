@@ -2,10 +2,10 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from "@/pages/Auth/Login.vue";
 import {supabase} from "@/supabase.ts";
 import Register from "@/pages/Auth/Register.vue";
-import Client from "@/pages/Client/Client.vue";
+import Cliente from "@/pages/Clientes/Cliente.vue";
 import {getToken} from "@/services/auth/auth.service.ts";
 import Mesa from "@/pages/Mesas/Mesa.vue";
-
+import Home from "@/pages/Home/Home.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -35,7 +35,16 @@ const router = createRouter({
       },
       {
           path: "/cliente",
-          component: Client,
+          component: Cliente,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/inicio",
+          component: Home,
           meta: {
               hideLatBar: false,
               hideNavBar: false,

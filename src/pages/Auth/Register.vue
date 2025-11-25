@@ -83,7 +83,7 @@ const registrar = () => {
   const user = {
       nome: nome.value,
       email: email.value,
-      senha_hash: senha.value,
+      senha: senha.value,
       cpf: cpf.value,
       telefone: whatsapp.value,
       tipo_perfil_id: 5,

@@ -28,9 +28,9 @@
   </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { supabase } from '../supabase'
+import { supabase } from '@/supabase'
 
 const mesas = ref([])
 const ROWS = 6

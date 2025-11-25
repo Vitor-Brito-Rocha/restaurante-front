@@ -12,30 +12,30 @@
       <template v-for="(item, i) in items" :key="i">
         <!-- Se o item tiver filhos, vira um grupo -->
         <v-list-group
-            v-if="item.children"
-            :value="item.title"
-            :prepend-icon="item.icon"
+            v-if="item.children?.length > 0"
+            :value="item.titulo"
+            :prepend-icon="item.icone"
         >
           <template #activator="{ props }">
-            <v-list-item v-bind="props" :title="item.title"></v-list-item>
+            <v-list-item v-bind="props" :title="item.titulo"></v-list-item>
           </template>
 
           <!-- Renderiza os filhos -->
           <v-list-item
               v-for="(child, j) in item.children"
               :key="j"
-              :prepend-icon="child.icon"
-              :to="child.route"
-              :title="child.title"
+              :prepend-icon="child.icone"
+              :to="child.rota"
+              :title="child.titulo"
           />
         </v-list-group>
 
         <!-- Caso contrário, vira só um item -->
         <v-list-item
             v-else
-            :prepend-icon="item.icon"
-            :title="item.title"
-            :to="item.route"
+            :prepend-icon="item.icone"
+            :title="item.titulo"
+            :to="item.rota"
         />
       </template>
     </v-list>
@@ -54,43 +54,18 @@
 <script setup lang="ts">
 import {ref, onMounted} from 'vue'
 import {getRotasMenu} from "@/services/menu/lateralMenu.service.ts";
-const items = ref<any[]>([]);
+const items = ref<any[]>([{titulo: "Início", rota: "inicio", icone: "mdi-home", children: []}]);
 onMounted(async ()=>{
   const savedMenu = localStorage.getItem('menu');
   if (savedMenu) {
-    items.value = JSON.parse(savedMenu);
+    items.value.push(...JSON.parse(savedMenu));
+    localStorage.removeItem('menu')
   } else {
     const menuFromApi = await getRotasMenu();
-    items.value = menuFromApi;
+    items.value.push(...menuFromApi);
     localStorage.setItem('menu', JSON.stringify(menuFromApi));
   }
 })
-// const items = [
-//   {
-//     icon: 'mdi-home',
-//     title: 'Início',
-//     route: 'restaurante'
-//   },
-//   {
-//     icon: 'mdi-folder',
-//     title: 'Projetos',
-//     children: [
-//       { icon: 'mdi-file-outline', title: 'Projeto A',  route: 'projA' },
-//       { icon: 'mdi-file-outline', title: 'Projeto B', route: 'projB' },
-//     ]
-//   },
-//   {
-//     icon: 'mdi-cog',
-//     title: 'Configurações',
-//     route: 'configuracoes'
-//   },
-//   {
-//     icon: 'mdi-logout',
-//     title: 'Logout',
-//     route: 'logout'
-//
-//   }
-// ]
 const drawer = ref(true)
 const rail = ref(true)
 </script>

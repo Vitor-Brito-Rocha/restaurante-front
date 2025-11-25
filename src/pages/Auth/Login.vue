@@ -66,15 +66,13 @@ const Login = async () => {
     }
     const user = {
       email: email.value,
-      senha_hash: senha.value,
+      senha: senha.value,
     }
-    const response = await login(user)
-    console.log(response, 'resposta')
+    await login(user)
     snackbar.trigger("Sucesso! Bem-vindo ao sistema Restaurante", "success")
     await router.push("/home")
   }
   catch (error: any) {
-    console.error(error)
     snackbar.trigger("Erro ao se autenticar", "error")
   }
   finally {
