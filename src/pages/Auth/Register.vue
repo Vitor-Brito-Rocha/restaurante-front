@@ -94,7 +94,6 @@ const registrar = () => {
 async function registerUsuario(user: any) {
   try {
     const response = await register(user) // <<< aqui entra o await
-    console.log(response.data, 'resposta')
     snackbar.trigger("Sucesso! Bem-vindo ao sistema Restaurante", "primary")
     await router.push("/home")
   }
