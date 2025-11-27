@@ -1,6 +1,6 @@
 // api.ts
 import axios from "axios";
-import {getToken, logout} from "@/services/auth/auth.service.ts";
+import { getToken, logout } from "@/services/auth/auth.service.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -15,6 +15,7 @@ api.interceptors.request.use(
         if (token) {
             config.headers = config.headers || {};
             config.headers["Authorization"] = `${token}`;
+            config.headers["ngrok-skip-browser-warning"] = `69420`;
         }
         return config;
     },
