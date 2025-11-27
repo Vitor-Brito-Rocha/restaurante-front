@@ -6,6 +6,7 @@ import Cliente from "@/pages/Clientes/Cliente.vue";
 import {getToken} from "@/services/auth/auth.service.ts";
 import Mesa from "@/pages/Mesas/Mesa.vue";
 import Home from "@/pages/Home/Home.vue";
+import NotFound from "@/pages/Auth/NotFound.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -60,6 +61,16 @@ const router = createRouter({
               requiresAuth: true
           },
       },
+      {
+          path: '/:pathMatch(.*)*',
+          component: NotFound,
+          name: "NotFound",
+          meta: {
+              hideLatBar: true,
+              hideNavBar: true,
+              requiresAuth: false
+          }
+      }
   ],
 })
 

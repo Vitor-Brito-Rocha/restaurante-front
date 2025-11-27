@@ -2,7 +2,7 @@
   <v-app class="app" >
   <NavBar v-if="showNavBar" />
       <LateralBar v-if="showLatBar" class="flex-shrink-0" />
-    <RouterView v-if="route.name == 'Login' || route.name == 'Register'" />
+    <RouterView v-if="route.name == 'Login' || route.name == 'Register' || route.name == 'NotFound'" />
     <v-main v-else class=" mt-3 d-flex align-center"> <!-- align-center para alinhar verticalmente -->
 
         <div class="w-100 mr-2 ml-15 h-100">

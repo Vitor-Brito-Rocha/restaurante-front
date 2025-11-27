@@ -28,21 +28,26 @@
         {{ verifyAge(item?.data_nascimento) }}
       </template>
       <template  v-slot:item.actions="{ item }">
-        <v-btn size="small" class="mr-2" icon @click="openViewModal">
+        <v-btn variant="flat" size="small" class="mr-2" icon @click="openViewModal(item)">
         <v-icon icon="mdi-eye"></v-icon>
         </v-btn>
-        <v-btn size="small" icon @click="editViewModal">
+        <v-btn variant="flat" size="small" icon @click="editViewModal(item)">
         <v-icon icon="mdi-pencil"></v-icon>
         </v-btn>
       </template>
     </v-data-table-server>
   </div>
+  <v-dialog v-model="dialogComponent">
+    <ClienteComponent :dados="clienteSelected" @close="dialogComponent = false" />
+  </v-dialog>
 </template>
 <script setup lang="ts">
 import SearchFilter from "@/components/search/SearchFilter.vue";
 import {onMounted, ref} from "vue";
 import {getClientsPaginated, searchClientsPaginated} from "@/services/client/client.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
+import ClienteComponent from "@/components/registers/Clientes/Cliente-Component.vue";
+const dialogComponent = ref(false)
 const loadingTable = ref<boolean>(false)
 const totalItems = ref<number>(0)
 const headers = [
@@ -58,6 +63,7 @@ onMounted(()=>{
   getItemsList()
 })
 const page = ref<number>(0)
+const clienteSelected = ref<any>({})
 const searchModel = ref<{type: string, value: string}>({type: "", value: ""})
 const items = ref<any[]>([])
 const filters = [{id: "nome", descricao: "Nome"}, {id: "documento", descricao: "Documento Principal (sem pontuação)"}]
@@ -86,14 +92,15 @@ function verifyGetFunction(){
     getItemsList()
   }
 }
-function openViewModal(){
-
+function openViewModal(item: any){
+  console.log(item)
 }
-function editViewModal(){
-
+function editViewModal(item: any){
+  clienteSelected.value = item
+  dialogComponent.value = true
 }
 function newClient(){
-
+  dialogComponent.value = true
 }
 async function search(model: {type: string, value: string}): Promise<void> {
   searchModel.value = model
@@ -124,7 +131,7 @@ async function getItemsList(){
     page.value = pagination.atualPagina;
     snackbar.trigger(`${message}!`, "success")
   }
-  catch (error: {error: {}, message: string}) {
+  catch (error: any) {
     snackbar.trigger(`${error.message}!`, "error")
 
   }
