@@ -1,20 +1,20 @@
 import api from "@/api-axios.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-const resource = "mesa";
+const resource = "status-mesa";
 
 /**
  * Lista paginada
  */
-export const getMesasAll = async (): Promise<{
+export const getStatusMesasAll = async (): Promise<{
     mesas: any[],
     count: number,
     message: string
 }> => {
-    const response = await api.get(`${baseUrl}/${resource}`);
+    const response = await api.get(`${baseUrl}/${resource}/`);
     return response.data;
 };
-export const getMesasPaginated = async (
+export const getStatusMesasPaginated = async (
     page: number = 1,
     limit: number = 10
 ): Promise<{
@@ -24,13 +24,13 @@ export const getMesasPaginated = async (
     message: string
 }> => {
     const response = await api.get(`${baseUrl}/${resource}/?page=${page}&limit=${limit}`);
-    return response.data.mesas;
+    return response.data;
 };
 
 /**
  * Busca paginada
  */
-export const searchMesasPaginated = async (
+export const searchStatusMesasPaginated = async (
     model?: { type: string, value: string },
     page: number = 1,
     limit: number = 10
@@ -49,9 +49,8 @@ export const searchMesasPaginated = async (
 /**
  * Criar mesa
  */
-export const createMesa = async (mesa: {
-    status: number,
-    localizacao: string
+export const createStatusMesa = async (mesa: {
+    descricao: string
 }): Promise<any> => {
     const response = await api.post(`${baseUrl}/${resource}/create`, mesa);
     return response.data;
@@ -60,7 +59,7 @@ export const createMesa = async (mesa: {
 /**
  * Atualizar mesa
  */
-export const updateMesa = async (id: number, mesa: any): Promise<any> => {
+export const updateStatusMesa = async (id: number, mesa: any): Promise<any> => {
     const response = await api.put(`${baseUrl}/${resource}/${id}`, mesa);
     return response.data;
 };
@@ -68,7 +67,7 @@ export const updateMesa = async (id: number, mesa: any): Promise<any> => {
 /**
  * Deletar mesa
  */
-export const deleteMesa = async (id: number): Promise<any> => {
+export const deleteStatusMesa = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };
