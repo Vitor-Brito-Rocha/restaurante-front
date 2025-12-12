@@ -1,4 +1,5 @@
 <template>
+  <div class="w-100 h-100">
   <div class="w-100 h-5 d-flex align-top justify-end">
     <v-btn density="default" variant="elevated" @click="newClient">
       Novo Cliente
@@ -9,33 +10,12 @@
     <SearchFilter @search-event="search($event)" @reload-table="verifyGetFunction" :filters="filters"></SearchFilter>
   </div>
   <div class="h-75 w-100">
-    <v-data-table-server
-        :items-per-page-options="[{value: 5, title: '5'}, {value: 10, title: '10'}, {value: 25, title: '25'}, {value: 50, title: '50'}]"
-        :items-length="totalItems"
-        hover
-        :page="page"
-        disable-sort
-        :headers="headers"
-        @update:page="verifyGetFunction"
-        @update:items-per-page="verifyGetFunction"
-        :items="items"
-        :loading="loadingTable"
-        class="w-100 h-100">
-      <template v-slot:item.data_ultima_visita="{ item }">
-        {{ item.data_ultima_visita ? item.data_ultima_visita : 'Não Informado' }}
-      </template>
-      <template v-slot:item.idade="{ item }">
-        {{ verifyAge(item?.data_nascimento) }}
-      </template>
-      <template  v-slot:item.actions="{ item }">
-        <v-btn size="small" class="mr-2" icon @click="openViewModal">
-        <v-icon icon="mdi-eye"></v-icon>
-        </v-btn>
-        <v-btn size="small" icon @click="editViewModal">
-        <v-icon icon="mdi-pencil"></v-icon>
-        </v-btn>
-      </template>
-    </v-data-table-server>
+    <v-progress-linear indeterminate v-if="loadingTable"></v-progress-linear>
+    <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :total-items="totalItems" :page="page" @verify="verifyGetFunction" @viewModal="openViewModal" @editModal="editViewModal" />
+  </div>
+  <v-dialog v-model="dialogComponent">
+    <ClienteComponent :dados="clienteSelected" @close="dialogComponent = false" />
+  </v-dialog>
   </div>
 </template>
 <script setup lang="ts">
@@ -43,6 +23,9 @@ import SearchFilter from "@/components/search/SearchFilter.vue";
 import {onMounted, ref} from "vue";
 import {getClientsPaginated, searchClientsPaginated} from "@/services/client/client.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
+import ClienteComponent from "@/components/registers/Clientes/Cliente-Component.vue";
+import CommomTableList from "@/components/templates/commom-table-list.vue";
+const dialogComponent = ref(false)
 const loadingTable = ref<boolean>(false)
 const totalItems = ref<number>(0)
 const headers = [
@@ -57,27 +40,13 @@ const headers = [
 onMounted(()=>{
   getItemsList()
 })
+const permissoes = {edit: true}
 const page = ref<number>(0)
+const clienteSelected = ref<any>({})
 const searchModel = ref<{type: string, value: string}>({type: "", value: ""})
 const items = ref<any[]>([])
 const filters = [{id: "nome", descricao: "Nome"}, {id: "documento", descricao: "Documento Principal (sem pontuação)"}]
 const snackbar = useSnackbarStore();
-  const dataHoje = new Date()
-function verifyAge(dataNascimento: string | Date): number {
-  const nascimento = new Date(dataNascimento);
-  const hoje = new Date();
-
-  let idade = hoje.getFullYear() - nascimento.getFullYear();
-
-  // Ajusta se ainda não fez aniversário este ano
-  const mesDiff = hoje.getMonth() - nascimento.getMonth();
-  const diaDiff = hoje.getDate() - nascimento.getDate();
-  if (mesDiff < 0 || (mesDiff === 0 && diaDiff < 0)) {
-    idade--;
-  }
-
-  return idade;
-}
 function verifyGetFunction(){
   if(searchModel.value.value.length > 0){
     search(searchModel.value)
@@ -86,14 +55,15 @@ function verifyGetFunction(){
     getItemsList()
   }
 }
-function openViewModal(){
-
+function openViewModal(item: any){
+  console.log(item)
 }
-function editViewModal(){
-
+function editViewModal(item: any){
+  clienteSelected.value = item
+  dialogComponent.value = true
 }
 function newClient(){
-
+  dialogComponent.value = true
 }
 async function search(model: {type: string, value: string}): Promise<void> {
   searchModel.value = model
@@ -103,7 +73,7 @@ async function search(model: {type: string, value: string}): Promise<void> {
     const {clientes, pagination, count, message} = await searchClientsPaginated(searchModel.value)
     items.value = clientes;
     totalItems.value = count;
-    page.value = pagination.atualPagina;
+    page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")
   }
   catch (error: any) {
@@ -111,7 +81,6 @@ async function search(model: {type: string, value: string}): Promise<void> {
   }
   finally {
     loadingTable.value = false
-
   }
 }
 async function getItemsList(){
@@ -121,16 +90,15 @@ async function getItemsList(){
     const {clientes, pagination, count, message} = await getClientsPaginated()
     items.value = clientes;
     totalItems.value = count;
-    page.value = pagination.atualPagina;
+    page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")
   }
-  catch (error: {error: {}, message: string}) {
+  catch (error: any) {
     snackbar.trigger(`${error.message}!`, "error")
 
   }
   finally {
     loadingTable.value = false
-
   }
 }
 </script>

@@ -95,7 +95,7 @@ async function registerUsuario(user: any) {
   try {
     const response = await register(user) // <<< aqui entra o await
     snackbar.trigger("Sucesso! Bem-vindo ao sistema Restaurante", "primary")
-    await router.push("/home")
+    await router.push("/inicio")
   }
   catch (error: any) {
     console.error(error)

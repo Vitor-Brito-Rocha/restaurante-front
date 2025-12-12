@@ -42,7 +42,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import {onMounted, ref} from "vue";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import {login} from "@/services/auth/auth.service.ts";
 import router from "@/router";
@@ -56,6 +56,9 @@ const rules = {
 const visible = ref(false);
 const snackbar = useSnackbarStore();
 const loading = ref(false);
+onMounted(() =>{
+  localStorage.clear()
+})
 const Login = async () => {
   try {
     loading.value = true;
@@ -70,7 +73,7 @@ const Login = async () => {
     }
     await login(user)
     snackbar.trigger("Sucesso! Bem-vindo ao sistema Restaurante", "success")
-    await router.push("/home")
+    await router.push("/inicio")
   }
   catch (error: any) {
     snackbar.trigger("Erro ao se autenticar", "error")

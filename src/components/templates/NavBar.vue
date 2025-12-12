@@ -30,7 +30,7 @@ const isDark = ref(localStorage.getItem('theme') === 'dark')
 
 // Aplica o tema ao montar
 onBeforeMount(() => {
-  theme.global.name.value = isDark.value ? 'theme_restaurant_dark' : 'theme_restaurant_light'
+  theme.change(isDark.value ? 'theme_restaurant_dark' : 'theme_restaurant_light')
 })
 
 const toggleTheme = () => {

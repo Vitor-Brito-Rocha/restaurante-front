@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-4">
+  <div v-if="!loading" class="pa-4">
     <v-sheet elevation="2" class="pa-2" style="display: inline-block;">
       <v-row
           v-for="(row, rowIndex) in matrix"
@@ -25,25 +25,38 @@
     </v-sheet>
 
     <v-btn class="mt-4" color="primary" @click="addRandomMesa">Adicionar Mesa Aleatória</v-btn>
-  </v-container>
+  </div>
+  <div v-else>
+    <v-progress-linear indeterminate></v-progress-linear>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { supabase } from '@/supabase'
+import {getMesasAll} from "@/services/mesa/mesa.service.ts";
+import {useSnackbarStore} from "@/stores/snackbar.ts";
+const snackbar = useSnackbarStore()
 
-const mesas = ref([])
+const mesas = ref<any[]>([]);
+const loading = ref(false)
 const ROWS = 6
 const COLS = 8
-let draggedMesa = null
+let draggedMesa: any = null
 
 // Carrega mesas do Supabase
 const fetchMesas = async () => {
-  const { data, error } = await supabase
-      .from('mesa')
-      .select('*')
-  if(error) console.error(error)
-  else mesas.value = data
+  loading.value = true
+  try{
+    const response = await getMesasAll()
+    mesas.value = response.mesas
+    snackbar.trigger("Sucesso ao buscar mesas!", "success")
+  } catch (error: any){
+    snackbar.trigger("Sucesso ao buscar mesas!", "error")
+  } finally {
+    loading.value = false
+  }
+
 }
 
 // Computed para gerar matriz 2D
@@ -66,7 +79,7 @@ const matrix = computed(() => {
 })
 
 // Alterna status e atualiza Supabase
-const toggleStatus = async (cell) => {
+const toggleStatus = async (cell: any) => {
   if(cell.type !== 'table') return
   const mesa = mesas.value.find(m => m.id === cell.id)
   if(!mesa) return
@@ -74,7 +87,7 @@ const toggleStatus = async (cell) => {
   else if(mesa.status === '2') mesa.status = '3'
   else mesa.status = '1'
 
-  // Atualiza no Supabase
+  // Atualiza no Supabawse
   const { error } = await supabase
       .from('mesa')
       .update({ status: mesa.status })
