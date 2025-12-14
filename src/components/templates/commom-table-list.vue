@@ -1,28 +1,41 @@
 <template>
   <v-data-table-server
+      height="600"
       v-if="!noContent"
       :items-per-page-options="[{value: 5, title: '5'}, {value: 10, title: '10'}, {value: 25, title: '25'}, {value: 50, title: '50'}]"
       :items-length="totalItems"
       hover
       :page="props.page"
+      :items-per-page="props.perPage"
       disable-sort
+      :loading="props.loading"
       :headers="props.headers"
-      @update:page="$emit('verify')"
-      @update:items-per-page="$emit('verify')"
+      @update:options="o => $emit('verify', { page: o.page, offset: o.itemsPerPage })"
       :items="props.data"
-      :loading="loadingTable"
       class="w-100 h-100">
+
+      <!--    PARA CLIENTES-->
     <template v-slot:item.data_ultima_visita="{ item }">
       {{ item.data_ultima_visita ? item.data_ultima_visita : 'Não Informado' }}
     </template>
     <template v-slot:item.idade="{ item }">
       {{ verifyAge(item?.data_nascimento) }}
     </template>
+<!--        PARA MESAS     -->
+    <template v-slot:item.updatedAt="{ item }">
+      {{ item.updatedAt.split('T')[0].split('-').reverse().join('/') + ' ' + item.updatedAt.split('T')[1].split('.')[0] }}
+    </template>
     <template  v-slot:item.actions="{ item }">
       <v-btn v-if="permissoes.visualize" variant="flat" size="small" class="mr-2" icon @click="$emit('view-modal', item)">
         <v-icon icon="mdi-eye"></v-icon>
       </v-btn>
       <v-btn v-if="permissoes.edit" variant="flat" size="small" icon @click="$emit('edit-modal', item)">
+        <v-icon icon="mdi-pencil"></v-icon>
+      </v-btn>
+      <v-btn v-if="permissoes.delete" variant="flat" size="small" class="mr-2" icon @click="$emit('delete-modal', item)">
+        <v-icon icon="mdi-bin"></v-icon>
+      </v-btn>
+      <v-btn v-if="permissoes.customize" variant="flat" size="small" icon @click="$emit('customize-modal', item)">
         <v-icon icon="mdi-pencil"></v-icon>
       </v-btn>
     </template>
@@ -33,15 +46,16 @@
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
-const loadingTable = ref(false)
-const emit = defineEmits(['verify', 'view-modal', 'edit-modal', 'customize-modal']);
+const emit = defineEmits(['verify', 'view-modal', 'edit-modal', 'customize-modal', 'delete-modal']);
 const noContent = ref(false)
 const props = defineProps<{
   data: any[],
   headers: any[],
   permissoes: {edit?: boolean, delete?: boolean, customize?: boolean, visualize?: boolean},
-  totalItems: number
-  page: number
+  totalItems: number,
+  perPage: number,
+  page: number,
+  loading?: boolean,
 }>()
 const permissoes = ref<{edit?: boolean, visualize?: boolean, delete?: boolean, customize?: boolean}>({visualize: false, edit: false, delete: false, customize: false})
 onMounted(()=>{

@@ -7,11 +7,11 @@ const resource = "status-mesa";
  * Lista paginada
  */
 export const getStatusMesasAll = async (): Promise<{
-    mesas: any[],
+    statusMesas: any[],
     count: number,
     message: string
 }> => {
-    const response = await api.get(`${baseUrl}/${resource}/`);
+    const response = await api.get(`${baseUrl}/${resource}`);
     return response.data;
 };
 export const getStatusMesasPaginated = async (

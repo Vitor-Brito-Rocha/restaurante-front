@@ -1,23 +1,20 @@
 import api from "@/api-axios.ts";
-import type {Mesa} from "@/models/Mesa.ts";
-import {organizeFilters} from "@/services/system/system.service.ts";
-import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-const resource = "mesa";
+const resource = "ambiente";
 
 /**
  * Lista paginada
  */
-export const getMesasAll = async (): Promise<{
-    mesas: any[],
+export const getAmbienteAll = async (): Promise<{
+    ambientes: any[],
     count: number,
     message: string
 }> => {
     const response = await api.get(`${baseUrl}/${resource}`);
     return response.data;
 };
-export const getMesasPaginated = async (
+export const getAmbientePaginated = async (
     page: number = 1,
     limit: number = 10
 ): Promise<{
@@ -26,24 +23,25 @@ export const getMesasPaginated = async (
     count: number,
     message: string
 }> => {
-    const response = await api.get(`${baseUrl}/${resource}?page=${page}&limit=${limit}`);
+    const response = await api.get(`${baseUrl}/${resource}/?page=${page}&limit=${limit}`);
     return response.data;
 };
 
 /**
  * Busca paginada
  */
-export const searchMesasPaginated = async (model: PadraoManyFilters,
-                                           page: number = 1,
-                                           limit: number = 10): Promise<{
+export const searchAmbientePaginated = async (
+    model?: { type: string, value: string },
+    page: number = 1,
+    limit: number = 10
+): Promise<{
     mesas: any[],
     pagination: { atualPagina: number },
     count: number,
     message: string
 }> => {
-    let params = organizeFilters(model)
     const response = await api.get(
-        `${baseUrl}/${resource}?page=${page}&limit=${limit}${params}`
+        `${baseUrl}/${resource}/?page=${page}&limit=${limit}&${model?.type}=${model?.value}`
     );
     return response.data;
 };
@@ -51,7 +49,9 @@ export const searchMesasPaginated = async (model: PadraoManyFilters,
 /**
  * Criar mesa
  */
-export const createMesa = async (mesa: Mesa): Promise<any> => {
+export const createStatusMesa = async (mesa: {
+    descricao: string
+}): Promise<any> => {
     const response = await api.post(`${baseUrl}/${resource}/create`, mesa);
     return response.data;
 };
@@ -59,7 +59,7 @@ export const createMesa = async (mesa: Mesa): Promise<any> => {
 /**
  * Atualizar mesa
  */
-export const updateMesa = async (id: number, mesa: Mesa): Promise<any> => {
+export const updateStatusMesa = async (id: number, mesa: any): Promise<any> => {
     const response = await api.put(`${baseUrl}/${resource}/${id}`, mesa);
     return response.data;
 };
@@ -67,7 +67,7 @@ export const updateMesa = async (id: number, mesa: Mesa): Promise<any> => {
 /**
  * Deletar mesa
  */
-export const deleteMesa = async (id: number): Promise<any> => {
+export const deleteStatusMesa = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };
