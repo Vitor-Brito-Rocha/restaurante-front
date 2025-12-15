@@ -1,162 +1,137 @@
 <template>
-  <div v-if="!loading" class="pa-4">
-    <v-sheet elevation="2" class="pa-2" style="display: inline-block;">
-      <v-row
-          v-for="(row, rowIndex) in matrix"
-          :key="rowIndex"
-          class="no-gutters"
-      >
-        <v-col
-            v-for="(cell, colIndex) in row"
-            :key="colIndex"
-            :cols="1"
-            class="d-flex align-center justify-center"
-            :class="getCellClass(cell)"
-            style="width: 60px; height: 60px; border: 1px solid #ccc; cursor: pointer;"
-            @click="toggleStatus(cell)"
-            @dragover.prevent
-            @drop="dropMesa($event, rowIndex, colIndex)"
-            :draggable="cell.type === 'table'"
-            @dragstart="dragMesa($event, cell)"
-        >
-          <span v-if="cell.type === 'table'">{{ cell.id }}</span>
-        </v-col>
-      </v-row>
-    </v-sheet>
-
-    <v-btn class="mt-4" color="primary" @click="addRandomMesa">Adicionar Mesa Aleatória</v-btn>
-  </div>
-  <div v-else>
-    <v-progress-linear indeterminate></v-progress-linear>
+  <div class="w-100 h-100 pr-4">
+    <div class="w-100 d-flex gap-4 align-top justify-end">
+      <reload-create :tela="'Mesa'" @reload="verifyGetFunction(null, {page,offset})" @create="newClient" />
+    </div>
+    <div class="mt-3  mb-3 w-100">
+          <search-select-filters @update="verifyGetFunction($event, {page, offset})" :data="filtersModel" />
+    </div>
+    <div class="h-75 w-100">
+      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
+    </div>
+    <v-dialog v-model="dialogComponent">
+      <MesaComponent :dados="mesaSelected" @close="dialogComponent = false" />
+    </v-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { supabase } from '@/supabase'
-import {getMesasAll} from "@/services/mesa/mesa.service.ts";
+import { ref, onMounted } from 'vue'
+import {deleteMesa, getMesasPaginated, searchMesasPaginated} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
+import CommomTableList from "@/components/templates/commom-table-list.vue";
+import MesaComponent from "@/components/registers/Mesa/Mesa-Component.vue";
+import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
+import SearchSelectFilters from "@/components/search/SearchSelectFilters.vue";
+import type {FilterSelect} from "@/models/FilterSelect.ts";
+import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
+import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
+import type {Filter} from "@/models/Filter.ts";
+import ReloadCreate from "@/components/templates/reload-create.vue";
 const snackbar = useSnackbarStore()
+const items = ref<any[]>([]);
+const dialogComponent = ref(false)
+const loadingTable = ref<boolean>(false)
+const totalItems = ref<number>(0)
+const headers = [
+  {title: 'Código - Número', key: 'id'},
+  {title: 'Capacidade', key: 'capacidade'},
+  {title: 'Status', key: 'status_descricao'},
+  {title: 'Ambiente', key: 'ambiente_descricao'},
+  {title: 'Última Atualização', key: 'updatedAt'},
+  {title: 'Ações', key: 'actions'},
+]
+onMounted(async ()=>{
+  try {
+    const [statusRes, ambienteRes] = await Promise.all([
+      getStatusMesasAll(),
+      getAmbienteAll(),
+      getItemsList()
+    ])
 
-const mesas = ref<any[]>([]);
-const loading = ref(false)
-const ROWS = 6
-const COLS = 8
-let draggedMesa: any = null
+    filtersModel.value.find(f => f.key === "status_id")!.items =
+        statusRes.statusMesas
 
-// Carrega mesas do Supabase
-const fetchMesas = async () => {
-  loading.value = true
-  try{
-    const response = await getMesasAll()
-    mesas.value = response.mesas
-    snackbar.trigger("Sucesso ao buscar mesas!", "success")
-  } catch (error: any){
-    snackbar.trigger("Sucesso ao buscar mesas!", "error")
-  } finally {
-    loading.value = false
+    filtersModel.value.find(f => f.key === "ambiente_id")!.items =
+        ambienteRes.ambientes
+  } catch (e: any) {
+    // snackbar.trigger("Erro ao carregar filtros", "error")
   }
-
-}
-
-// Computed para gerar matriz 2D
-const matrix = computed(() => {
-  const m = []
-  for (let r = 0; r < ROWS; r++) {
-    const row = []
-    for (let c = 0; c < COLS; c++) {
-      const mesa = mesas.value.find(m => {
-        if(!m.localizacao) return false
-        const [linha, col] = m.localizacao.split(',').map(Number)
-        return linha === r && col === c
-      })
-      if (mesa) row.push({ type: 'table', id: mesa.id, status: mesa.status })
-      else row.push({ type: 'wall' })
-    }
-    m.push(row)
-  }
-  return m
 })
-
-// Alterna status e atualiza Supabase
-const toggleStatus = async (cell: any) => {
-  if(cell.type !== 'table') return
-  const mesa = mesas.value.find(m => m.id === cell.id)
-  if(!mesa) return
-  if(mesa.status === '1') mesa.status = '2'
-  else if(mesa.status === '2') mesa.status = '3'
-  else mesa.status = '1'
-
-  // Atualiza no Supabawse
-  const { error } = await supabase
-      .from('mesa')
-      .update({ status: mesa.status })
-      .eq('id', mesa.id)
-  if(error) console.error(error)
-}
-
-// Drag & drop
-const dragMesa = (event, cell) => { draggedMesa = cell }
-
-const dropMesa = async (event, row, col) => {
-  if(!draggedMesa) return
-  const mesa = mesas.value.find(m => m.id === draggedMesa.id)
-  mesa.localizacao = `${row},${col}`
-  draggedMesa = null
-
-  // Atualiza no Supabase
-  const { error } = await supabase
-      .from('mesa')
-      .update({ localizacao: mesa.localizacao })
-      .eq('id', mesa.id)
-  if(error) console.error(error)
-}
-
-// Adicionar mesa aleatória
-const addRandomMesa = async () => {
-  const emptyCells = []
-  for(let r=0;r<ROWS;r++){
-    for(let c=0;c<COLS;c++){
-      const exists = mesas.value.find(m => {
-        if(!m.localizacao) return false
-        const [linha, col] = m.localizacao.split(',').map(Number)
-        return linha === r && col === c
-      })
-      if(!exists) emptyCells.push([r,c])
-    }
+const permissoes = {edit: true, delete: true}
+const page = ref<number>(1)
+const offset = ref<number>(10)
+const mesaSelected = ref<any>({})
+const filtersModel = ref<FilterSelect[]>([
+  {
+    label: "Status",
+    value: null,
+    key: "status_id",
+    items: []
+  },
+  {
+    label: "Ambiente",
+    value: null,
+    key: "ambiente_id",
+    items: []
   }
-  if(emptyCells.length === 0) return
-  const [row,col] = emptyCells[Math.floor(Math.random()*emptyCells.length)]
-  const newId = mesas.value.length ? Math.max(...mesas.value.map(m=>m.id))+1 : 1
-  const newMesa = { id: newId, status: 1, localizacao: `${row},${col}` }
-
-  // Insere no Supabase
-  const { data, error } = await supabase
-      .from('mesa')
-      .insert([newMesa])
-  if(error) console.error(error)
-  else mesas.value.push(data[0])
+])
+const filters = ref<PadraoManyFilters | null>(null)
+function verifyGetFunction(filters: Filter[] | null, pagination: {page: number, offset: number}) {
+  page.value = pagination.page
+  offset.value = pagination.offset
+  if(filters !== null && filters.some(f => f.value !== null && f.value !== undefined && f.value !== '')){
+    search(filters)
+  }
+  else{
+    getItemsList()
+  }
 }
+function editViewModal(item: any){
+  mesaSelected.value = item
+  dialogComponent.value = true
+}
+function deletarMesa(id: number){
+console.log("pix ", id)
+}
+function newClient(){
+  dialogComponent.value = true
+}
+async function search(model: PadraoManyFilters): Promise<void> {
+  filters.value = model
+  loadingTable.value = true
+  try {
+    const {mesas, pagination, count, message} = await searchMesasPaginated(model, page.value, offset.value)
+    items.value = mesas;
+    totalItems.value = count;
+    page.value = Number(pagination.atualPagina);
+    snackbar.trigger(`${message}!`, "success")
+  }
+  catch (error: any) {
+    snackbar.trigger(`${error.message}!`, "error")
+  }
+  finally {
+    loadingTable.value = false
+  }
+}
+async function getItemsList() {
+  loadingTable.value = true
 
-// Carrega mesas ao montar
-onMounted(fetchMesas)
-
-const getCellClass = (cell) => {
-  switch(cell.type) {
-    case 'table':
-      if(cell.status === 'Livre') return 'bg-light-blue'
-      if(cell.status === 'Ocupada') return 'bg-orange'
-      if(cell.status === 'Reservada') return 'bg-green'
-      return ''
-    case 'wall': return 'bg-grey'
-    default: return ''
+  try {
+    const {mesas, message, count, pagination} = await getMesasPaginated(page.value, offset.value)
+    items.value = mesas
+    items.value = mesas
+    totalItems.value = count;
+    page.value = Number(pagination.atualPagina);
+    snackbar.trigger(`${message}!`, "success")
+  } catch (error: any) {
+    const mensagem = error.message == "Network Error" ? 'Erro de conexão, tente novamente mais tarde': error.message
+    snackbar.trigger(`${mensagem}!`, "error")
+  } finally {
+    loadingTable.value = false
   }
 }
 </script>
 
 <style scoped>
-.bg-light-blue { background-color: #90caf9; }
-.bg-orange { background-color: #ffb74d; }
-.bg-green { background-color: #81c784; }
-.bg-grey { background-color: #b0bec5; }
 </style>

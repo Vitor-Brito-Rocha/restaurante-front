@@ -25,6 +25,7 @@ import {getClientsPaginated, searchClientsPaginated} from "@/services/client/cli
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import ClienteComponent from "@/components/registers/Clientes/Cliente-Component.vue";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
+import type {Filter} from "@/models/Filter.ts";
 const dialogComponent = ref(false)
 const loadingTable = ref<boolean>(false)
 const totalItems = ref<number>(0)
@@ -43,7 +44,7 @@ onMounted(()=>{
 const permissoes = {edit: true}
 const page = ref<number>(0)
 const clienteSelected = ref<any>({})
-const searchModel = ref<{type: string, value: string}>({type: "", value: ""})
+const searchModel = ref<Filter>({type: "", value: ""})
 const items = ref<any[]>([])
 const filters = [{id: "nome", descricao: "Nome"}, {id: "documento", descricao: "Documento Principal (sem pontuação)"}]
 const snackbar = useSnackbarStore();
@@ -65,7 +66,7 @@ function editViewModal(item: any){
 function newClient(){
   dialogComponent.value = true
 }
-async function search(model: {type: string, value: string}): Promise<void> {
+async function search(model: Filter): Promise<void> {
   searchModel.value = model
 
   loadingTable.value = true

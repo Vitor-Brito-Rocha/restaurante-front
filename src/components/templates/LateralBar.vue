@@ -52,10 +52,10 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, onBeforeMount} from 'vue'
 import {getRotasMenu} from "@/services/menu/lateralMenu.service.ts";
 const items = ref<any[]>([{titulo: "Início", rota: "inicio", icone: "mdi-home", children: []}]);
-onMounted(async ()=>{
+onBeforeMount(async ()=>{
   const savedMenu = localStorage.getItem('menu');
   if (savedMenu) {
     items.value.push(...JSON.parse(savedMenu));
