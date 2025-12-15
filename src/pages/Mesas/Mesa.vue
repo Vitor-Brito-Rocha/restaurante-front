@@ -1,16 +1,13 @@
 <template>
-  <div class="w-100 h-100">
-    <div class="w-100 d-flex align-top justify-end">
-      <v-btn density="default" variant="elevated" @click="newClient">
-        Nova Mesa
-        <v-icon icon="mdi-plus"></v-icon>
-      </v-btn>
+  <div class="w-100 h-100 pr-4">
+    <div class="w-100 d-flex gap-4 align-top justify-end">
+      <reload-create :tela="'Mesa'" @reload="verifyGetFunction(null, {page,offset})" @create="newClient" />
     </div>
-    <div class="mt-3 mb-3 w-100">
+    <div class="mt-3  mb-3 w-100">
           <search-select-filters @update="verifyGetFunction($event, {page, offset})" :data="filtersModel" />
     </div>
     <div class="h-75 w-100">
-      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @viewModal="openViewModal" @editModal="editViewModal" />
+      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
       <MesaComponent :dados="mesaSelected" @close="dialogComponent = false" />
@@ -20,7 +17,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { getMesasPaginated, searchMesasPaginated} from "@/services/mesa/mesa.service.ts";
+import {deleteMesa, getMesasPaginated, searchMesasPaginated} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import MesaComponent from "@/components/registers/Mesa/Mesa-Component.vue";
@@ -30,6 +27,7 @@ import type {FilterSelect} from "@/models/FilterSelect.ts";
 import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
 import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
 import type {Filter} from "@/models/Filter.ts";
+import ReloadCreate from "@/components/templates/reload-create.vue";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -47,7 +45,8 @@ onMounted(async ()=>{
   try {
     const [statusRes, ambienteRes] = await Promise.all([
       getStatusMesasAll(),
-      getAmbienteAll()
+      getAmbienteAll(),
+      getItemsList()
     ])
 
     filtersModel.value.find(f => f.key === "status_id")!.items =
@@ -55,12 +54,11 @@ onMounted(async ()=>{
 
     filtersModel.value.find(f => f.key === "ambiente_id")!.items =
         ambienteRes.ambientes
-  } catch (e) {
-    snackbar.trigger("Erro ao carregar filtros", "error")
+  } catch (e: any) {
+    // snackbar.trigger("Erro ao carregar filtros", "error")
   }
-  await getItemsList()
 })
-const permissoes = {edit: true}
+const permissoes = {edit: true, delete: true}
 const page = ref<number>(1)
 const offset = ref<number>(10)
 const mesaSelected = ref<any>({})
@@ -89,12 +87,12 @@ function verifyGetFunction(filters: Filter[] | null, pagination: {page: number, 
     getItemsList()
   }
 }
-function openViewModal(item: any){
-  console.log(item)
-}
 function editViewModal(item: any){
   mesaSelected.value = item
   dialogComponent.value = true
+}
+function deletarMesa(id: number){
+console.log("pix ", id)
 }
 function newClient(){
   dialogComponent.value = true
@@ -127,8 +125,8 @@ async function getItemsList() {
     page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")
   } catch (error: any) {
-    snackbar.trigger(`${error.message}!`, "error")
-
+    const mensagem = error.message == "Network Error" ? 'Erro de conexão, tente novamente mais tarde': error.message
+    snackbar.trigger(`${mensagem}!`, "error")
   } finally {
     loadingTable.value = false
   }

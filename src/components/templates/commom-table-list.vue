@@ -32,7 +32,7 @@
       <v-btn v-if="permissoes.edit" variant="flat" size="small" icon @click="$emit('edit-modal', item)">
         <v-icon icon="mdi-pencil"></v-icon>
       </v-btn>
-      <v-btn v-if="permissoes.delete" variant="flat" size="small" class="mr-2" icon @click="$emit('delete-modal', item)">
+      <v-btn v-if="permissoes.delete" variant="flat" size="small" class="mr-2" icon @click="$emit('delete-modal', item.id)">
         <v-icon icon="mdi-bin"></v-icon>
       </v-btn>
       <v-btn v-if="permissoes.customize" variant="flat" size="small" icon @click="$emit('customize-modal', item)">
