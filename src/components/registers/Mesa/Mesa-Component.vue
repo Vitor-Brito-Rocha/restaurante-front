@@ -34,7 +34,7 @@ const props = defineProps<{
   dados?: Mesa;
 }>()
 onMounted(() => {
-  if(props.dados.id){
+  if(props.dados?.id){
   dados.value = props.dados;
   }
   getStatusMesasAll().then(a =>{statusMesaList.value = a.statusMesas})

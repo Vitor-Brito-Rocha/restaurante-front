@@ -1,4 +1,6 @@
 import api from "@/api-axios.ts";
+import type {UnwrapRef} from "vue";
+import type {StatusMesa} from "@/models/StatusMesa.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const resource = "status-mesa";
@@ -18,7 +20,7 @@ export const getStatusMesasPaginated = async (
     page: number = 1,
     limit: number = 10
 ): Promise<{
-    mesas: any[],
+    statusMesas: any[],
     pagination: { atualPagina: number },
     count: number,
     message: string
@@ -49,9 +51,7 @@ export const searchStatusMesasPaginated = async (
 /**
  * Criar mesa
  */
-export const createStatusMesa = async (mesa: {
-    descricao: string
-}): Promise<any> => {
+export const createStatusMesa = async (mesa: StatusMesa): Promise<any> => {
     const response = await api.post(`${baseUrl}/${resource}/create`, mesa);
     return response.data;
 };

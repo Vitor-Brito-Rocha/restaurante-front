@@ -6,6 +6,7 @@ import {getToken} from "@/services/auth/auth.service.ts";
 import Mesa from "@/pages/Mesas/Mesa.vue";
 import Home from "@/pages/Home/Home.vue";
 import NotFound from "@/pages/Auth/NotFound.vue";
+import StatusMesa from "@/pages/Status/StatusMesa.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -54,6 +55,15 @@ const router = createRouter({
       {
           path: "/mesa",
           component: Mesa,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/status-mesa",
+          component: StatusMesa,
           meta: {
               hideLatBar: false,
               hideNavBar: false,
