@@ -53,7 +53,6 @@
 <script setup lang="ts">
 import { vMaska } from "maska/vue"
 import { ref } from "vue";
-import { supabase } from "@/supabase.ts";
 import { useRouter } from "vue-router";
 import {register} from "@/services/auth/auth.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";

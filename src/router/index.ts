@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from "@/pages/Auth/Login.vue";
-import {supabase} from "@/supabase.ts";
 import Register from "@/pages/Auth/Register.vue";
 import Cliente from "@/pages/Clientes/Cliente.vue";
 import {getToken} from "@/services/auth/auth.service.ts";
