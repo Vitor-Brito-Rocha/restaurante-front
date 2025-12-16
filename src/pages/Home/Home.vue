@@ -9,7 +9,7 @@
         </p>
       </v-col>
       <v-col cols="12" md="4" class="d-flex justify-end align-center">
-        <v-chip color="primary" variant="outlined" size="large" class="text-capitalize date-chip">
+        <v-chip variant="outlined" size="large" class="text-capitalize date-chip">
           {{ today }}
         </v-chip>
       </v-col>
@@ -18,7 +18,7 @@
     <!-- KPI CARDS (SEM DADOS SENSÍVEIS) -->
     <v-row class="mb-6">
       <v-col cols="12" sm="6" md="3">
-        <v-card class="kpi-card" rounded="xl" elevation="0">
+        <v-card class="border " rounded="xl" elevation="0">
           <v-card-text>
             <div class="d-flex justify-space-between align-center">
               <div>
@@ -32,7 +32,7 @@
       </v-col>
 
       <v-col cols="12" sm="6" md="3">
-        <v-card class="kpi-card" rounded="xl" elevation="0">
+        <v-card class="border" rounded="xl" elevation="0">
           <v-card-text>
             <div class="d-flex justify-space-between align-center">
               <div>
@@ -46,7 +46,7 @@
       </v-col>
 
       <v-col cols="12" sm="6" md="3">
-        <v-card class="kpi-card" rounded="xl" elevation="0">
+        <v-card class="border" rounded="xl" elevation="0">
           <v-card-text>
             <div class="d-flex justify-space-between align-center">
               <div>
@@ -60,7 +60,7 @@
       </v-col>
 
       <v-col cols="12" sm="6" md="3">
-        <v-card class="kpi-card" rounded="xl" elevation="0">
+        <v-card class="border" rounded="xl" elevation="0">
           <v-card-text>
             <div class="d-flex justify-space-between align-center">
               <div>
@@ -78,9 +78,9 @@
     <v-row>
       <!-- STATUS GERAL -->
       <v-col cols="12" md="8">
-        <v-card class="section-card" rounded="xl" elevation="0">
-          <v-card-title class="font-weight-bold">Status recente</v-card-title>
-          <v-divider />
+        <v-card class="section-card border" rounded="xl" elevation="0">
+          <v-card-title class="font-weight-bold mt-2 align-middle justify-center items-center">Status recente</v-card-title>
+          <v-divider class="my-2" />
           <v-list density="comfortable">
             <v-list-item v-for="item in feed" :key="item.id">
               <template #prepend>
@@ -95,9 +95,9 @@
 
       <!-- AÇÕES RÁPIDAS -->
       <v-col cols="12" md="4">
-        <v-card class="section-card" rounded="xl" elevation="0">
-          <v-card-title class="font-weight-bold">Ações rápidas</v-card-title>
-          <v-divider />
+        <v-card class="section-card border" rounded="xl" elevation="0">
+          <v-card-title class="font-weight-bold mt-2 align-middle justify-center items-center">Ações rápidas</v-card-title>
+          <v-divider class="my-2" />
           <v-card-text class="d-flex flex-column gap-3">
             <v-btn color="primary" block prepend-icon="mdi-plus-box">Novo pedido</v-btn>
             <v-btn color="secondary" block prepend-icon="mdi-table-chair">Mesas</v-btn>
@@ -132,10 +132,7 @@ const feed = [
   background: linear-gradient(180deg, rgba(25,118,210,0.05), transparent);
 }
 
-.kpi-card,
 .section-card {
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(6px);
 }
 

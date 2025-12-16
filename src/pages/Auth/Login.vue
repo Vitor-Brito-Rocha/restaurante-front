@@ -56,9 +56,6 @@ const rules = {
 const visible = ref(false);
 const snackbar = useSnackbarStore();
 const loading = ref(false);
-onMounted(() =>{
-  localStorage.clear()
-})
 const Login = async () => {
   try {
     loading.value = true;

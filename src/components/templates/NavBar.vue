@@ -31,14 +31,15 @@ const isDark = ref(localStorage.getItem('theme') === 'dark')
 // Aplica o tema ao montar
 onBeforeMount(() => {
   theme.change(isDark.value ? 'theme_restaurant_dark' : 'theme_restaurant_light')
+  localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
 })
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
   const themeName = isDark.value ? 'theme_restaurant_dark' : 'theme_restaurant_light'
   theme.change(themeName)
-
   localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
+
 }
 
 </script>

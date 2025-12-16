@@ -51,13 +51,18 @@ const vuetify = createVuetify({
                     secondary: "#1976D2", // secundário mais forte
                     success: "#66BB6A",   // verde escuro
                     error: "#EF5350",     // vermelho escuro
-                    background: "#4D4D4D",
-                    surface: "#1E1E1E",
+                    background: "#626262",
+                    surface: "#413e3e",
                 },
             },
         },
     },
 })
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+        .then(() => console.log("✅ Service Worker registrado"))
+        .catch(err => console.error("❌ SW erro:", err))
+}
 
 const app = createApp(App)
 app.use(createPinia())
