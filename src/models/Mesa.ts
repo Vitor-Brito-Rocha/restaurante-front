@@ -1,8 +1,9 @@
 
 export interface Mesa {
     id?: number,
-    status_id: String,
-    status_descricao?: String,
-    ambiente_id: String,
-    ambiente_descricao?: String,
+    capacidade?: number,
+    status_id?: number,
+    status_descricao?: string,
+    ambiente_id?: number,
+    ambiente_descricao?: string,
 }

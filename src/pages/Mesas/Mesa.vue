@@ -1,7 +1,7 @@
 <template>
   <div class="w-100 h-100 pr-4">
     <div class="w-100 d-flex gap-4 align-top justify-end">
-      <reload-create :tela="'Mesa'" @reload="verifyGetFunction(null, {page,offset})" @create="newClient" />
+      <reload-create :tela="'Mesa'" @reload="verifyGetFunction()" @create="newClient" />
     </div>
     <div class="mt-3  mb-3 w-100">
           <search-select-filters @update="verifyGetFunction($event, {page, offset})" :data="filtersModel" />
@@ -10,7 +10,7 @@
       <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
-      <MesaComponent :dados="mesaSelected" @close="dialogComponent = false" />
+      <MesaComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
     </v-dialog>
   </div>
 </template>
@@ -77,11 +77,12 @@ const filtersModel = ref<FilterSelect[]>([
   }
 ])
 const filters = ref<PadraoManyFilters | null>(null)
-function verifyGetFunction(filters: Filter[] | null, pagination: {page: number, offset: number}) {
-  page.value = pagination.page
-  offset.value = pagination.offset
-  if(filters !== null && filters.some(f => f.value !== null && f.value !== undefined && f.value !== '')){
-    search(filters)
+function verifyGetFunction(filters_param?: PadraoManyFilters | null, pagination?: {page: number, offset: number}) {
+  page.value = pagination?.page ?? page.value
+  offset.value = pagination?.offset ?? offset.value
+  filters.value = filters_param ?? filters.value
+  if(filters.value !== null && filters.value.some(f => f.value !== null && f.value !== undefined && f.value !== '')){
+    search(filters.value)
   }
   else{
     getItemsList()
@@ -91,10 +92,18 @@ function editViewModal(item: any){
   mesaSelected.value = item
   dialogComponent.value = true
 }
-function deletarMesa(id: number){
-console.log("pix ", id)
+async function deletarMesa(id: number){
+  try {
+    await deleteMesa(id)
+    snackbar.trigger("Sucesso ao excluir mesa!", "success")
+    verifyGetFunction()
+  }catch (error: any){
+    snackbar.trigger("Não foi possível excluir essa mesa, tente novamente mais tarde!", "error")
+
+  }
 }
 function newClient(){
+  mesaSelected.value = {}
   dialogComponent.value = true
 }
 async function search(model: PadraoManyFilters): Promise<void> {

@@ -12,7 +12,8 @@
       :headers="props.headers"
       @update:options="o => $emit('verify', { page: o.page, offset: o.itemsPerPage })"
       :items="props.data"
-      class="w-100 h-100">
+      fixed-header
+      class="w-100 h-100 rounded border">
 
       <!--    PARA CLIENTES-->
     <template v-slot:item.data_ultima_visita="{ item }">
@@ -33,7 +34,7 @@
         <v-icon icon="mdi-pencil"></v-icon>
       </v-btn>
       <v-btn v-if="permissoes.delete" variant="flat" size="small" class="mr-2" icon @click="$emit('delete-modal', item.id)">
-        <v-icon icon="mdi-bin"></v-icon>
+        <v-icon icon="mdi-delete"></v-icon>
       </v-btn>
       <v-btn v-if="permissoes.customize" variant="flat" size="small" icon @click="$emit('customize-modal', item)">
         <v-icon icon="mdi-pencil"></v-icon>
