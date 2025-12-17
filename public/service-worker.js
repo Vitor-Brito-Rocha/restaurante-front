@@ -4,9 +4,6 @@ self.addEventListener("push", event => {
     self.registration.showNotification(data.title, {
         body: data.body,
         data: data.data,
-        actions: [
-            { action: "ver", title: "Ver detalhes" }
-        ],
         tag: `mesa-${data.data.mesaId}`
     })
 })

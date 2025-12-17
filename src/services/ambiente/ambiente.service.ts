@@ -1,4 +1,5 @@
 import api from "@/api-axios.ts";
+import type {Ambiente} from "@/models/Ambiente.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const resource = "ambiente";
@@ -18,7 +19,7 @@ export const getAmbientePaginated = async (
     page: number = 1,
     limit: number = 10
 ): Promise<{
-    mesas: any[],
+    ambientes: any[],
     pagination: { atualPagina: number },
     count: number,
     message: string
@@ -49,9 +50,7 @@ export const searchAmbientePaginated = async (
 /**
  * Criar mesa
  */
-export const createStatusMesa = async (mesa: {
-    descricao: string
-}): Promise<any> => {
+export const createAmbiente = async (mesa: Ambiente): Promise<any> => {
     const response = await api.post(`${baseUrl}/${resource}/create`, mesa);
     return response.data;
 };
@@ -59,15 +58,15 @@ export const createStatusMesa = async (mesa: {
 /**
  * Atualizar mesa
  */
-export const updateStatusMesa = async (id: number, mesa: any): Promise<any> => {
-    const response = await api.put(`${baseUrl}/${resource}/${id}`, mesa);
+export const updateAmbiente = async (id: number, mesa: Ambiente): Promise<any> => {
+    const response = await api.patch(`${baseUrl}/${resource}/${id}`, mesa);
     return response.data;
 };
 
 /**
  * Deletar mesa
  */
-export const deleteStatusMesa = async (id: number): Promise<any> => {
+export const deleteAmbiente = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };

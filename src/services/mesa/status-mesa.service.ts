@@ -60,7 +60,7 @@ export const createStatusMesa = async (mesa: StatusMesa): Promise<any> => {
  * Atualizar mesa
  */
 export const updateStatusMesa = async (id: number, mesa: any): Promise<any> => {
-    const response = await api.put(`${baseUrl}/${resource}/${id}`, mesa);
+    const response = await api.patch(`${baseUrl}/${resource}/${id}`, mesa);
     return response.data;
 };
 

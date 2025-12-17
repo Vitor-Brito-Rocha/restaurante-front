@@ -51,6 +51,7 @@ export const getNomeUsuario = () => {
 export const logout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('idUsuario')
+    localStorage.removeItem('menu')
     localStorage.removeItem('perfil_id')
     localStorage.removeItem('nomeUsuario')
     router.push('/login')

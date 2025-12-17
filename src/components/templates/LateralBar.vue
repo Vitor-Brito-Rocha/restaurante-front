@@ -54,18 +54,34 @@
 <script setup lang="ts">
 import {ref, onMounted, onBeforeMount} from 'vue'
 import {getRotasMenu} from "@/services/menu/lateralMenu.service.ts";
-const items = ref<any[]>([{titulo: "Início", rota: "inicio", icone: "mdi-home", children: []}]);
-onBeforeMount(async ()=>{
-  const savedMenu = localStorage.getItem('menu');
+const items = ref<any[]>([
+  { titulo: "Início", rota: "inicio", icone: "mdi-home", children: [] }
+])
+
+onBeforeMount(async () => {
+  const savedMenu = localStorage.getItem('menu')
+
   if (savedMenu) {
-    items.value.push(...JSON.parse(savedMenu));
-    localStorage.removeItem('menu')
+    const parsed = JSON.parse(savedMenu)
+
+    items.value.push(
+        ...parsed.sort((a: any, b: any) =>
+            a.titulo.localeCompare(b.titulo)
+        )
+    )
+
   } else {
-    const menuFromApi = await getRotasMenu();
-    items.value.push(...menuFromApi);
-    localStorage.setItem('menu', JSON.stringify(menuFromApi));
+    const menuFromApi = await getRotasMenu()
+
+    const sortedMenu = menuFromApi.sort((a: any, b: any) =>
+        a.titulo.localeCompare(b.titulo)
+    )
+
+    items.value.push(...sortedMenu)
+    localStorage.setItem('menu', JSON.stringify(sortedMenu))
   }
 })
+
 const drawer = ref(true)
 const rail = ref(true)
 </script>

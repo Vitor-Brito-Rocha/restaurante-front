@@ -33,14 +33,10 @@ const snackbar = useSnackbarStore()
 const isVisible = ref<boolean>(true)
 onMounted(() => {
   document.addEventListener("visibilitychange", () => {
-    console.log(document.visibilityState)
     isVisible.value = document.visibilityState == "visible"
   })
-console.log(document.visibilityState, " Documento")
-console.log(isVisible.value)
   onItemPronto(data => {
     if (isVisible.value) {
-      console.log(data, 'bateu')
       snackbar.trigger(
           `Item #${data.itemId} (${data.produto}) da mesa #${data.mesa} está pronto`, 'success'
       )
