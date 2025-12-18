@@ -1,5 +1,6 @@
 import router from "@/router";
 import api from "@/api-axios.ts";
+import type {MenuItem} from "@/models/Menu.ts";
 const baseUrl = import.meta.env.VITE_BASE_URL
 
 const resource = "auth"
@@ -56,3 +57,45 @@ export const logout = () => {
     localStorage.removeItem('nomeUsuario')
     router.push('/login')
 }
+export const verifyPermission = (rota: string): {edit: boolean, list: boolean, delete: boolean, create: boolean} => {
+    const menu: MenuItem[] = JSON.parse(localStorage.getItem('menu') || '[]');
+    // Função recursiva para buscar o módulo pela rota
+    const findModuloByRota = (rota: string, items: MenuItem[]): MenuItem | null => {
+        for (const item of items) {
+            if (item.rota === rota) {
+                return item;
+            }
+            if (item.children && item.children.length > 0) {
+                const found = findModuloByRota(rota, item.children);
+                if (found) return found;
+            }
+        }
+        return null;
+    };
+
+    const modulo = findModuloByRota(rota, menu);
+
+    if (!modulo || !modulo.permissoes) {
+        console.log('nao achou o modulo')
+        return {
+            'list': false,
+            'create': false,
+            'edit': false,
+            'delete': false
+        };
+    }
+
+    // Mapear a ação para a propriedade correspondente
+    const permissionMap = {
+        'list': modulo.permissoes.listar,
+        'create': modulo.permissoes.criar,
+        'edit': modulo.permissoes.editar,
+        'delete': modulo.permissoes.excluir
+    };
+
+    return permissionMap || false;
+};
+export const getRoute = () =>{
+    return window.location.pathname.split('/')[1]
+}
+

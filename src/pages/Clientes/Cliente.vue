@@ -11,7 +11,7 @@
   </div>
   <div class="h-75 w-100">
     <v-progress-linear indeterminate v-if="loadingTable"></v-progress-linear>
-    <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :total-items="totalItems" :page="page" @verify="verifyGetFunction" @viewModal="openViewModal" @editModal="editViewModal" />
+<!--    <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :total-items="totalItems" :page="page" @verify="verifyGetFunction" @viewModal="openViewModal" @editModal="editViewModal" />-->
   </div>
   <v-dialog v-model="dialogComponent">
     <ClienteComponent :dados="clienteSelected" @close="dialogComponent = false" />

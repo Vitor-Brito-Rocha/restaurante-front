@@ -24,7 +24,7 @@ export const getAmbientePaginated = async (
     count: number,
     message: string
 }> => {
-    const response = await api.get(`${baseUrl}/${resource}/?page=${page}&limit=${limit}`);
+    const response = await api.get(`${baseUrl}/${resource}?page=${page}&limit=${limit}`);
     return response.data;
 };
 
@@ -42,7 +42,7 @@ export const searchAmbientePaginated = async (
     message: string
 }> => {
     const response = await api.get(
-        `${baseUrl}/${resource}/?page=${page}&limit=${limit}&${model?.type}=${model?.value}`
+        `${baseUrl}/${resource}?page=${page}&limit=${limit}&${model?.type}=${model?.value}`
     );
     return response.data;
 };

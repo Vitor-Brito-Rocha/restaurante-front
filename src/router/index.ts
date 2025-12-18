@@ -8,6 +8,9 @@ import Home from "@/pages/Home/Home.vue";
 import NotFound from "@/pages/Auth/NotFound.vue";
 import StatusMesa from "@/pages/Status/StatusMesa.vue";
 import Ambiente from "@/pages/Ambiente/Ambiente.vue";
+import Perfil from "@/pages/Perfil/Perfil.vue";
+import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
+import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -65,6 +68,15 @@ const router = createRouter({
       {
           path: "/mesa",
           component: Mesa,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/tipo-perfil",
+          component: Perfil,
           meta: {
               hideLatBar: false,
               hideNavBar: false,

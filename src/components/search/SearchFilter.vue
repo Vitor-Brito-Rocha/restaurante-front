@@ -14,11 +14,13 @@
 
 <script setup lang="ts">
 import {ref} from "vue";
+import type {SearchFilterType} from "@/models/SearchFilter.ts";
+const emit = defineEmits(['searchEvent', 'reloadTable']);
 const props = defineProps({
   filters: Array,
 });
 const filters = props.filters;
-const selectedFilter = ref<any[] | null>(null);
+const selectedFilter = ref<SearchFilterType | null>(null);
 const searchValue = ref<string>("")
 const model = {type: selectedFilter, value: searchValue};
 </script>

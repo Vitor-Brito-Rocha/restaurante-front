@@ -1,10 +1,10 @@
 <template>
   <div class="w-100 h-100 pr-4">
     <div class="w-100 d-flex gap-4 align-top justify-end">
-      <reload-create suf="a" tela="Mesa" @reload="verifyGetFunction()" @create="newClient" />
+      <reload-create suf="a" tela="Mesa" @reload="resetFilters()" :permissoes="permissoes" @create="newClient" />
     </div>
     <div class="mt-2 mb-2 w-100">
-          <search-select-filters @update="verifyGetFunction($event, {page, offset})" :data="filtersModel" />
+          <search-select-filters :key="searchKey" @update="verifyGetFunction($event, {page, offset})" :data="filtersModel" />
     </div>
     <div class="h-75 w-100">
       <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
@@ -28,6 +28,7 @@ import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
 import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
 import type {Filter} from "@/models/Filter.ts";
 import ReloadCreate from "@/components/templates/reload-create.vue";
+import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -41,6 +42,7 @@ const headers = [
   {title: 'Última Atualização', key: 'updatedAt'},
   {title: 'Ações', key: 'actions'},
 ]
+const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
 onMounted(async ()=>{
   try {
     const [statusRes, ambienteRes] = await Promise.all([
@@ -58,7 +60,6 @@ onMounted(async ()=>{
     // snackbar.trigger("Erro ao carregar filtros", "error")
   }
 })
-const permissoes = {edit: true, delete: true}
 const page = ref<number>(1)
 const offset = ref<number>(10)
 const mesaSelected = ref<any>({})
@@ -76,6 +77,15 @@ const filtersModel = ref<FilterSelect[]>([
     items: []
   }
 ])
+const searchKey = ref<number>(1)
+function resetFilters(){
+  console.log(permissoes)
+  filters.value = null
+  page.value = 1
+  offset.value = 10
+  searchKey.value++
+  verifyGetFunction()
+}
 const filters = ref<PadraoManyFilters | null>(null)
 function verifyGetFunction(filters_param?: PadraoManyFilters | null, pagination?: {page: number, offset: number}) {
   page.value = pagination?.page ?? page.value

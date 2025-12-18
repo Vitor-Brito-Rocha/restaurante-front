@@ -52,7 +52,7 @@ const noContent = ref(false)
 const props = defineProps<{
   data: any[],
   headers: any[],
-  permissoes: {edit?: boolean, delete?: boolean, customize?: boolean, visualize?: boolean},
+  permissoes: {edit?: boolean, delete?: boolean, customize?: boolean, visualize?: boolean, create?: boolean},
   totalItems: number,
   perPage: number,
   page: number,
