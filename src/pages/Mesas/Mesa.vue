@@ -26,7 +26,6 @@ import SearchSelectFilters from "@/components/search/SearchSelectFilters.vue";
 import type {FilterSelect} from "@/models/FilterSelect.ts";
 import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
 import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
-import type {Filter} from "@/models/Filter.ts";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
 const snackbar = useSnackbarStore()
