@@ -1,35 +1,34 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-center align-center w-100">
-        {{dados?.id ? 'Editar Perfil ('+ dados.descricao +')'  : 'Cadastrar Perfil'}}
+        {{dados?.id ? 'Editar Permissões do Perfil ('+ dados.descricao +')'  : ''}}
     </v-card-title>
-      <v-form @submit.prevent="dados?.id ? editTable() : saveTable()">
-    <v-card-text>
-      <div class="d-flex justify-center gap-3 align-center items-center">
-        <v-text-field label="Descrição" variant="outlined" v-model="dados.descricao" />
-      </div>
+    <v-card-text  class="overflow-y-hidden">
+      <PermissoesTable  :data="permissoes" />
     </v-card-text>
     <v-card-actions class="justify-space-around">
       <v-btn color="error" @click="$emit('close')" prepend-icon="mdi-close">Fechar</v-btn>
-      <v-btn color="success" type="submit" prepend-icon="mdi-check">{{dados?.id ? 'Editar' : 'Salvar'}}</v-btn>
     </v-card-actions>
-      </v-form>
   </v-card>
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import type {Perfil} from "@/models/Perfil/Perfil.ts";
+import type {ModuloProfile, Perfil} from "@/models/Perfil/Perfil.ts";
 import {createPerfil, updatePerfil} from "@/services/perfil/perfil.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
+import PermissoesTable from "@/components/profile/Permissoes-Table.vue";
+import {getPermissoesByPerfil} from "@/services/perfil/permissao-perfil.service.ts";
 const dados = ref<Perfil>({});
+const permissoes = ref<ModuloProfile[]>([])
 const snackbar = useSnackbarStore()
 const emit = defineEmits(['close'])
 const props = defineProps<{
   dados?: Perfil;
 }>()
-onMounted(() => {
+onMounted(async () => {
   if(props.dados?.id){
   dados.value = props.dados;
+  permissoes.value = await getPermissoesByPerfil(dados.value.id!).then(result => result.data)
   }
 })
 async function saveTable(){

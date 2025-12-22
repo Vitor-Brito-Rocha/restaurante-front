@@ -1,5 +1,5 @@
 import api from "@/api-axios.ts";
-import type {Perfil} from "@/models/Perfil.ts";
+import type {Perfil} from "@/models/Perfil/Perfil.ts";
 import {organizeFilters} from "@/services/system/system.service.ts";
 import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
 

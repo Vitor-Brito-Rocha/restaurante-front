@@ -27,18 +27,20 @@
       {{ item.updatedAt.split('T')[0].split('-').reverse().join('/') + ' ' + item.updatedAt.split('T')[1].split('.')[0] }}
     </template>
     <template  v-slot:item.actions="{ item }">
-      <v-btn v-if="permissoes.visualize" variant="flat" size="small" class="mr-2" icon @click="$emit('view-modal', item)">
+      <div class="ga-5">
+      <v-btn v-if="permissoes.visualize" variant="flat" size="small" icon @click="$emit('view-modal', item)">
         <v-icon icon="mdi-eye"></v-icon>
       </v-btn>
       <v-btn v-if="permissoes.edit" variant="flat" size="small" icon @click="$emit('edit-modal', item)">
         <v-icon icon="mdi-pencil"></v-icon>
       </v-btn>
-      <v-btn v-if="permissoes.delete" variant="flat" size="small" class="mr-2" icon @click="$emit('delete-modal', item.id)">
+      <v-btn v-if="permissoes.delete" variant="flat" size="small" icon @click="$emit('delete-modal', item.id)">
         <v-icon icon="mdi-delete"></v-icon>
       </v-btn>
       <v-btn v-if="permissoes.customize" variant="flat" size="small" icon @click="$emit('customize-modal', item)">
-        <v-icon icon="mdi-pencil"></v-icon>
+        <v-icon icon="mdi-cog"></v-icon>
       </v-btn>
+      </div>
     </template>
   </v-data-table-server>
   <div v-else>
