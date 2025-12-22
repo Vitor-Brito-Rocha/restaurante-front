@@ -37,11 +37,11 @@ const props = defineProps<{
   dados?: Mesa;
 }>()
 onMounted(() => {
+  getStatusMesasAll().then(a =>{statusMesaList.value = a.statusMesas})
+  getAmbienteAll().then(a =>{ambienteList.value = a.ambientes})
   if(props.dados?.id){
   dados.value = props.dados;
   }
-  getStatusMesasAll().then(a =>{statusMesaList.value = a.statusMesas})
-  getAmbienteAll().then(a =>{ambienteList.value = a.ambientes})
 })
 async function saveTable(){
   try{
@@ -54,8 +54,8 @@ async function saveTable(){
 }
 async function editTable(){
   try{
-    joinMesa(dados.value.id!, Number(getIdUsuario()))
-    registerPush(dados.value.id!)
+    // joinMesa(dados.value.id!, Number(getIdUsuario()))
+    // registerPush(dados.value.id!)
     await updateMesa(dados.value.id!, dados.value)
     snackbar.trigger("Mesa atualizada com sucesso!", "success")
     emit('close')

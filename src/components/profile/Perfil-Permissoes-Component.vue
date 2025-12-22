@@ -3,8 +3,8 @@
     <v-card-title class="d-flex justify-center align-center w-100">
         {{dados?.id ? 'Editar Permissões do Perfil ('+ dados.descricao +')'  : ''}}
     </v-card-title>
-    <v-card-text  class="overflow-y-hidden">
-      <PermissoesTable  :data="permissoes" />
+    <v-card-text  class="overflow-y-scroll">
+      <PermissoesTable @associate-endpoint="cadastrarAcaoAoModulo($event)" @associate-module="cadastrarModulo($event)" @disassociate-endpoint="removerAcaoAoModulo($event)" @disassociate-module="removerModulo($event)" :key="pKey" :data="permissoes" />
     </v-card-text>
     <v-card-actions class="justify-space-around">
       <v-btn color="error" @click="$emit('close')" prepend-icon="mdi-close">Fechar</v-btn>
@@ -17,10 +17,15 @@ import type {ModuloProfile, Perfil} from "@/models/Perfil/Perfil.ts";
 import {createPerfil, updatePerfil} from "@/services/perfil/perfil.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import PermissoesTable from "@/components/profile/Permissoes-Table.vue";
-import {getPermissoesByPerfil} from "@/services/perfil/permissao-perfil.service.ts";
+import {
+  associateAction, associateModule,
+  disassociateAction, disassociateModule,
+  getPermissoesByPerfil
+} from "@/services/perfil/permissao-perfil.service.ts";
 const dados = ref<Perfil>({});
 const permissoes = ref<ModuloProfile[]>([])
 const snackbar = useSnackbarStore()
+const pKey = ref<number>(0)
 const emit = defineEmits(['close'])
 const props = defineProps<{
   dados?: Perfil;
@@ -31,24 +36,55 @@ onMounted(async () => {
   permissoes.value = await getPermissoesByPerfil(dados.value.id!).then(result => result.data)
   }
 })
-async function saveTable(){
+async function cadastrarAcaoAoModulo(body: {modulo_id: number, acao: string}){
   try{
-    await createPerfil(dados.value)
-    snackbar.trigger("Perfil criada com sucesso!", "success")
-    emit('close')
-  } catch (error: any) {
-    snackbar.trigger("Não foi possível criar mesa, tente novamente mais tarde", "error")
+  await associateAction({...body, perfil_id: dados.value.id!})
+    snackbar.trigger("Sucesso ao cadastrar ação!", "success")
+  } catch(error: any){
+    console.log(error)
+    snackbar.trigger("Erro ao cadastrar essa ação", 'error')
+  } finally {
+    permissoes.value = await getPermissoesByPerfil(dados.value.id!).then(result => result.data)
+    pKey.value++
   }
 }
-async function editTable(){
+async function removerAcaoAoModulo(body: {modulo_id: number, acao: string}){
   try{
-    await updatePerfil(dados.value.id!, dados.value)
-    snackbar.trigger("Perfil atualizada com sucesso!", "success")
-    emit('close')
-  } catch (error: any) {
+  await disassociateAction({...body, perfil_id: dados.value.id!})
+    snackbar.trigger("Sucesso ao remover ação!", "success")
+  } catch(error: any){
     console.log(error)
-    snackbar.trigger("Não foi possível editar mesa, tente novamente mais tarde", "error")
+    snackbar.trigger("Erro ao remover essa ação", 'error')
+  } finally {
+    permissoes.value = await getPermissoesByPerfil(dados.value.id!).then(result => result.data)
+    pKey.value++
   }
+}
+async function cadastrarModulo(body: {modulo_id: number}){
+  try{
+  await associateModule({...body, perfil_id: dados.value.id!})
+    snackbar.trigger("Sucesso ao cadastrar módulo!", "success")
+  }  catch(error: any){
+    console.log(error)
+    snackbar.trigger("Erro ao remover esse módulo", 'error')
+  } finally {
+    permissoes.value = await getPermissoesByPerfil(dados.value.id!).then(result => result.data)
+    pKey.value++
+  }
+}
+async function removerModulo(body: {modulo_id: number}){
+  try{
+  await disassociateModule({...body, perfil_id: dados.value.id!})
+    snackbar.trigger("Sucesso ao remover módulo!", "success")
+  } catch(error: any){
+    console.log(error)
+    snackbar.trigger("Sucesso ao remover módulo!", "success")
+
+  } finally {
+    permissoes.value = await getPermissoesByPerfil(dados.value.id!).then(result => result.data)
+    pKey.value++
+  }
+
 }
 </script>
 <style scoped>

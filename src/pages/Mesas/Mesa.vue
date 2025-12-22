@@ -17,15 +17,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import {deleteMesa, getMesasPaginated, searchMesasPaginated} from "@/services/mesa/mesa.service.ts";
+import {deleteMesa, getMesasPaginated, searchMesasPaginated, getStatusMesasAll, getAmbienteAll} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import MesaComponent from "@/components/registers/Mesa/Mesa-Component.vue";
 import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
 import SearchSelectFilters from "@/components/search/SearchSelectFilters.vue";
 import type {FilterSelect} from "@/models/FilterSelect.ts";
-import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
-import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
 const snackbar = useSnackbarStore()

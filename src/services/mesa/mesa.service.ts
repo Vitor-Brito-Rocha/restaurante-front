@@ -55,7 +55,22 @@ export const createMesa = async (mesa: Mesa): Promise<any> => {
     const response = await api.post(`${baseUrl}/${resource}/create`, mesa);
     return response.data;
 };
-
+export const getAmbienteAll = async (): Promise<{
+    ambientes: any[],
+    count: number,
+    message: string
+}> => {
+    const response = await api.get(`${baseUrl}/${resource}/ambiente`);
+    return response.data;
+};
+export const getStatusMesasAll = async (): Promise<{
+    statusMesas: any[],
+    count: number,
+    message: string
+}> => {
+    const response = await api.get(`${baseUrl}/${resource}/status-mesa`);
+    return response.data;
+};
 /**
  * Atualizar mesa
  */
