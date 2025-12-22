@@ -52,7 +52,7 @@ export const searchMesasPaginated = async (model: PadraoManyFilters,
  * Criar mesa
  */
 export const createMesa = async (mesa: Mesa): Promise<any> => {
-    const response = await api.post(`${baseUrl}/${resource}/create`, mesa);
+    const response = await api.post(`${baseUrl}/${resource}`, mesa);
     return response.data;
 };
 export const getAmbienteAll = async (): Promise<{

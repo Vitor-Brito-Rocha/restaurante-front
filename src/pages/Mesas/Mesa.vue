@@ -25,7 +25,7 @@ import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
 import SearchSelectFilters from "@/components/search/SearchSelectFilters.vue";
 import type {FilterSelect} from "@/models/FilterSelect.ts";
 import ReloadCreate from "@/components/templates/reload-create.vue";
-import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
+import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -56,6 +56,7 @@ onMounted(async ()=>{
   } catch (e: any) {
     // snackbar.trigger("Erro ao carregar filtros", "error")
   }
+
 })
 const page = ref<number>(1)
 const offset = ref<number>(10)

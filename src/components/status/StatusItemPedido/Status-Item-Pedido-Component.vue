@@ -18,7 +18,7 @@
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import {createStatusMesa, updateStatusMesa} from "@/services/mesa/status-mesa.service.ts";
+import {createStatusItemPedido, updateStatusItemPedido} from "@/services/item-pedido/status-item-pedido.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import type {Status} from "@/models/Status.ts";
 const dados = ref<Status>({});
@@ -35,7 +35,7 @@ onMounted(() => {
 async function saveTable(){
   try{
     console.log(dados.value)
-    await createStatusMesa(dados.value)
+    await createStatusItemPedido(dados.value)
     snackbar.trigger("Status criado com sucesso!", "success")
     emit('close')
   } catch (error: any) {
@@ -44,7 +44,7 @@ async function saveTable(){
 }
 async function editTable(){
   try{
-    await updateStatusMesa(dados.value.id!, dados.value)
+    await updateStatusItemPedido(dados.value.id!, dados.value)
     snackbar.trigger("Status atualizada com sucesso!", "success")
     emit('close')
   } catch (error: any) {

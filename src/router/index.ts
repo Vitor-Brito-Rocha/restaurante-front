@@ -9,8 +9,8 @@ import NotFound from "@/pages/Auth/NotFound.vue";
 import StatusMesa from "@/pages/Status/StatusMesa.vue";
 import Ambiente from "@/pages/Ambiente/Ambiente.vue";
 import Perfil from "@/pages/Perfil/Perfil.vue";
-import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
-import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
+import StatusPedido from "@/pages/Status/StatusPedido.vue";
+import StatusItemPedido from "@/pages/Status/StatusItemPedido.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -86,6 +86,24 @@ const router = createRouter({
       {
           path: "/status-mesa",
           component: StatusMesa,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/status-item-pedido",
+          component: StatusItemPedido,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/status-pedido",
+          component: StatusPedido,
           meta: {
               hideLatBar: false,
               hideNavBar: false,

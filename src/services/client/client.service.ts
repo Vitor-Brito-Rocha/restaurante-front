@@ -43,6 +43,6 @@ export const createClient = async (client: {
                                        ]
                                    }
 ): Promise<any> => {
-    const response =  await api.post(`${baseUrl}/${resource}/create`, client)
+    const response =  await api.post(`${baseUrl}/${resource}`, client)
     return response.data
 }

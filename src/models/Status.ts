@@ -1,5 +1,5 @@
 
-export interface StatusMesa {
+export interface Status {
     id?: number,
     descricao?: string,
 }

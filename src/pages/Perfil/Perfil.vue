@@ -22,7 +22,7 @@ import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import {deletePerfil, getPerfisPaginated} from "@/services/perfil/perfil.service.ts";
 import PerfilComponent from "@/components/profile/Perfil-Component.vue";
-import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
+import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
 import PerfilPermissoesComponent from "@/components/profile/Perfil-Permissoes-Component.vue";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
@@ -42,6 +42,7 @@ onMounted(async ()=>{
       await getItemsList()
   } catch (e: any) {
   }
+
 })
 const page = ref<number>(1)
 const offset = ref<number>(10)

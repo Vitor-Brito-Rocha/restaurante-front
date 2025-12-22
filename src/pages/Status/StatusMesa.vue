@@ -19,7 +19,7 @@ import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import StatusMesaComponent from "@/components/status/StatusMesa/Status-Mesa-Component.vue";
-import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
+import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -30,7 +30,9 @@ const headers = [
   {title: 'Descrição', key: 'descricao'},
   {title: 'Ações', key: 'actions'},
 ]
-onMounted(getItemsList)
+onMounted(()=>{
+  getItemsList()
+})
 const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
 const page = ref<number>(1)
 const offset = ref<number>(10)

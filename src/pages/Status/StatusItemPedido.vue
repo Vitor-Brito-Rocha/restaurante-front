@@ -7,19 +7,20 @@
       <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
-      <StatusPedidoComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
+      <StatusItemPedidoComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
     </v-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import {deleteStatusPedido, getStatusPedidoPaginated} from "@/services/pedido/status-pedido.service.ts";
+import {deleteStatusItemPedido, getStatusItemPedidoPaginated} from "@/services/item-pedido/status-item-pedido.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
 import StatusPedidoComponent from "@/components/status/StatusPedido/Status-Pedido-Component.vue";
+import StatusItemPedidoComponent from "@/components/status/StatusItemPedido/Status-Item-Pedido-Component.vue";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -48,7 +49,7 @@ function editViewModal(item: any){
 }
 async function deletarMesa(id: number){
   try {
-    await deleteStatusPedido(id)
+    await deleteStatusItemPedido(id)
     snackbar.trigger("Sucesso ao excluir mesa!", "success")
     verifyGetFunction()
   }catch (error: any){
@@ -64,8 +65,8 @@ async function getItemsList() {
   loadingTable.value = true
 
   try {
-    const {statusPedidos, message, count, pagination} = await getStatusPedidoPaginated(page.value, offset.value)
-    items.value = statusPedidos
+    const {statusItensPedidos, message, count, pagination} = await getStatusItemPedidoPaginated(page.value, offset.value)
+    items.value = statusItensPedidos
     totalItems.value = count;
     page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")
