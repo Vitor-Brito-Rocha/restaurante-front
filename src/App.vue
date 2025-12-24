@@ -1,5 +1,5 @@
 <template>
-  <v-app class="app" >
+  <v-app class="app">
     <RouterView v-if="route.name == 'Login' || route.name == 'Register' || route.name == 'NotFound'" />
     <RouterView v-else class="flex-shrink-0" v-slot="{ Component }">
 
@@ -14,7 +14,7 @@
       </v-main>
 
     </RouterView>
-    <AppSnackbar v-if="showLatBar" />
+    <AppSnackbar />
   </v-app>
 </template>
 
@@ -35,6 +35,14 @@ onMounted(() => {
   document.addEventListener("visibilitychange", () => {
     isVisible.value = document.visibilityState == "visible"
   })
+    window.addEventListener("online", () => {
+      console.log('conectado')
+      snackbar.trigger("Você está online!", "success")
+    });
+    window.addEventListener("offline", () => {
+      console.log('desconectado')
+      snackbar.trigger("Você está offline, verifique sua conexão com a internet!", "error")
+    });
   onItemPronto(data => {
     if (isVisible.value) {
       snackbar.trigger(

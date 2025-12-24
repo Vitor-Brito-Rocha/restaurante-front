@@ -11,6 +11,7 @@ import Ambiente from "@/pages/Ambiente/Ambiente.vue";
 import Perfil from "@/pages/Perfil/Perfil.vue";
 import StatusPedido from "@/pages/Status/StatusPedido.vue";
 import StatusItemPedido from "@/pages/Status/StatusItemPedido.vue";
+import Funcionario from "@/pages/Funcionario/Funcionario.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -68,6 +69,15 @@ const router = createRouter({
       {
           path: "/mesa",
           component: Mesa,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/funcionario",
+          component: Funcionario,
           meta: {
               hideLatBar: false,
               hideNavBar: false,

@@ -19,6 +19,12 @@
     <template v-slot:item.data_ultima_visita="{ item }">
       {{ item.data_ultima_visita ? item.data_ultima_visita : 'Não Informado' }}
     </template>
+    <template v-slot:item.ativo="{ item }">
+      {{ item.ativo ? 'Ativo' : 'Inativo' }}
+    </template>
+    <template v-slot:item.documento="{ item }">
+      {{ item.documento.length===11 ? formatCpf(item.documento) : item.documento.length===14 ? formatCnpj(item.documento) : 'Não informado' }}
+    </template>
     <template v-slot:item.idade="{ item }">
       {{ verifyAge(item?.data_nascimento) }}
     </template>
@@ -64,14 +70,12 @@ const permissoes = ref<{edit?: boolean, visualize?: boolean, delete?: boolean, c
 onMounted(()=>{
   permissoes.value = props.permissoes
 })
-
-
-
-
-
-
-
-
+function formatCpf(cpf: string){
+  return cpf
+}
+function formatCnpj(cnpj: string){
+return cnpj
+}
 
 function verifyAge(dataNascimento: string | Date): number {
   const nascimento = new Date(dataNascimento);

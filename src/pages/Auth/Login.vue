@@ -73,12 +73,15 @@ const Login = async () => {
     await router.push("/inicio")
   }
   catch (error: any) {
+    if(error.code != "ERR_NETWORK"){
     snackbar.trigger("Erro ao se autenticar", "error")
+    }
   }
   finally {
     loading.value = false;
   }
 };
+
 
 </script>
 <style scoped>
