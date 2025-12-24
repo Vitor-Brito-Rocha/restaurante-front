@@ -1,11 +1,5 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
-
-const router = useRouter()
-
-const goLogin = () => {
-  router.push('/login')
-}
+import {logout} from "@/services/auth/auth.service.ts";
 </script>
 
 <template>
@@ -37,7 +31,7 @@ const goLogin = () => {
       <v-btn
           color="primary"
           size="large"
-          @click="goLogin"
+          @click="logout()"
       >
         Voltar ao Login
       </v-btn>

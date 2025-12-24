@@ -25,7 +25,7 @@
                 <p class="text-caption text-medium-emphasis">Pedidos ativos</p>
                 <h2 class="font-weight-bold">14</h2>
               </div>
-              <v-icon size="36" color="primary">mdi-receipt-text-clock</v-icon>
+              <v-icon size="36" color="secondary">mdi-receipt-text-clock</v-icon>
             </div>
           </v-card-text>
         </v-card>
