@@ -25,9 +25,6 @@ import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
 import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
 import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
-import {joinMesa, onItemPronto} from "@/services/system/socket.ts";
-import {getIdUsuario} from "@/services/auth/auth.service.ts";
-import {registerPush} from "@/services/system/register-push.ts";
 const dados = ref<Mesa>({});
 const statusMesaList = ref<any[]>([])
 const ambienteList = ref<any[]>([])
@@ -54,8 +51,6 @@ async function saveTable(){
 }
 async function editTable(){
   try{
-    // joinMesa(dados.value.id!, Number(getIdUsuario()))
-    // registerPush(dados.value.id!)
     await updateMesa(dados.value.id!, dados.value)
     snackbar.trigger("Mesa atualizada com sucesso!", "success")
     emit('close')

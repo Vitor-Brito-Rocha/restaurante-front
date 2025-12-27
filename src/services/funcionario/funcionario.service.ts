@@ -1,7 +1,7 @@
 import api from "@/api-axios.ts";
 import type {Funcionario} from "@/models/Funcionario.ts";
 import {organizeFilters} from "@/services/system/system.service.ts";
-import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
+import type {Filter} from "@/models/Filter.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const resource = "funcionario";
@@ -33,17 +33,16 @@ export const getFuncionarioPaginated = async (
 /**
  * Busca paginada
  */
-export const searchFuncionarioPaginated = async (model: PadraoManyFilters,
+export const searchFuncionarioPaginated = async (model: Filter,
                                            page: number = 1,
                                            limit: number = 10): Promise<{
     funcionarios: any[],
-    pagination: { atualPagina: number },
+    pagination: { paginaAtual: number },
     count: number,
     message: string
 }> => {
-    let params = organizeFilters(model)
     const response = await api.get(
-        `${baseUrl}/${resource}?page=${page}&limit=${limit}${params}`
+        `${baseUrl}/${resource}?page=${page}&limit=${limit}${model.type}=${model.value}`
     );
     return response.data;
 };

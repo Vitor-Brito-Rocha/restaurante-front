@@ -6,12 +6,11 @@ export const socket = io(baseUrl, {
     withCredentials: true
 })
 
-export function joinMesa(mesaId: number, garcomId?: number) {
-    socket.emit("join-mesa", { mesaId, garcomId })
+export function joinPedido(pedidoId: number, garcomId?: number) {
+    socket.emit("join-pedido", { pedidoId, garcomId })
 }
 
 
 export function onItemPronto(cb: (data: any) => void) {
-    console.log("onItemPronto")
     socket.on("item-pronto", cb)
 }

@@ -3,14 +3,24 @@
       height="600"
       v-if="!noContent"
       :items-per-page-options="[{value: 5, title: '5'}, {value: 10, title: '10'}, {value: 25, title: '25'}, {value: 50, title: '50'}]"
-      :items-length="totalItems"
+      :items-length="props.totalItems"
       hover
       :page="props.page"
       :items-per-page="props.perPage"
       disable-sort
       :loading="props.loading"
       :headers="props.headers"
-      @update:options="o => $emit('verify', { page: o.page, offset: o.itemsPerPage })"
+      @update:options="o => {
+  if (isFirstEmit) {
+    isFirstEmit = false
+    return
+  }
+
+  $emit('verify', {
+    page: o.page,
+    offset: o.itemsPerPage
+  })
+}"
       :items="props.data"
       fixed-header
       class="w-100 h-100 rounded border">
@@ -54,9 +64,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
 const emit = defineEmits(['verify', 'view-modal', 'edit-modal', 'customize-modal', 'delete-modal']);
 const noContent = ref(false)
+const isFirstEmit = ref(true)
+
 const props = defineProps<{
   data: any[],
   headers: any[],
@@ -66,15 +78,28 @@ const props = defineProps<{
   page: number,
   loading?: boolean,
 }>()
-const permissoes = ref<{edit?: boolean, visualize?: boolean, delete?: boolean, customize?: boolean}>({visualize: false, edit: false, delete: false, customize: false})
-onMounted(()=>{
-  permissoes.value = props.permissoes
-})
-function formatCpf(cpf: string){
-  return cpf
+function onlyDigits(value: string) {
+  return value.replace(/\D/g, '');
 }
-function formatCnpj(cnpj: string){
-return cnpj
+function formatCpf(cpf: string) {
+  const digits = onlyDigits(cpf);
+
+  if (digits.length !== 11) return cpf;
+
+  return digits.replace(
+      /(\d{3})(\d{3})(\d{3})(\d{2})/,
+      '$1.$2.$3-$4'
+  );
+}
+function formatCnpj(cnpj: string) {
+  const digits = onlyDigits(cnpj);
+
+  if (digits.length !== 14) return cnpj;
+
+  return digits.replace(
+      /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+      '$1.$2.$3/$4-$5'
+  );
 }
 
 function verifyAge(dataNascimento: string | Date): number {

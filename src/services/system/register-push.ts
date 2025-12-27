@@ -1,6 +1,6 @@
 import api from "@/api-axios.ts";
 
-export async function registerPush(mesaId: number) {
+export async function registerPush(pedidoId: number) {
     const registration = await navigator.serviceWorker.ready
 
     const subscription = await registration.pushManager.subscribe({
@@ -9,7 +9,7 @@ export async function registerPush(mesaId: number) {
     })
 
     await api.post(`${import.meta.env.VITE_BASE_URL}/push/subscribe`, {
-        mesaId,
+        pedidoId,
         subscription
     })
 
