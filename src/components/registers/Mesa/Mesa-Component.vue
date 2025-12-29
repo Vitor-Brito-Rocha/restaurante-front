@@ -33,9 +33,11 @@ const emit = defineEmits(['close'])
 const props = defineProps<{
   dados?: Mesa;
 }>()
-onMounted(() => {
-  getStatusMesasAll().then(a =>{statusMesaList.value = a.statusMesas})
-  getAmbienteAll().then(a =>{ambienteList.value = a.ambientes})
+onMounted(async () => {
+  await Promise.all([
+    getStatusMesasAll().then(a =>{statusMesaList.value = a.statusMesas}),
+    getAmbienteAll().then(a =>{ambienteList.value = a.ambientes})
+  ])
   if(props.dados?.id){
   dados.value = props.dados;
   }

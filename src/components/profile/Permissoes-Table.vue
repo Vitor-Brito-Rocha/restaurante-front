@@ -20,7 +20,7 @@
         <v-col class="justify-center d-flex">{{item.modulo_titulo}}</v-col>
         <v-col class="justify-center d-flex">
 
-          <v-btn :color="item.modulo_permitido ? 'error' : 'success'" @click="item.modulo_permitido ? $emit('disassociateModule', {modulo_id: item.modulo_id}) : $emit('associateModule', {modulo_id: item.modulo_id})">{{item.modulo_permitido ? 'Revogar' : 'Conceder'}}</v-btn>
+          <v-btn :color="item.modulo_permitido ? 'error' : 'success'" @click.stop="item.modulo_permitido ? $emit('disassociateModule', {modulo_id: item.modulo_id}) : $emit('associateModule', {modulo_id: item.modulo_id})">{{item.modulo_permitido ? 'Revogar' : 'Conceder'}}</v-btn>
 
         </v-col>
       </v-row>

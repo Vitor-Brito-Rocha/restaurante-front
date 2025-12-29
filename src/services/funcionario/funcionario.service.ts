@@ -22,8 +22,12 @@ export const getFuncionarioPaginated = async (
     limit: number = 10
 ): Promise<{
     funcionarios: any[],
-    pagination: { atualPagina: number },
-    count: number,
+    pagination: {
+        "totalPaginas": number,
+        "paginaAtual": number,
+        "itensPorPagina": number,
+        "totalItens": number
+    },    count: number,
     message: string
 }> => {
     const response = await api.get(`${baseUrl}/${resource}?page=${page}&limit=${limit}`);
@@ -37,12 +41,17 @@ export const searchFuncionarioPaginated = async (model: Filter,
                                            page: number = 1,
                                            limit: number = 10): Promise<{
     funcionarios: any[],
-    pagination: { paginaAtual: number },
+    pagination: {
+        "totalPaginas": number,
+        "paginaAtual": number,
+        "itensPorPagina": number,
+        "totalItens": number
+    },
     count: number,
     message: string
 }> => {
     const response = await api.get(
-        `${baseUrl}/${resource}?page=${page}&limit=${limit}${model.type}=${model.value}`
+        `${baseUrl}/${resource}?page=${page}&limit=${limit}&${model.type}=${model.value}`
     );
     return response.data;
 };

@@ -1,6 +1,6 @@
 <template>
   <v-data-table-server
-      height="600"
+      height="50dvh"
       v-if="!noContent"
       :items-per-page-options="[{value: 5, title: '5'}, {value: 10, title: '10'}, {value: 25, title: '25'}, {value: 50, title: '50'}]"
       :items-length="props.totalItems"
@@ -11,6 +11,7 @@
       :loading="props.loading"
       :headers="props.headers"
       @update:options="o => {
+        console.log(o)
   if (isFirstEmit) {
     isFirstEmit = false
     return
