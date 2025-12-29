@@ -5,7 +5,7 @@
 
       <NavBar v-if="showNavBar" />
 
-      <LateralBar v-if="showLatBar" class="flex-shrink-0" />
+      <LateralBar v-if="showLatBar && !isMobile()" class="flex-shrink-0" />
 
       <v-main class="mt-15 d-flex align-center">
         <div class="w-100 mr-2 ml-15 h-100">
@@ -29,6 +29,7 @@ import LateralBar from "@/components/templates/LateralBar.vue";
 import NavBar from "@/components/templates/NavBar.vue";
 import {onItemPronto} from "@/services/system/socket.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
+import {isMobile} from "@/services/system/system.service.ts";
 const snackbar = useSnackbarStore()
 const isVisible = ref<boolean>(true)
 onMounted(() => {
@@ -36,7 +37,6 @@ onMounted(() => {
     isVisible.value = document.visibilityState == "visible"
   })
     window.addEventListener("online", () => {
-      console.log('conectado')
       snackbar.trigger("Você está online!", "success")
     });
     window.addEventListener("offline", () => {
@@ -46,7 +46,7 @@ onMounted(() => {
   onItemPronto(data => {
     if (isVisible.value) {
       snackbar.trigger(
-          `Item #${data.itemId} (${data.produto}) da mesa #${data.mesa} está pronto`, 'success'
+          `Item #${data.itemId} - ${data.produto} da mesa #${data.mesa} está pronto`, 'success', 10000
       )
     }
   })

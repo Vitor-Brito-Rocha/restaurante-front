@@ -3,7 +3,7 @@
       v-model="store.show"
       :color="store.snackbarColor"
       :timeout="store.timeout"
-      location="bottom center"
+      :location="!isMobile() ? 'bottom center' : 'top center'"
   >
     <span v-html="store.message" />
     <template #actions>
@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import { useSnackbarStore } from '@/stores/snackbar'
+import {isMobile} from "@/services/system/system.service.ts";
 
 const store = useSnackbarStore()
 </script>

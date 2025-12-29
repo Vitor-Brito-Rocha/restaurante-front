@@ -4,7 +4,7 @@ self.addEventListener("push", event => {
     self.registration.showNotification(data.title, {
         body: data.body,
         data: data.data,
-        tag: `mesa-${data.data.mesaId}`
+        tag: `Pedido - #${data.data.pedidoId}`
     })
 })
 
@@ -12,6 +12,6 @@ self.addEventListener("notificationclick", event => {
     event.notification.close()
 
     event.waitUntil(
-        clients.openWindow(`/mesa/${event.notification.data.mesaId}`)
+        clients.openWindow(`/pedido/${event.notification.data.pedidoId}`)
     )
 })

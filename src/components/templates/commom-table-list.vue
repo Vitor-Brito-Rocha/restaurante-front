@@ -11,7 +11,6 @@
       :loading="props.loading"
       :headers="props.headers"
       @update:options="o => {
-        console.log(o)
   if (isFirstEmit) {
     isFirstEmit = false
     return

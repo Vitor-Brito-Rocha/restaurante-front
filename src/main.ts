@@ -18,10 +18,14 @@ import '@/styles/theme-restaurant.css'
 
 import App from './App.vue'
 import {pt} from "vuetify/locale";
+import {VMaskInput} from "vuetify/labs/components";
 
 
 const vuetify = createVuetify({
-    components,
+    components: {
+        ...components,
+        VMaskInput
+    },
     directives,
     locale: {
         locale: 'pt',

@@ -8,3 +8,4 @@ export const organizeFilters =  (model?: PadraoManyFilters): string=> {
     }
     return model_organized
 }
+export const isMobile = (): boolean => window.innerWidth <= 768
