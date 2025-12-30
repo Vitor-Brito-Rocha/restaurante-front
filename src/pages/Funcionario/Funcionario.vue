@@ -104,7 +104,7 @@
       items.value = funcionarios
       totalItems.value = count;
       page.value = Number(pagination.paginaAtual);
-      snackbar.trigger(`${message}!`, "success")
+      snackbar.trigger(`${message}!`, "success", 3000)
     } catch (error: any) {
       const mensagem = error.message == "Network Error" ? 'Erro de conexão, tente novamente mais tarde': error.message
       snackbar.trigger(`${mensagem}!`, "error")
