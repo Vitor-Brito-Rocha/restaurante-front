@@ -8,7 +8,6 @@ export const register = async (usuario: {}) => {
     const response: {data: {usuario: {id: number, token: string, nome: string, tipo_perfil_id: number}, message: string,}} = await api.post(`${baseUrl}/${resource}/register`, usuario)
     await Promise.all([
         setIdUsuario(response.data.usuario.id),
-        setIdPerfil(response.data.usuario.tipo_perfil_id),
         setToken(response.data.usuario.token),
         setNomeUsuario(response.data.usuario.nome)
     ]);
@@ -18,7 +17,6 @@ export const login = async (usuario: {}) => {
     const response: {data: {usuario: {id: number, token: string, nome: string, tipo_perfil_id: number}, message: string,}} =  await api.post(`${baseUrl}/${resource}/login`, usuario)
     await Promise.all([
         setIdUsuario(response.data.usuario.id),
-        setIdPerfil(response.data.usuario.tipo_perfil_id),
         setToken(response.data.usuario.token),
         setNomeUsuario(response.data.usuario.nome)
     ]);
@@ -36,12 +34,6 @@ export const setIdUsuario = async (idUsuario: number) => {
 }
 export const getIdUsuario = () => {
     return localStorage.getItem("idUsuario")
-}
-export const setIdPerfil = async (perfil: number) => {
-    localStorage.setItem("perfil_id", String(perfil))
-}
-export const getIdPerfil = () => {
-    return localStorage.getItem("perfil_id")
 }
 export const setNomeUsuario = async (nome: string) => {
     localStorage.setItem("nomeUsuario", nome)
