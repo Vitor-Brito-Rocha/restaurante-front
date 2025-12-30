@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 h-100 pr-4">
+  <div class="w-100 h-100">
     <div class="w-100 d-flex gap-4 align-top justify-end">
       <reload-create suf="a" tela="Mesa" @reload="resetFilters()" :permissoes="permissoes" @create="newClient" />
     </div>

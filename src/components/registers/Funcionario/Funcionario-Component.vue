@@ -6,16 +6,46 @@
     <v-form @submit.prevent="dados?.funcionario_id ? editTable() : saveTable()">
       <v-card-text>
         <div class="d-flex justify-center gap-3 align-center items-center">
-          <v-autocomplete label="Tipo de Pessoa" item-title="descricao" item-value="id" v-model="dados.tipo" :items="[{id: 1, descricao: 'Pessoa Física'}, {id: 2, descricao: 'Pessoa Jurídica'}]" />
-          <v-text-field label="Email" variant="outlined" type="number" v-model="dados.email" />
-          <v-text-field label="Senha" variant="outlined" type="number" v-model="dados.senha" />
-          <v-text-field label="Telefone" variant="outlined" type="number" v-model="dados.telefone" />
+          <v-autocomplete variant="outlined" label="Tipo de Pessoa" item-title="descricao" item-value="id" v-model="dados.tipo" :items="[{id: 1, descricao: 'Pessoa Física'}, {id: 2, descricao: 'Pessoa Jurídica'}]" />
+          <v-text-field
+              label="Email"
+              variant="outlined"
+              type="email"
+              v-model="dados.email"
+          />
+
+          <v-text-field
+              label="Senha"
+              variant="outlined"
+              type="password"
+              v-model="dados.senha"
+          />
+          <v-mask-input mask="(##) #####-####" label="Telefone" variant="outlined" v-model="dados.telefone" />
         </div>
+        <v-divider class="my-4" v-if="dados.tipo" />
         <div v-if="dados.tipo === 1" class="d-flex justify-center gap-3 align-center items-center">
-          <v-text-field label="" variant="outlined" type="number" v-model="dados.funcionario_id" />
+          <v-mask-input
+              label="CPF"
+              mask="###.###.###-##"
+              variant="outlined"
+              v-model="dados.fisica.cpf"
+          />
+
+          <v-text-field
+              label="Data de Nascimento"
+              type="date"
+              variant="outlined"
+              v-model="dados.fisica.data_nascimento"
+          />
         </div>
         <div v-if="dados.tipo === 2" class="d-flex justify-center gap-3 align-center items-center">
-          <v-text-field label="" variant="outlined" type="number" v-model="dados.email" />
+          <v-mask-input
+              label="CNPJ"
+              mask="##.###.###/####-##"
+              variant="outlined"
+              v-model="dados.juridica.cnpj"
+          />
+          <v-text-field label="Razão Social" variant="outlined" type="number" v-model="dados.juridica.razao_social" />
         </div>
       </v-card-text>
       <v-card-actions class="justify-space-around">
@@ -30,7 +60,21 @@ import {onMounted, ref} from 'vue'
 import type {Funcionario} from "@/models/Funcionario.ts";
 import {createFuncionario, updateFuncionario} from "@/services/funcionario/funcionario.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
-const dados = ref<Funcionario>({});
+const dados = ref<Funcionario>({
+  tipo: undefined,
+  email: '',
+  senha: '',
+  telefone: '',
+  fisica: {
+    cpf: '',
+    data_nascimento: ''
+  },
+  juridica: {
+    cnpj: '',
+    razao_social: ''
+  },
+  enderecos: []
+})
 const statusFuncionarioList = ref<any[]>([])
 const ambienteList = ref<any[]>([])
 const snackbar = useSnackbarStore()

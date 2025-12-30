@@ -1,5 +1,5 @@
 <template>
-  <div class="w-100 h-100 pr-4">
+  <div class="w-100 h-100">
     <div class="w-100 d-flex gap-2 align-top justify-end">
       <reload-create suf="o" tela="Perfil" :permissoes="permissoes" @reload="getItemsList()" @create="newClient" />
     </div>

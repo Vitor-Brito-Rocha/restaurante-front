@@ -5,10 +5,15 @@
 
       <NavBar v-if="showNavBar" />
 
-      <LateralBar v-if="showLatBar && !isMobile()" class="flex-shrink-0" />
+      <LateralBar v-if="showLatBar && !mobile" class="flex-shrink-0" />
 
-      <v-main class="mt-15 d-flex align-center">
+      <v-main v-if="!mobile" class="mt-15 d-flex align-center">
         <div class="w-100 mr-2 ml-15 h-100">
+          <component :is="Component" />
+        </div>
+      </v-main>
+      <v-main v-else class="d-flex mt-7 justify-center align-content-center align-center">
+        <div class="w-100 justify-center d-flex align-center align-content-center h-100">
           <component :is="Component" />
         </div>
       </v-main>
@@ -31,6 +36,7 @@ import {onItemPronto} from "@/services/system/socket.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import {isMobile} from "@/services/system/system.service.ts";
 const snackbar = useSnackbarStore()
+const mobile = computed(()=> isMobile())
 const isVisible = ref<boolean>(true)
 onMounted(() => {
   document.addEventListener("visibilitychange", () => {
