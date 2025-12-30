@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Login from "@/pages/Auth/Login.vue";
 import Register from "@/pages/Auth/Register.vue";
 import Cliente from "@/pages/Clientes/Cliente.vue";
-import {getToken} from "@/services/auth/auth.service.ts";
+import {getLoggedIn} from "@/services/auth/auth.service.ts";
 import Mesa from "@/pages/Mesas/Mesa.vue";
 import Home from "@/pages/Home/Home.vue";
 import NotFound from "@/pages/Auth/NotFound.vue";
@@ -135,7 +135,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     console.log(to.path)
-    if (to.meta.requiresAuth && !getToken()) {
+    if (to.meta.requiresAuth && !getLoggedIn()) {
         return next("/login");
     }
     next();

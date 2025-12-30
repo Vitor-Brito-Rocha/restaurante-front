@@ -8,7 +8,7 @@ export const register = async (usuario: {}) => {
     const response: {data: {usuario: {id: number, token: string, nome: string, tipo_perfil_id: number}, message: string,}} = await api.post(`${baseUrl}/${resource}/register`, usuario)
     await Promise.all([
         setIdUsuario(response.data.usuario.id),
-        setToken(response.data.usuario.token),
+        setLoggedIn(),
         setNomeUsuario(response.data.usuario.nome)
     ]);
     return response.data
@@ -17,17 +17,16 @@ export const login = async (usuario: {}) => {
     const response: {data: {usuario: {id: number, token: string, nome: string, tipo_perfil_id: number}, message: string,}} =  await api.post(`${baseUrl}/${resource}/login`, usuario)
     await Promise.all([
         setIdUsuario(response.data.usuario.id),
-        setToken(response.data.usuario.token),
+        setLoggedIn(),
         setNomeUsuario(response.data.usuario.nome)
     ]);
     return response.data
 }
-
-export const setToken = async (token: string) => {
-    localStorage.setItem("token", token)
+export const setLoggedIn = async () => {
+    localStorage.setItem("loggedIn", true.toString())
 }
-export const getToken = () => {
-    return localStorage.getItem("token")
+export const getLoggedIn = () => {
+    return localStorage.getItem("loggedIn") === "true"
 }
 export const setIdUsuario = async (idUsuario: number) => {
     localStorage.setItem("idUsuario", String(idUsuario))
@@ -41,13 +40,19 @@ export const setNomeUsuario = async (nome: string) => {
 export const getNomeUsuario = () => {
     return localStorage.getItem("nomeUsuario") || "Usuário"
 }
-export const logout = () => {
-    localStorage.removeItem('token')
-    localStorage.removeItem('idUsuario')
-    localStorage.removeItem('menu')
-    localStorage.removeItem('perfil_id')
-    localStorage.removeItem('nomeUsuario')
-    router.push('/login')
+export const logout = async () => {
+    try {
+        // 1. Avisa o back-end para invalidar o Cookie
+        await api.post(`${baseUrl}/${resource}/logout`);
+    } catch (error) {
+        console.error("Erro ao avisar o servidor sobre o logout", error);
+    } finally {
+        localStorage.removeItem('loggedIn')
+        localStorage.removeItem('idUsuario')
+        localStorage.removeItem('menu')
+        localStorage.removeItem('nomeUsuario')
+        await router.push('/login')
+    }
 }
 export const verifyPermission = (rota: string): {edit: boolean, list: boolean, delete: boolean, create: boolean} => {
     const menu: MenuItem[] = JSON.parse(localStorage.getItem('menu') || '[]');

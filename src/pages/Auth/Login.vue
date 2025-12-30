@@ -69,8 +69,8 @@ const Login = async () => {
       senha: senha.value,
     }
     await login(user)
+    router.push("/inicio")
     snackbar.trigger("Sucesso! Bem-vindo ao sistema Restaurante", "success")
-    await router.push("/inicio")
   }
   catch (error: any) {
     if(error.code != "ERR_NETWORK"){

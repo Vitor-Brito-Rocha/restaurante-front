@@ -1,23 +1,20 @@
 // api.ts
 import axios from "axios";
-import { getToken, logout } from "@/services/auth/auth.service.ts";
+import { logout } from "@/services/auth/auth.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
 const api = axios.create({
     baseURL: baseUrl,
+    withCredentials: true
 });
 
 // Interceptor para sempre anexar o token
 api.interceptors.request.use(
     (config) => {
-        const token = getToken();
-        if (token) {
             config.headers = config.headers || {};
-            config.headers["Authorization"] = `${token}`;
             config.headers["ngrok-skip-browser-warning"] = `69420`;
-        }
         return config;
     },
     (error) => Promise.reject(error)
