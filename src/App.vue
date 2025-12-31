@@ -59,5 +59,17 @@ onMounted(() => {
 })
 
 </script>
-<style scoped>
+<style>
+.downButtonRight{
+  right: 20px;
+  bottom: 20px;
+  position: fixed;
+  z-index: 1003;
+}
+.downButtonLeft{
+  left: 20px;
+  bottom: 20px;
+  position: fixed;
+  z-index: 1003;
+}
 </style>

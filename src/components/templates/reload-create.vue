@@ -4,7 +4,7 @@
     Nov{{props.suf}} {{props.tela}}
     <v-icon icon="mdi-plus"></v-icon>
   </v-btn>
-  <v-btn icon density="default" variant="elevated" color="success" class="downButton" v-if="props.permissoes?.create && isMobile()" @click="$emit('create')">
+  <v-btn icon density="default" variant="elevated" color="success" class="downButtonRight" v-if="props.permissoes?.create && isMobile()" @click="$emit('create')">
     <v-icon icon="mdi-plus"></v-icon>
   </v-btn>
 </template>
@@ -21,11 +21,3 @@ const props = defineProps<{
   suf: string
 }>()
 </script>
-<style scoped>
-.downButton{
-  right: 20px;
-  bottom: 20px;
-  position: fixed;
-  z-index: 1003;
-
-}</style>

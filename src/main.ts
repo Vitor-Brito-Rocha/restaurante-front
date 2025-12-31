@@ -9,12 +9,10 @@ import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 import '@mdi/font/css/materialdesignicons.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-
 // Router
 import router from './router'
 
 // SCSS com variáveis
-import '@/styles/theme-restaurant.css'
 
 import App from './App.vue'
 import {pt} from "vuetify/locale";
@@ -45,6 +43,7 @@ const vuetify = createVuetify({
                     success: "#4CAF50",
                     error: "#F44336",
                     background: "#FFFFFF",
+                    gray_test: "#000000",
                     surface: "#F5F5F5",
 
                 },
@@ -57,6 +56,7 @@ const vuetify = createVuetify({
                     success: "#66BB6A",   // verde escuro
                     error: "#EF5350",     // vermelho escuro
                     background: "#626262",
+                    gray_test: "#9e9494",
                     surface: "#413e3e",
                 },
             },
