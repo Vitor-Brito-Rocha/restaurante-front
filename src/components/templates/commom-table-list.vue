@@ -1,7 +1,5 @@
 <template>
-  <v-pull-to-refresh
-      v-if="isMobile()"
-      @load="load">
+
 
   <v-data-table-server
       height="50dvh"
@@ -63,8 +61,11 @@
       </div>
     </template>
   </v-data-table-server>
+  <v-pull-to-refresh
+      v-if="isMobile()"
+      @load="load">
     <v-container
-        v-else-if="!noContent && isMobile()">
+        v-if="!noContent && isMobile()">
       <v-row dense>
         <v-card
             v-for="item in props.data"
@@ -78,7 +79,7 @@
     backgroundColor: (activeId === item.id && currentOffset < 0) || swipedItemId === item.id ? '#ff5252' : 'transparent',
     touchAction: 'pan-y'
   }"
-            class="swipe-container mb-3 border-opacity-25 w-100"
+            class="swipe-container mb-3 border-2 w-100"
             variant="outlined"
         >
           <div class="delete-action"
@@ -128,7 +129,7 @@
               </v-row>
             </v-card-text>
 
-            <v-card-actions class="bg-grey-darken-3 px-3">
+            <v-card-actions class="bg-grey-darken-4 px-3">
               <v-spacer></v-spacer>
               <v-btn v-if="permissoes.edit" icon="mdi-pencil" size="small" variant="text" @click.stop="$emit('edit-modal', item)"></v-btn>
             </v-card-actions>
@@ -150,7 +151,6 @@ import {isMobile} from "@/services/system/system.service.ts";
 const emit = defineEmits(['verify', 'view-modal', 'edit-modal', 'customize-modal', 'delete-modal']);
 const noContent = ref(false)
 const isFirstEmit = ref(true)
-const mobileItems = ref<any[]>([])
 const mobilePage = ref(1)
 const touchStartX = ref(0);
 const currentOffset = ref(0);
@@ -189,6 +189,7 @@ function closeSwipe() {
 function handleTouchEnd(id: any) {
   // Se o card parou antes de -40px (mais perto do zero), ele fecha
   if (currentOffset.value > -40) {
+    if ('vibrate' in navigator) navigator.vibrate(10); // Vibra de leve ao "travar" aberto
     swipedItemId.value = null;
   }
   // Se parou além de -40px, ele fixa no -80px (aberto)
@@ -199,11 +200,6 @@ function handleTouchEnd(id: any) {
   activeId.value = null;
   currentOffset.value = 0; // Resetamos o offset temporário
 }
-onMounted(()=>{
-  if(isMobile() && props.data.length>0){
-  mobileItems.value.push(...props.data)
-  }
-})
 const props = defineProps<{
   data: any[],
   headers: any[],
