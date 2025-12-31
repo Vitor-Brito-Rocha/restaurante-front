@@ -111,4 +111,47 @@ const toggleTheme = () => {
 .v-list-group__items .v-list-item {
   padding-inline-start: 8px !important;
 }
+:deep(.v-list-item) {
+  margin-bottom: 4px !important;
+  border-radius: 8px !important; /* Arredondado igual para todos */
+  transition: all 0.2s ease;
+  position: relative !important;
+}
+
+:deep(.v-list-item--active) {
+  font-weight: 600 !important;
+  background-color: (90deg, rgba(var(--v-theme-primary), 0.15) 0%, rgba(var(--v-theme-primary), 0.02) 100%) !important;
+}
+:deep(.v-list-group__items){
+  background: rgba(128, 128, 128, 0.13) !important;
+  border-radius: 8px 8px !important;
+}
+:deep(.v-list-item--active::before) {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 60%;
+  width: 4px;
+  background-color: rgb(var(--v-theme-primary));
+  border-radius: 0 4px 4px 0;
+  z-index: 2;
+}
+
+:deep(.v-navigation-drawer:not(.v-navigation-drawer--rail)) .v-list-group__items .v-list-item {
+  padding-inline-start: 20px !important; /* Recuo interno para o ícone */
+  margin-left: 8px !important; /* Pequeno recuo para hierarquia */
+  width: calc(100% - 8px) !important;
+  border-left: none !important; /* Removemos a linha fina antiga */
+}
+
+:deep(.v-navigation-drawer--rail) .v-list-item {
+  margin-left: 0 !important;
+  padding-inline-start: 8px !important;
+}
+
+:deep(.v-list-group__items .v-list-item-title) {
+  font-size: 0.875rem !important;
+}
 </style>

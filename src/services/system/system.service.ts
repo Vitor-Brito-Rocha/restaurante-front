@@ -8,4 +8,5 @@ export const organizeFilters =  (model?: PadraoManyFilters): string=> {
     }
     return model_organized
 }
+export const findAdressByCEP = async (cep: string) => fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
 export const isMobile = (): boolean => window.innerWidth <= 768

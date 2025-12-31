@@ -1,7 +1,7 @@
 import type {Endereco} from "@/models/Endereco.ts";
 
 export interface Funcionario {
-    "funcionario_id"?: number,
+    "id"?: number,
     "ativo"?: boolean,
     "createdAt"?: string,
     "usuario_id"?: number,
@@ -16,16 +16,16 @@ export interface Funcionario {
     "telefone"?: string,
     "senha"?: string,
     "data_nascimento"?: string,
-    "fisica"?: Fisica,
-    "juridica"?: Juridica,
-    "enderecos"?: Endereco[]
-
+    "razao_social"?: string,
+    fisica?: Fisica,
+    juridica?: Juridica,
+    endereco?: Endereco
 }
-type Fisica = {
+export type Fisica = {
     "cpf"?: string,
     "data_nascimento"?: string
 }
-type Juridica = {
+export type Juridica = {
     "cnpj"?: string,
     "razao_social"?: string
 }

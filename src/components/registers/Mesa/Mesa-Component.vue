@@ -4,7 +4,12 @@
         {{dados?.id ? 'Editar Mesa ('+ dados.id +')'  : 'Cadastrar Mesa'}}
     </v-card-title>
       <v-form @submit.prevent="dados?.id ? editTable() : saveTable()">
-    <v-card-text>
+        <v-card-text v-if="isMobile()">
+            <v-text-field label="Capacidade" variant="outlined" type="number" v-model="dados.capacidade" />
+            <v-autocomplete label="Status" v-model="dados.status_id" item-value="id" item-title="descricao" :items="statusMesaList" variant="outlined" />
+            <v-autocomplete label="Ambiente" v-model="dados.ambiente_id" item-value="id" item-title="descricao" :items="ambienteList" variant="outlined" />
+        </v-card-text>
+    <v-card-text v-else>
       <div class="d-flex justify-center gap-3 align-center items-center">
         <v-text-field label="Capacidade" variant="outlined" type="number" v-model="dados.capacidade" />
         <v-autocomplete label="Status" v-model="dados.status_id" item-value="id" item-title="descricao" :items="statusMesaList" variant="outlined" />
@@ -25,6 +30,7 @@ import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
 import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
 import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
+import {isMobile} from "@/services/system/system.service.ts";
 const dados = ref<Mesa>({});
 const statusMesaList = ref<any[]>([])
 const ambienteList = ref<any[]>([])

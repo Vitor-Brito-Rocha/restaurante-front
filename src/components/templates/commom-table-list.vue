@@ -132,6 +132,7 @@
             <v-card-actions class="bg-grey-darken-4 px-3">
               <v-spacer></v-spacer>
               <v-btn v-if="permissoes.edit" icon="mdi-pencil" size="small" variant="text" @click.stop="$emit('edit-modal', item)"></v-btn>
+              <v-btn v-if="permissoes.customize" icon="mdi-cog" size="small" variant="text" @click="$emit('customize-modal', item)"></v-btn>
             </v-card-actions>
           </div>
         </v-card>      </v-row>
