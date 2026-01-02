@@ -10,19 +10,9 @@
       :page="props.page"
       :items-per-page="props.perPage"
       disable-sort
+      @update:options="onUpdateOptions"
       :loading="props.loading"
       :headers="props.headers"
-      @update:options="o => {
-  if (isFirstEmit) {
-    isFirstEmit = false
-    return
-  }
-
-  $emit('verify', {
-    page: o.page,
-    offset: o.itemsPerPage
-  })
-}"
       :items="props.data"
       fixed-header
       class="w-100 h-100 rounded border">
@@ -156,6 +146,16 @@
 import {onMounted, ref} from "vue";
 import {isMobile} from "@/services/system/system.service.ts";
 const emit = defineEmits(['update-status','verify', 'view-modal', 'edit-modal', 'customize-modal', 'delete-modal']);
+const props = defineProps<{
+  data: any[],
+  headers: any[],
+  permissoes: {edit?: boolean, delete?: boolean, customize?: boolean, visualize?: boolean, create?: boolean},
+  totalItems: number,
+  perPage: number,
+  page: number,
+  loading?: boolean,
+}>()
+
 const noContent = ref(false)
 const isFirstEmit = ref(true)
 const mobilePage = ref(1)
@@ -193,6 +193,27 @@ function closeSwipe() {
   activeId.value = null;
   currentOffset.value = 0;
 }
+const lastOptions = ref({
+  page: props.page,
+  itemsPerPage: props.perPage
+})
+function onUpdateOptions(o: any) {
+  const pageChanged = o.page !== lastOptions.value.page
+  const perPageChanged = o.itemsPerPage !== lastOptions.value.itemsPerPage
+
+  if (!pageChanged && !perPageChanged) return
+
+  lastOptions.value = {
+    page: o.page,
+    itemsPerPage: o.itemsPerPage
+  }
+
+  emit('verify', {
+    page: o.page,
+    offset: o.itemsPerPage
+  })
+}
+
 function handleTouchEnd(id: any) {
   // Se o card parou antes de -40px (mais perto do zero), ele fecha
   if (currentOffset.value > -40) {
@@ -207,15 +228,6 @@ function handleTouchEnd(id: any) {
   activeId.value = null;
   currentOffset.value = 0; // Resetamos o offset temporário
 }
-const props = defineProps<{
-  data: any[],
-  headers: any[],
-  permissoes: {edit?: boolean, delete?: boolean, customize?: boolean, visualize?: boolean, create?: boolean},
-  totalItems: number,
-  perPage: number,
-  page: number,
-  loading?: boolean,
-}>()
 
 const swipedItemId = ref(null); // Armazena o ID do item que foi deslizado
 function onlyDigits(value: string) {

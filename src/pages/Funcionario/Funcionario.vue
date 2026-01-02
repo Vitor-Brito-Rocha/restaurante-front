@@ -29,6 +29,7 @@
   import SearchFilter from "@/components/search/SearchFilter.vue";
   import FuncionarioComponent from "@/components/registers/Funcionario/Funcionario-Component.vue";
   import type {Filter} from "@/models/Filter.ts";
+  import {verifyError} from "@/services/system/system.service.ts";
   const snackbar = useSnackbarStore()
   const items = ref<any[]>([]);
   const dialogComponent = ref(false)
@@ -80,9 +81,8 @@
   async function changeStatus(model: {status: boolean, id: number}){
     try {
       await statusFuncionario(model.status, model.id)
-      snackbar.trigger(`Status alterado com sucesso!`, 'success')
     } catch (error: any){
-      snackbar.trigger("Não foi possível alterar o status desse funcionário, tente novamente mais tarde!", 'error')
+      verifyError(error)
     } finally {
       verifyGetFunction()
     }
@@ -116,8 +116,7 @@
       page.value = Number(pagination.paginaAtual);
       snackbar.trigger(`${message}!`, "success", 3000)
     } catch (error: any) {
-      const mensagem = error.message == "Network Error" ? 'Erro de conexão, tente novamente mais tarde': error.message
-      snackbar.trigger(`${mensagem}!`, "error")
+      verifyError(error)
     } finally {
       loadingTable.value = false
     }
