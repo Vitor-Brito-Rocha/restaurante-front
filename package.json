@@ -8,11 +8,13 @@
   },
   "scripts": {
     "dev:prod": "vite --mode prod",
+    "dev:local": "vite --mode localdev",
     "dev:homolog": "vite --mode homolog",
     "dev:dev": "vite --mode dev",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build:homolog": "vite build --mode homolog",
+    "build:local": "vite build --mode localdev",
     "build:dev": "vite build --mode dev",
     "build:prod": "vite build --mode prod",
     "type-check": "vue-tsc --build"
