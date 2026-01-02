@@ -9,9 +9,21 @@ export const useSnackbarStore = defineStore('snackbar', {
         timeout: 3000,
     }),
     actions: {
-        trigger(message: string, color = 'success', timeout = 2400) {
+        trigger(message: string, color = 'success', timeout = 3000) {
             this.message = message
             this.color = color
+            this.timeout = timeout
+            this.show = true
+        },
+        success(message: string, timeout = 3000) {
+            this.message = message
+            this.color = "success"
+            this.timeout = timeout
+            this.show = true
+        },
+        error(message: string, timeout = 3000) {
+            this.message = message
+            this.color = "error"
             this.timeout = timeout
             this.show = true
         },

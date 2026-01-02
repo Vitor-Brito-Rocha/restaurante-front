@@ -75,3 +75,7 @@ export const deleteFuncionario = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };
+export const statusFuncionario = async (status: boolean, id: number): Promise<any> => {
+    const response = await api.post(`${baseUrl}/${resource}/status/${id}`, {status: status});
+    return response.data;
+};

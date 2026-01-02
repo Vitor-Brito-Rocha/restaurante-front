@@ -7,7 +7,7 @@
         <SearchFilter @search-event="search($event)" @reload-table="verifyGetFunction()" :filters="filters"></SearchFilter>
       </div>
       <div class="h-75 w-100">
-        <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :per-page="offset" :totalItems="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
+        <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :per-page="offset" :totalItems="totalItems" :page="page" :loading="loadingTable" @update-status="changeStatus($event)" @verify="verifyGetFunction($event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
       </div>
       <v-dialog v-model="dialogComponent">
         <FuncionarioComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
@@ -20,7 +20,7 @@
   import {
     deleteFuncionario,
     getFuncionarioPaginated,
-    searchFuncionarioPaginated
+    searchFuncionarioPaginated, statusFuncionario
   } from "@/services/funcionario/funcionario.service.ts";
   import {useSnackbarStore} from "@/stores/snackbar.ts";
   import CommomTableList from "@/components/templates/commom-table-list.vue";
@@ -76,6 +76,16 @@
   function newClient(){
     mesaSelected.value = {}
     dialogComponent.value = true
+  }
+  async function changeStatus(model: {status: boolean, id: number}){
+    try {
+      await statusFuncionario(model.status, model.id)
+      snackbar.trigger(`Status alterado com sucesso!`, 'success')
+    } catch (error: any){
+      snackbar.trigger("Não foi possível alterar o status desse funcionário, tente novamente mais tarde!", 'error')
+    } finally {
+      verifyGetFunction()
+    }
   }
   async function search(model: Filter): Promise<void> {
     searchModel.value = model

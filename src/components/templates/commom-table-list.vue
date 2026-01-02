@@ -32,7 +32,12 @@
       {{ item.data_ultima_visita ? item.data_ultima_visita : 'Não Informado' }}
     </template>
     <template v-slot:item.ativo="{ item }">
-      {{ item.ativo ? 'Ativo' : 'Inativo' }}
+      <v-switch
+          hide-details
+          v-model="item.ativo"
+          @update:model-value="$emit('update-status', {status: item.ativo, id: item.id})"
+      :label="item.ativo ? 'Ativo' : 'Inativo'">
+      </v-switch>
     </template>
     <template v-slot:item.documento="{ item }">
       {{ item.documento.length===11 ? formatCpf(item.documento) : item.documento.length===14 ? formatCnpj(item.documento) : 'Não informado' }}
@@ -101,8 +106,9 @@
                 <v-chip
                     v-if="item.hasOwnProperty('ativo')"
                     :color="item.ativo ? 'success' : 'error'"
-                    size="small"
                     label
+                    class="cursor-pointer"
+                    @click.stop="$emit('update-status', {status: item.ativo, id: item.id})"
                 >
                   {{ item.ativo ? 'Ativo' : 'Inativo' }}
                 </v-chip>
@@ -149,7 +155,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
 import {isMobile} from "@/services/system/system.service.ts";
-const emit = defineEmits(['verify', 'view-modal', 'edit-modal', 'customize-modal', 'delete-modal']);
+const emit = defineEmits(['update-status','verify', 'view-modal', 'edit-modal', 'customize-modal', 'delete-modal']);
 const noContent = ref(false)
 const isFirstEmit = ref(true)
 const mobilePage = ref(1)

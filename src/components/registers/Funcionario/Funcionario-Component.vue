@@ -228,7 +228,7 @@ async function editTable(){
     snackbar.trigger("Funcionário atualizada com sucesso!", "success")
     emit('close')
   } catch (error: any) {
-    snackbar.trigger("Não foi possível criar funcionário, tente novamente mais tarde", "error")
+    snackbar.trigger("Não foi possível editar funcionário, tente novamente mais tarde", "error")
   }
 }
 async function findCEP(val: string){
