@@ -23,7 +23,7 @@ import SearchFilter from "@/components/search/SearchFilter.vue";
 import {onMounted, ref} from "vue";
 import {getClientsPaginated, searchClientsPaginated} from "@/services/client/client.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
-import ClienteComponent from "@/components/registers/Clientes/Cliente-Component.vue";
+import ClienteComponent from "@/components/registers/clientes/Cliente-Component.vue";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import type {Filter} from "@/models/Filter.ts";
 const dialogComponent = ref(false)

@@ -1,6 +1,6 @@
 <template>
 <v-expansion-panels elevation="2">
-  <div class="w-100 font-bold text-h6">
+  <div class="w-100 flex-wrap text-wrap font-bold text-h6">
     <v-row class="w-100">
       <v-col class="justify-center d-flex">
         Código
@@ -20,7 +20,7 @@
         <v-col class="justify-center d-flex">{{item.modulo_titulo}}</v-col>
         <v-col class="justify-center d-flex">
 
-          <v-btn :color="item.modulo_permitido ? 'error' : 'success'" @click.stop="item.modulo_permitido ? $emit('disassociateModule', {modulo_id: item.modulo_id}) : $emit('associateModule', {modulo_id: item.modulo_id})">{{item.modulo_permitido ? 'Revogar' : 'Conceder'}}</v-btn>
+          <v-btn :density="isMobile() ? 'compact' : 'default'" :color="item.modulo_permitido ? 'error' : 'success'" @click.stop="item.modulo_permitido ? $emit('disassociateModule', {modulo_id: item.modulo_id}) : $emit('associateModule', {modulo_id: item.modulo_id})">{{item.modulo_permitido ? 'Revogar' : 'Conceder'}}</v-btn>
 
         </v-col>
       </v-row>
@@ -59,7 +59,8 @@
 </v-expansion-panels>
 </template>
 <script setup lang="ts">
-import type {ModuloProfile} from "@/models/Perfil/Perfil.ts";
+import type {ModuloProfile} from "@/models/Tipos/Perfil/Perfil.ts";
+import {isMobile} from "@/services/system/system.service.ts";
 const emit = defineEmits(["updateTable", "associateModule", "disassociateModule", "associateEndpoint", "disassociateEndpoint"]);
 const props = defineProps<{
   data: ModuloProfile[]

@@ -1,16 +1,13 @@
 <template>
   <div class="w-100 h-100">
-    <div class="w-100 d-flex gap-2 align-top justify-end">
-      <reload-create suf="o" tela="Perfil" :permissoes="permissoes" @reload="getItemsList()" @create="newClient" />
+    <div class="w-100 d-flex gap-4 align-top justify-end">
+      <reload-create suf="o" tela="Ambiente" :permissoes="permissoes" @reload="verifyGetFunction()" @create="newClient" />
     </div>
-    <div class="h-75 mt-2 w-100">
-      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="getItemsList" @customizeModal="editPermissions($event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
+    <div class="h-75 mt-2 mb-2 w-100">
+      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarAmbiente($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
-      <PerfilComponent :dados="mesaSelected" @close="() => {dialogComponent = false; getItemsList()}" />
-    </v-dialog>
-    <v-dialog v-model="dialogComponent2">
-      <PerfilPermissoesComponent :dados="mesaSelected" @close="() => {dialogComponent2 = false; getItemsList()}" />
+      <AmbienteComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
     </v-dialog>
   </div>
 </template>
@@ -20,14 +17,13 @@ import { ref, onMounted } from 'vue'
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
-import {deletePerfil, getPerfisPaginated} from "@/services/perfil/perfil.service.ts";
-import PerfilComponent from "@/components/profile/Perfil-Component.vue";
+import AmbienteComponent from "@/components/registers/ambiente/Ambiente-Component.vue";
+import {deleteAmbiente, getAmbientePaginated} from "@/services/ambiente/ambiente.service.ts";
+import {getPermissoesByPerfil} from "@/services/perfil/permissao-perfil.service.ts";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
-import PerfilPermissoesComponent from "@/components/profile/Perfil-Permissoes-Component.vue";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
-const dialogComponent2 = ref(false)
 const loadingTable = ref<boolean>(false)
 const totalItems = ref<number>(0)
 const headers = [
@@ -37,31 +33,27 @@ const headers = [
 ]
 const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
 onMounted(async ()=>{
-  try {
-    permissoes.value.customize = true
-      await getItemsList()
-  } catch (e: any) {
-  }
-
+  await getItemsList()
 })
 const page = ref<number>(1)
 const offset = ref<number>(10)
 const mesaSelected = ref<any>({})
+function verifyGetFunction(pagination?: {page: number, offset: number}) {
+  page.value = pagination?.page ?? page.value
+  offset.value = pagination?.offset ?? offset.value
+  getItemsList()
+}
 function editViewModal(item: any){
   mesaSelected.value = item
   dialogComponent.value = true
 }
-function editPermissions(item: any){
-  mesaSelected.value = item
-  dialogComponent2.value = true
-}
-async function deletarMesa(id: number){
+async function deletarAmbiente(id: number){
   try {
-    await deletePerfil(id)
-    snackbar.trigger("Sucesso ao excluir mesa!", "success")
-    await getItemsList()
+    await deleteAmbiente(id)
+    snackbar.trigger("Sucesso ao excluir ambiente!", "success")
+    verifyGetFunction()
   }catch (error: any){
-    snackbar.trigger("Não foi possível excluir essa mesa, tente novamente mais tarde!", "error")
+    snackbar.trigger("Não foi possível excluir esse ambiente, tente novamente mais tarde!", "error")
 
   }
 }
@@ -73,8 +65,8 @@ async function getItemsList() {
   loadingTable.value = true
 
   try {
-    const {perfis, message, count, pagination} = await getPerfisPaginated(page.value, offset.value)
-    items.value = perfis
+    const {ambientes, message, count, pagination} = await getAmbientePaginated(page.value, offset.value)
+    items.value = ambientes
     totalItems.value = count;
     page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")

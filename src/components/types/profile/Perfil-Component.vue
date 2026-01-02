@@ -18,7 +18,7 @@
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import type {Perfil} from "@/models/Perfil/Perfil.ts";
+import type {Perfil} from "@/models/Tipos/Perfil/Perfil.ts";
 import {createPerfil, updatePerfil} from "@/services/perfil/perfil.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 const dados = ref<Perfil>({});

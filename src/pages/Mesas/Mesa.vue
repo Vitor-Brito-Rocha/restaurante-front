@@ -20,7 +20,7 @@ import { ref, onMounted } from 'vue'
 import {deleteMesa, getMesasPaginated, searchMesasPaginated, getStatusMesasAll, getAmbienteAll} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
-import MesaComponent from "@/components/registers/Mesa/Mesa-Component.vue";
+import MesaComponent from "@/components/mesa/Mesa-Component.vue";
 import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
 import SearchSelectFilters from "@/components/search/SearchSelectFilters.vue";
 import type {FilterSelect} from "@/models/FilterSelect.ts";

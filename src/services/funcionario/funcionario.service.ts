@@ -1,5 +1,5 @@
 import api from "@/api-axios.ts";
-import type {Funcionario} from "@/models/Funcionario.ts";
+import type {Funcionario} from "@/models/Registros/Funcionario.ts";
 import {organizeFilters} from "@/services/system/system.service.ts";
 import type {Filter} from "@/models/Filter.ts";
 

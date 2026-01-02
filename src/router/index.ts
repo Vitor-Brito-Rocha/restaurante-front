@@ -7,11 +7,12 @@ import Mesa from "@/pages/Mesas/Mesa.vue";
 import Home from "@/pages/Home/Home.vue";
 import NotFound from "@/pages/Auth/NotFound.vue";
 import StatusMesa from "@/pages/Status/StatusMesa.vue";
-import Ambiente from "@/pages/Ambiente/Ambiente.vue";
-import Perfil from "@/pages/Perfil/Perfil.vue";
+import Ambiente from "@/pages/Registros/Ambiente/Ambiente.vue";
+import Perfil from "@/pages/Tipos/Perfil/Perfil.vue";
 import StatusPedido from "@/pages/Status/StatusPedido.vue";
 import StatusItemPedido from "@/pages/Status/StatusItemPedido.vue";
-import Funcionario from "@/pages/Funcionario/Funcionario.vue";
+import Funcionario from "@/pages/Registros/Funcionario/Funcionario.vue";
+import Produto from "@/pages/Registros/Produto/Produto.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -69,6 +70,15 @@ const router = createRouter({
       {
           path: "/mesa",
           component: Mesa,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
+          path: "/produto",
+          component: Produto,
           meta: {
               hideLatBar: false,
               hideNavBar: false,

@@ -46,7 +46,6 @@ onMounted(() => {
       snackbar.trigger("Você está online!", "success")
     });
     window.addEventListener("offline", () => {
-      console.log('desconectado')
       snackbar.trigger("Você está offline, verifique sua conexão com a internet!", "error")
     });
   onItemPronto(data => {
@@ -69,7 +68,7 @@ onMounted(() => {
 .downButtonLeft{
   left: 20px;
   bottom: 20px;
-  position: fixed;
-  z-index: 1003;
+  position: fixed !important;
+  z-index: 1003 !important;
 }
 </style>

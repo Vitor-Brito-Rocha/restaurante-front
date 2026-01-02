@@ -98,7 +98,7 @@
                     :color="item.ativo ? 'success' : 'error'"
                     label
                     class="cursor-pointer"
-                    @click.stop="$emit('update-status', {status: item.ativo, id: item.id})"
+                    @click="()=>{item.ativo = !item.ativo; $emit('update-status', {status: item.ativo, id: item.id})}"
                 >
                   {{ item.ativo ? 'Ativo' : 'Inativo' }}
                 </v-chip>
@@ -114,7 +114,7 @@
                   <div class="d-flex py-1 text-body-2" v-if="header.key !== 'actions' && header.key !== 'ativo'">
                     <span class="text-medium-emphasis mr-2" style="min-width: 80px;">{{ header.title }}:</span>
                     <span class="text-high-emphasis">
-              <template v-if="header.key === 'documento'">{{ formatCnpj(item[header.key]) }}</template>
+              <template v-if="header.key === 'documento'">{{ item[header.key].length == 14 ? formatCnpj(item[header.key]) : item[header.key].length == 11 ? formatCpf(item[header.key]) : item[header.key] }}</template>
               <template v-else-if="header.key === 'updatedAt'">
                 {{ item.updatedAt.split('T')[0].split('-').reverse().join('/') + ' ' + item.updatedAt.split('T')[1].split('.')[0] }}
               </template>
@@ -360,19 +360,6 @@ function verifyAge(dataNascimento: string | Date): number {
   transform: translateX(-80px); /* 80px é o tamanho do botão que vai aparecer */
 }
 
-/* Estilo do botão que fica atrás */
-.delete-action {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  cursor: pointer;
-}
 .swipe-container {
   position: relative;
   overflow: hidden;

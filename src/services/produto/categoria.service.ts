@@ -1,25 +1,25 @@
 import api from "@/api-axios.ts";
-import type {Ambiente} from "@/models/Registros/Ambiente.ts";
+import type {Categoria} from "@/models/Tipos/Categoria.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-const resource = "ambiente";
+const resource = "categoria";
 
 /**
  * Lista paginada
  */
-export const getAmbienteAll = async (): Promise<{
-    ambientes: any[],
+export const getCategoriaAll = async (): Promise<{
+    produtos: any[],
     count: number,
     message: string
 }> => {
     const response = await api.get(`${baseUrl}/${resource}`);
     return response.data;
 };
-export const getAmbientePaginated = async (
+export const getCategoriaPaginated = async (
     page: number = 1,
     limit: number = 10
 ): Promise<{
-    ambientes: any[],
+    produtos: any[],
     pagination: { atualPagina: number },
     count: number,
     message: string
@@ -31,12 +31,12 @@ export const getAmbientePaginated = async (
 /**
  * Busca paginada
  */
-export const searchAmbientePaginated = async (
+export const searchCategoriaPaginated = async (
     model?: { type: string, value: string },
     page: number = 1,
     limit: number = 10
 ): Promise<{
-    mesas: any[],
+    categorias: any[],
     pagination: { atualPagina: number },
     count: number,
     message: string
@@ -48,25 +48,25 @@ export const searchAmbientePaginated = async (
 };
 
 /**
- * Criar mesa
+ * Criar categoria
  */
-export const createAmbiente = async (mesa: Ambiente): Promise<any> => {
-    const response = await api.post(`${baseUrl}/${resource}`, mesa);
+export const createCategoria = async (categoria: Categoria): Promise<any> => {
+    const response = await api.post(`${baseUrl}/${resource}`, categoria);
     return response.data;
 };
 
 /**
- * Atualizar mesa
+ * Atualizar categoria
  */
-export const updateAmbiente = async (id: number, mesa: Ambiente): Promise<any> => {
-    const response = await api.patch(`${baseUrl}/${resource}/${id}`, mesa);
+export const updateCategoria = async (id: number, categoria: Categoria): Promise<any> => {
+    const response = await api.patch(`${baseUrl}/${resource}/${id}`, categoria);
     return response.data;
 };
 
 /**
- * Deletar mesa
+ * Deletar categoria
  */
-export const deleteAmbiente = async (id: number): Promise<any> => {
+export const deleteCategoria = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };

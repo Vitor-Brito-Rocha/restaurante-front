@@ -1,5 +1,5 @@
 import api from "@/api-axios.ts";
-import type {Perfil} from "@/models/Perfil/Perfil.ts";
+import type {Perfil} from "@/models/Tipos/Perfil/Perfil.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const resource = "permissao-perfil";

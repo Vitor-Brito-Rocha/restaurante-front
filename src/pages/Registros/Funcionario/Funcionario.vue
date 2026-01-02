@@ -27,7 +27,7 @@
   import ReloadCreate from "@/components/templates/reload-create.vue";
   import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
   import SearchFilter from "@/components/search/SearchFilter.vue";
-  import FuncionarioComponent from "@/components/registers/Funcionario/Funcionario-Component.vue";
+  import FuncionarioComponent from "@/components/registers/funcionario/Funcionario-Component.vue";
   import type {Filter} from "@/models/Filter.ts";
   import {verifyError} from "@/services/system/system.service.ts";
   const snackbar = useSnackbarStore()

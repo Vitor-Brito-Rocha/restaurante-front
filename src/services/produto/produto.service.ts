@@ -1,25 +1,25 @@
 import api from "@/api-axios.ts";
-import type {Ambiente} from "@/models/Registros/Ambiente.ts";
+import type {Produto} from "@/models/Registros/Produto.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
-const resource = "ambiente";
+const resource = "produto";
 
 /**
  * Lista paginada
  */
-export const getAmbienteAll = async (): Promise<{
-    ambientes: any[],
+export const getProdutoAll = async (): Promise<{
+    produtos: any[],
     count: number,
     message: string
 }> => {
     const response = await api.get(`${baseUrl}/${resource}`);
     return response.data;
 };
-export const getAmbientePaginated = async (
+export const getProdutoPaginated = async (
     page: number = 1,
     limit: number = 10
 ): Promise<{
-    ambientes: any[],
+    produtos: any[],
     pagination: { atualPagina: number },
     count: number,
     message: string
@@ -31,7 +31,7 @@ export const getAmbientePaginated = async (
 /**
  * Busca paginada
  */
-export const searchAmbientePaginated = async (
+export const searchProdutoPaginated = async (
     model?: { type: string, value: string },
     page: number = 1,
     limit: number = 10
@@ -50,7 +50,7 @@ export const searchAmbientePaginated = async (
 /**
  * Criar mesa
  */
-export const createAmbiente = async (mesa: Ambiente): Promise<any> => {
+export const createProduto = async (mesa: Produto): Promise<any> => {
     const response = await api.post(`${baseUrl}/${resource}`, mesa);
     return response.data;
 };
@@ -58,7 +58,7 @@ export const createAmbiente = async (mesa: Ambiente): Promise<any> => {
 /**
  * Atualizar mesa
  */
-export const updateAmbiente = async (id: number, mesa: Ambiente): Promise<any> => {
+export const updateProduto = async (id: number, mesa: Produto): Promise<any> => {
     const response = await api.patch(`${baseUrl}/${resource}/${id}`, mesa);
     return response.data;
 };
@@ -66,7 +66,7 @@ export const updateAmbiente = async (id: number, mesa: Ambiente): Promise<any> =
 /**
  * Deletar mesa
  */
-export const deleteAmbiente = async (id: number): Promise<any> => {
+export const deleteProduto = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };

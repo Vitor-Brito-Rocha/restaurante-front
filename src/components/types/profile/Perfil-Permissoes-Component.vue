@@ -1,9 +1,9 @@
 <template>
   <v-card>
-    <v-card-title class="d-flex justify-center align-center w-100">
+    <v-card-title class="d-flex text-wrap justify-center align-center w-100">
         {{dados?.id ? 'Editar Permissões do Perfil ('+ dados.descricao +')'  : ''}}
     </v-card-title>
-    <v-card-text  class="overflow-y-scroll">
+    <v-card-text class="overflow-y-scroll">
       <PermissoesTable @associate-endpoint="cadastrarAcaoAoModulo($event)" @associate-module="cadastrarModulo($event)" @disassociate-endpoint="removerAcaoAoModulo($event)" @disassociate-module="removerModulo($event)" :key="pKey" :data="permissoes" />
     </v-card-text>
     <v-card-actions class="justify-space-around">
@@ -13,10 +13,10 @@
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import type {ModuloProfile, Perfil} from "@/models/Perfil/Perfil.ts";
+import type {ModuloProfile, Perfil} from "@/models/Tipos/Perfil/Perfil.ts";
 import {createPerfil, updatePerfil} from "@/services/perfil/perfil.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
-import PermissoesTable from "@/components/profile/Permissoes-Table.vue";
+import PermissoesTable from "@/components/types/profile/Permissoes-Table.vue";
 import {
   associateAction, associateModule,
   disassociateAction, disassociateModule,

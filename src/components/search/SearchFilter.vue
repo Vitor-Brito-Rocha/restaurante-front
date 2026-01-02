@@ -32,49 +32,51 @@
         ></v-icon>
       </template>
     </v-text-field>
-    <v-btn
-        v-if="isMobile()"
-        icon="mdi-filter-variant"
-        class="downButtonLeft"
-        @click="sheet = true"
-    ></v-btn>
+  </v-card>
+  <v-btn
+      v-if="isMobile()"
+      density="default"
+      variant="elevated"
+      icon="mdi-filter-variant"
+      class="downButtonLeft"
+      @click="sheet = true"
+  ></v-btn>
 
-    <v-bottom-sheet content-class="shadow-none" class="bg-transparent shadow-none border-0" v-model="sheet">
-      <v-card
-          @touchstart="handleSheetTouchStart"
-          @touchmove="handleSheetTouchMove"
-          @touchend="handleSheetTouchEnd"
-          :style="{
+  <v-bottom-sheet content-class="shadow-none" class="bg-transparent shadow-none border-0" v-model="sheet">
+    <v-card
+        @touchstart="handleSheetTouchStart"
+        @touchmove="handleSheetTouchMove"
+        @touchend="handleSheetTouchEnd"
+        :style="{
       transform: `translateY(${sheetOffset}px)`,
       transition: isDraggingSheet ? 'none' : 'transform 0.3s cubic-bezier(0.25, 0.8, 0.5, 1)'
     }"
-          class="rounded-t-xl pb-6 shadow-none border-0"
-      >
-        <div class="d-flex barraArrastar justify-center pa-4 cursor-pointer">
-          <div
-              style="width: 40px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 10px;"
-          ></div>
-        </div>
-        <v-card-title class="text-center font-weight-bold">Filtrar por</v-card-title>
+        class="rounded-t-xl pb-6 shadow-none border-0"
+    >
+      <div class="d-flex barraArrastar justify-center pa-4 cursor-pointer">
+        <div
+            style="width: 40px; height: 5px; background: rgba(0,0,0,0.2); border-radius: 10px;"
+        ></div>
+      </div>
+      <v-card-title class="text-center font-weight-bold">Filtrar por</v-card-title>
 
-        <v-list class="pa-2">
-          <v-list-item
-              v-for="filter in props.filters"
-              :key="filter.id"
-              :active="selectedFilter === filter.id"
-              variant="tonal"
-              class="mb-2 rounded-lg"
-              @click="selectFilter(filter.id)"
-          >
-            <template v-slot:prepend>
-              <v-icon :icon="selectedFilter === filter.id ? 'mdi-check-circle' : 'mdi-circle-outline'"></v-icon>
-            </template>
-            <v-list-item-title>{{ filter.descricao }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-card>
-    </v-bottom-sheet>
-  </v-card>
+      <v-list class="pa-2">
+        <v-list-item
+            v-for="filter in props.filters"
+            :key="filter.id"
+            :active="selectedFilter === filter.id"
+            variant="tonal"
+            class="mb-2 rounded-lg"
+            @click="selectFilter(filter.id)"
+        >
+          <template v-slot:prepend>
+            <v-icon :icon="selectedFilter === filter.id ? 'mdi-check-circle' : 'mdi-circle-outline'"></v-icon>
+          </template>
+          <v-list-item-title>{{ filter.descricao }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-card>
+  </v-bottom-sheet>
 </template>
 
 <script setup lang="ts">
@@ -113,6 +115,9 @@ function handleSheetTouchMove(e: TouchEvent) {
   // Só permite arrastar para baixo (positivo)
   if (deltaY > 0) {
     sheetOffset.value = deltaY;
+  }
+  if(deltaY > 180){
+    sheet.value = false
   }
 }
 

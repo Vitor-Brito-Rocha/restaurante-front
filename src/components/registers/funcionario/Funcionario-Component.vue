@@ -149,7 +149,7 @@
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import type {Fisica, Funcionario, Juridica} from "@/models/Funcionario.ts";
+import type {Fisica, Funcionario, Juridica} from "@/models/Registros/Funcionario.ts";
 import {createFuncionario, updateFuncionario} from "@/services/funcionario/funcionario.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import {findAdressByCEP, isMobile} from "@/services/system/system.service.ts";
