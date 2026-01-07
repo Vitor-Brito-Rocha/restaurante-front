@@ -20,10 +20,11 @@ import { ref, onMounted } from 'vue'
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
-import {deletePerfil, getPerfisPaginated} from "@/services/perfil/perfil.service.ts";
+import {deletePerfil, getPerfisPaginated} from "@/services/tipo/perfil/perfil.service.ts";
 import PerfilComponent from "@/components/types/profile/Perfil-Component.vue";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
 import PerfilPermissoesComponent from "@/components/types/profile/Perfil-Permissoes-Component.vue";
+import type Permissao from "@/models/Permissao.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -35,7 +36,7 @@ const headers = [
   {title: 'Descrição', key: 'descricao'},
   {title: 'Ações', key: 'actions'},
 ]
-const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
+const permissoes = ref<Permissao>(verifyPermission(getRoute()))
 onMounted(async ()=>{
   try {
     permissoes.value.customize = true

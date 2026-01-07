@@ -18,9 +18,9 @@ import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import AmbienteComponent from "@/components/registers/ambiente/Ambiente-Component.vue";
-import {deleteAmbiente, getAmbientePaginated} from "@/services/ambiente/ambiente.service.ts";
-import {getPermissoesByPerfil} from "@/services/perfil/permissao-perfil.service.ts";
+import {deleteAmbiente, getAmbientePaginated} from "@/services/cadastro/ambiente/ambiente.service.ts";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
+import type Permissao from "@/models/Permissao.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -31,7 +31,7 @@ const headers = [
   {title: 'Descrição', key: 'descricao'},
   {title: 'Ações', key: 'actions'},
 ]
-const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
+const permissoes = ref<Permissao>(verifyPermission(getRoute()))
 onMounted(async ()=>{
   await getItemsList()
 })

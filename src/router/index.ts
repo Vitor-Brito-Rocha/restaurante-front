@@ -13,6 +13,7 @@ import StatusPedido from "@/pages/Status/StatusPedido.vue";
 import StatusItemPedido from "@/pages/Status/StatusItemPedido.vue";
 import Funcionario from "@/pages/Registros/Funcionario/Funcionario.vue";
 import Produto from "@/pages/Registros/Produto/Produto.vue";
+import Categoria from "@/pages/Tipos/Categoria/Categoria.vue";
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -86,6 +87,15 @@ const router = createRouter({
           },
       },
       {
+          path: "/categoria",
+          component: Categoria,
+          meta: {
+              hideLatBar: false,
+              hideNavBar: false,
+              requiresAuth: true
+          },
+      },
+      {
           path: "/funcionario",
           component: Funcionario,
           meta: {
@@ -144,7 +154,6 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-    console.log(to.path)
     if (to.meta.requiresAuth && !getLoggedIn()) {
         return next("/login");
     }

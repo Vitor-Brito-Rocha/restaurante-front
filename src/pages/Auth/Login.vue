@@ -32,8 +32,8 @@
             </v-btn>
           </v-card-text>
           <div class="text-subtitle-2">
-            Ainda não tem conta?
-            <router-link to="/register">Registre-se aqui</router-link>
+            Esqueceu a sua senha?
+            <router-link to="/register">Clique aqui</router-link>
           </div>
         </div>
       </v-form>

@@ -14,7 +14,7 @@ export const register = async (usuario: {}) => {
     return response.data
 }
 export const login = async (usuario: {}) => {
-    const response: {data: {usuario: {id: number, token: string, nome: string, tipo_perfil_id: number}, message: string,}} =  await api.post(`${baseUrl}/${resource}/login`, usuario)
+    const response: {data: {usuario: {id: number, nome: string, tipo_perfil_id: number}, message: string,}} =  await api.post(`${baseUrl}/${resource}/login`, usuario)
     await Promise.all([
         setIdUsuario(response.data.usuario.id),
         setLoggedIn(),

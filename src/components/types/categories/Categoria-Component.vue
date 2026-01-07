@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="d-flex justify-center align-center w-100">
-        {{dados?.id ? 'Editar Perfil ('+ dados.descricao +')'  : 'Cadastrar Perfil'}}
+        {{dados?.id ? 'Editar Categoria ('+ dados.id +')'  : 'Cadastrar Categoria'}}
     </v-card-title>
       <v-form @submit.prevent="dados?.id ? editTable() : saveTable()">
     <v-card-text>
@@ -18,14 +18,14 @@
 </template>
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
-import type {Perfil} from "@/models/Tipos/Perfil/Perfil.ts";
-import {createPerfil, updatePerfil} from "@/services/tipo/perfil/perfil.service.ts";
+import {createCategoria, updateCategoria} from "@/services/tipo/categoria/categoria.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
-const dados = ref<Perfil>({});
+import type {Categoria} from "@/models/Tipos/Categoria.ts";
+const dados = ref<Categoria>({});
 const snackbar = useSnackbarStore()
 const emit = defineEmits(['close'])
 const props = defineProps<{
-  dados?: Perfil;
+  dados?: Categoria;
 }>()
 onMounted(() => {
   if(props.dados?.id){
@@ -34,21 +34,21 @@ onMounted(() => {
 })
 async function saveTable(){
   try{
-    await createPerfil(dados.value)
-    snackbar.trigger("Perfil criada com sucesso!", "success")
+    console.log(dados.value)
+    await createCategoria(dados.value)
+    snackbar.trigger("Categoria criada com sucesso!", "success")
     emit('close')
   } catch (error: any) {
-    snackbar.trigger("Não foi possível criar mesa, tente novamente mais tarde", "error")
+    snackbar.trigger("Não foi possível criar categoria, tente novamente mais tarde", "error")
   }
 }
 async function editTable(){
   try{
-    await updatePerfil(dados.value.id!, dados.value)
-    snackbar.trigger("Perfil atualizada com sucesso!", "success")
+    await updateCategoria(dados.value.id!, dados.value)
+    snackbar.trigger("Categoria atualizada com sucesso!", "success")
     emit('close')
   } catch (error: any) {
-    console.log(error)
-    snackbar.trigger("Não foi possível editar mesa, tente novamente mais tarde", "error")
+    snackbar.trigger("Não foi possível criar categoria, tente novamente mais tarde", "error")
   }
 }
 </script>

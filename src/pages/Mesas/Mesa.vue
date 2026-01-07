@@ -3,11 +3,14 @@
     <div class="w-100 d-flex gap-4 align-top justify-end">
       <reload-create suf="a" tela="Mesa" @reload="resetFilters()" :permissoes="permissoes" @create="newClient" />
     </div>
-    <div class="mt-2 mb-2 w-100">
-          <search-select-filters :key="searchKey" @update="verifyGetFunction($event, {page, offset})" :data="filtersModel" />
+    <div class="mt-2 d-flex justify-space-around mb-2 w-100">
+          <search-select-filters class="w-75" :key="searchKey" @update="verifyGetFunction($event, {page, offset})" :data="filtersModel" />
+
+      <v-btn v-tooltip="'Alternar visão'" v-if="filters?.some(k => k.type === 'ambiente_id')" icon="mdi-swap-vertical" @click="viewMatriz = !viewMatriz" />
     </div>
     <div class="h-75 w-100">
-      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
+      <CommomTableList v-if="!viewMatriz" :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
+      <MatrizMesaComponent v-else :data="items" :permissoes="permissoes" />
     </div>
     <v-dialog v-model="dialogComponent">
       <MesaComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
@@ -26,10 +29,13 @@ import SearchSelectFilters from "@/components/search/SearchSelectFilters.vue";
 import type {FilterSelect} from "@/models/FilterSelect.ts";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
+import MatrizMesaComponent from "@/components/mesa/Matriz-Mesa-Component.vue";
+import type Permissao from "@/models/Permissao.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
 const loadingTable = ref<boolean>(false)
+const viewMatriz = ref(false)
 const totalItems = ref<number>(0)
 const headers = [
   {title: 'Código - Número', key: 'id'},
@@ -39,7 +45,7 @@ const headers = [
   {title: 'Última Atualização', key: 'updatedAt'},
   {title: 'Ações', key: 'actions'},
 ]
-const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
+const permissoes = ref<Permissao>(verifyPermission(getRoute()))
 onMounted(async ()=>{
   try {
     const [statusRes, ambienteRes] = await Promise.all([
@@ -77,7 +83,6 @@ const filtersModel = ref<FilterSelect[]>([
 ])
 const searchKey = ref<number>(1)
 function resetFilters(){
-  console.log(permissoes)
   filters.value = null
   page.value = 1
   offset.value = 10

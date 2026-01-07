@@ -1,25 +1,26 @@
 <template>
   <div class="w-100 h-100">
     <div class="w-100 d-flex gap-4 align-top justify-end">
-      <reload-create suf="o" tela="Status" :permissoes="permissoes"  @reload="verifyGetFunction()" @create="newClient" />
+      <reload-create suf="a" tela="Categoria" :permissoes="permissoes"  @reload="verifyGetFunction()" @create="newClient" />
     </div>
     <div class="h-75 mt-2 mb-2 w-100">
-      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
+      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarCategoria($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
-      <StatusMesaComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
+      <CategoriaComponent :dados="categoriaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
     </v-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import {deleteStatusMesa, getStatusMesasPaginated} from "@/services/mesa/status-mesa.service.ts";
+import {getCategoriasPaginated, deleteCategoria} from "@/services/tipo/categoria/categoria.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
-import StatusMesaComponent from "@/components/status/StatusMesa/Status-Mesa-Component.vue";
-import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
+import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
+import CategoriaComponent from "@/components/types/categories/Categoria-Component.vue";
+import type Permissao from "@/models/Permissao.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -33,39 +34,39 @@ const headers = [
 onMounted(()=>{
   getItemsList()
 })
-const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
+const permissoes = ref<Permissao>(verifyPermission(getRoute()))
 const page = ref<number>(1)
 const offset = ref<number>(10)
-const mesaSelected = ref<any>({})
+const categoriaSelected = ref<any>({})
 function verifyGetFunction(pagination?: {page: number, offset: number}) {
   page.value = pagination?.page ?? page.value
   offset.value = pagination?.offset ?? offset.value
   getItemsList()
 }
 function editViewModal(item: any){
-  mesaSelected.value = item
+  categoriaSelected.value = item
   dialogComponent.value = true
 }
-async function deletarMesa(id: number){
+async function deletarCategoria(id: number){
   try {
-    await deleteStatusMesa(id)
-    snackbar.trigger("Sucesso ao excluir mesa!", "success")
+    await deleteCategoria(id)
+    snackbar.trigger("Sucesso ao excluir categoria!", "success")
     verifyGetFunction()
   }catch (error: any){
-    snackbar.trigger("Não foi possível excluir essa mesa, tente novamente mais tarde!", "error")
+    snackbar.trigger("Não foi possível excluir essa categoria, tente novamente mais tarde!", "error")
 
   }
 }
 function newClient(){
-  mesaSelected.value = {}
+  categoriaSelected.value = {}
   dialogComponent.value = true
 }
 async function getItemsList() {
   loadingTable.value = true
 
   try {
-    const {statusMesas, message, count, pagination} = await getStatusMesasPaginated(page.value, offset.value)
-    items.value = statusMesas
+    const {categorias, message, count, pagination} = await getCategoriasPaginated(page.value, offset.value)
+    items.value = categorias
     totalItems.value = count;
     page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")

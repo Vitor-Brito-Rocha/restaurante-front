@@ -27,7 +27,7 @@
 import {onMounted, ref} from 'vue'
 import type {Mesa} from "@/models/Mesa.ts";
 import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
-import {getAmbienteAll} from "@/services/ambiente/ambiente.service.ts";
+import {getAmbienteAll} from "@/services/cadastro/ambiente/ambiente.service.ts";
 import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import {isMobile} from "@/services/system/system.service.ts";
@@ -40,10 +40,12 @@ const props = defineProps<{
   dados?: Mesa;
 }>()
 onMounted(async () => {
-  await Promise.all([
-    getStatusMesasAll().then(a =>{statusMesaList.value = a.statusMesas}),
-    getAmbienteAll().then(a =>{ambienteList.value = a.ambientes})
+  const [status, ambiente] = await Promise.all([
+    getStatusMesasAll(),
+    getAmbienteAll()
   ])
+  statusMesaList.value = status?.statusMesas ?? []
+  ambienteList.value = ambiente?.ambientes ?? []
   if(props.dados?.id){
   dados.value = props.dados;
   }

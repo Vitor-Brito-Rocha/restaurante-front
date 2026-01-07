@@ -20,6 +20,7 @@ import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
 import StatusMesaComponent from "@/components/status/StatusMesa/Status-Mesa-Component.vue";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
+import type Permissao from "@/models/Permissao.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -33,7 +34,7 @@ const headers = [
 onMounted(()=>{
   getItemsList()
 })
-const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
+const permissoes = ref<Permissao>(verifyPermission(getRoute()))
 const page = ref<number>(1)
 const offset = ref<number>(10)
 const mesaSelected = ref<any>({})

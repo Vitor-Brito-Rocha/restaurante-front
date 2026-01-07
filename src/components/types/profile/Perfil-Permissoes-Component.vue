@@ -14,14 +14,13 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
 import type {ModuloProfile, Perfil} from "@/models/Tipos/Perfil/Perfil.ts";
-import {createPerfil, updatePerfil} from "@/services/perfil/perfil.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import PermissoesTable from "@/components/types/profile/Permissoes-Table.vue";
 import {
   associateAction, associateModule,
   disassociateAction, disassociateModule,
   getPermissoesByPerfil
-} from "@/services/perfil/permissao-perfil.service.ts";
+} from "@/services/tipo/perfil/permissao-perfil.service.ts";
 const dados = ref<Perfil>({});
 const permissoes = ref<ModuloProfile[]>([])
 const snackbar = useSnackbarStore()

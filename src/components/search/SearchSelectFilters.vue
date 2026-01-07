@@ -1,4 +1,4 @@
-<template> <div class="w-100 ga-5 px-4 d-flex justify-space-evenly align-center items-center align-content-center"> <v-autocomplete density="default" v-for="item in localData" :key="item.key" :label="item.label" v-model="item.value" item-value="id" item-title="descricao" maxWidth="400" :items="item.items" variant="outlined" @update:modelValue="val => onChange(item.key, val)"></v-autocomplete> </div></template>
+<template> <div class="ga-5 px-4 d-flex justify-space-evenly align-center items-center align-content-center"> <v-autocomplete density="default" v-for="item in localData" :key="item.key" :label="item.label" v-model="item.value" item-value="id" item-title="descricao" maxWidth="400" :items="item.items" variant="outlined" @update:modelValue="val => onChange(item.key, val)"></v-autocomplete> </div></template>
 
 <script setup lang="ts">
 import type { FilterSelect } from "@/models/FilterSelect.ts"

@@ -1,0 +1,1 @@
+export default interface Permissao {edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}

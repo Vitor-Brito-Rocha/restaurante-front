@@ -9,10 +9,10 @@ export const organizeFilters =  (model?: PadraoManyFilters): string=> {
     }
     return model_organized
 }
-export const findAdressByCEP = async (cep: string) => fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
+export const findAdressByCEP = async (cep: string) => await fetch(`https://viacep.com.br/ws/${cep}/json/`).then(res => res.json())
 export const isMobile = (): boolean => window.innerWidth <= 768
 export const verifyError = (error: any) =>{
     const mensagem = error.message == "Network Error" ? 'Erro de conexão, tente novamente mais tarde': error.message
-    useSnackbarStore().error(`${mensagem}!`)
+    useSnackbarStore().error(`${error.error.message ? error.error.message : mensagem}!`)
     return
 }

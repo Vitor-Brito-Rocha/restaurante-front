@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue'
 import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
-import {createAmbiente, getAmbienteAll, updateAmbiente} from "@/services/ambiente/ambiente.service.ts";
+import {createAmbiente, getAmbienteAll, updateAmbiente} from "@/services/cadastro/ambiente/ambiente.service.ts";
 import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import type {Ambiente} from "@/models/Registros/Ambiente.ts";

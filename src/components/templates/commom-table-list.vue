@@ -59,6 +59,7 @@
   <v-pull-to-refresh
       v-if="isMobile()"
       @load="load">
+    <v-progress-linear indeterminate v-if="isMobile() && loading" />
     <v-container
         v-if="!noContent && isMobile()">
       <v-row dense>
@@ -149,7 +150,7 @@ const emit = defineEmits(['update-status','verify', 'view-modal', 'edit-modal', 
 const props = defineProps<{
   data: any[],
   headers: any[],
-  permissoes: {edit?: boolean, delete?: boolean, customize?: boolean, visualize?: boolean, create?: boolean},
+  permissoes: Permissao,
   totalItems: number,
   perPage: number,
   page: number,
@@ -279,6 +280,7 @@ const load = async ({ done }: any) => {
   })
 }
 import { watch } from 'vue'
+import type Permissao from "@/models/Permissao.ts";
 
 watch(
     () => props.data,

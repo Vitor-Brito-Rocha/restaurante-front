@@ -21,7 +21,7 @@
     deleteFuncionario,
     getFuncionarioPaginated,
     searchFuncionarioPaginated, statusFuncionario
-  } from "@/services/funcionario/funcionario.service.ts";
+  } from "@/services/cadastro/funcionario/funcionario.service.ts";
   import {useSnackbarStore} from "@/stores/snackbar.ts";
   import CommomTableList from "@/components/templates/commom-table-list.vue";
   import ReloadCreate from "@/components/templates/reload-create.vue";
@@ -30,6 +30,7 @@
   import FuncionarioComponent from "@/components/registers/funcionario/Funcionario-Component.vue";
   import type {Filter} from "@/models/Filter.ts";
   import {verifyError} from "@/services/system/system.service.ts";
+  import type Permissao from "@/models/Permissao.ts";
   const snackbar = useSnackbarStore()
   const items = ref<any[]>([]);
   const dialogComponent = ref(false)
@@ -44,7 +45,7 @@
     {title: 'Ativo', key: 'ativo'},
     {title: 'Ações', key: 'actions'},
   ]
-  const permissoes = ref<{edit?: boolean, list?: boolean, delete?: boolean, create?: boolean, customize?: boolean}>(verifyPermission(getRoute()))
+  const permissoes = ref<Permissao>(verifyPermission(getRoute()))
   onMounted(()=>{
         getItemsList()
   })
