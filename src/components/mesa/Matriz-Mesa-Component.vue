@@ -5,20 +5,20 @@
         class="grid-container"
         :style="{
         backgroundColor: vuetifyTheme.current.value.dark ? '#413e3e' : '#F5F5F5',
-        gridTemplateColumns: `repeat(${ambiente.cols}, 1fr)`,
-        gridTemplateRows: `repeat(${ambiente.rows}, 1fr)`
+        gridTemplateColumns: `repeat(${ambiente.linhas}, 1fr)`,
+        gridTemplateRows: `repeat(${ambiente.colunas}, 1fr)`
       }"
         @pointermove="onPointerMove"
         @pointerup="onPointerUp"
         @pointercancel="onPointerUp"
     >
-      <template v-for="(linha, r) in grid" :key="'row-'+r">
+      <template v-for="(linha, r) in grid" :key="'linha-'+r">
         <div
             v-for="(celula, c) in linha"
             :key="c"
             class="celula"
-            :data-row="r"
-            :data-col="c"
+            :data-linha="r"
+            :data-coluna="c"
         >
           <div
               v-if="celula"
@@ -53,23 +53,27 @@
       </div>
     </div>
   </div>
+  <v-dialog v-model="dialogView">
+    <MesaStatus :dados="mesaSelected" @close="dialogView = false" />
+  </v-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, ref, reactive } from 'vue';
+import {computed, ref, reactive, onBeforeMount} from 'vue';
 import { useTheme } from "vuetify";
+import MesaStatus from "@/components/mesa/Mesa-Status.vue";
+import type {Mesa} from "@/models/Mesa.ts";
 
 const vuetifyTheme = useTheme();
 const gridRef = ref<HTMLElement | null>(null);
-const ambiente = { id: 1, descricao: 'Sala 1', rows: 10, cols: 7 };
-
-const mesas = ref([
-  { id: 3, capacidade: 4, row: 2, col: 1, status_descricao: "Livre" },
-  { id: 23, capacidade: 6, row: 3, col: 1, status_descricao: "Livre" },
-  { id: 4, capacidade: 4, row: 1, col: 1, status_descricao: "Livre" },
-  { id: 25, capacidade: 6, row: 1, col: 2, status_descricao: "Livre" }
-]);
-
+const ambiente = { id: 1, descricao: 'Sala 1', linhas: 4, colunas: 5 };
+const mesas = ref<Mesa[]>([])
+const props = defineProps<{
+  data: Mesa[]
+}>()
+onBeforeMount(()=>{
+  mesas.value = props.data
+})
 const mesaSendoArrastada = ref<any>(null);
 const mesaComShake = ref<number | null>(null);
 const dragVisual = reactive({ active: false, x: 0, y: 0 });
@@ -79,10 +83,10 @@ let timerLongPress: any = null;
 
 const grid = computed(() => {
   const matriz = [];
-  for (let r = 0; r < ambiente.rows; r++) {
+  for (let r = 0; r < ambiente.linhas; r++) {
     const linha = [];
-    for (let c = 0; c < ambiente.cols; c++) {
-      const mesa = mesas.value.find(m => m.row === r && m.col === c);
+    for (let c = 0; c < ambiente.colunas; c++) {
+      const mesa = mesas.value.find(m => m.linha === r && m.coluna === c);
       linha.push(mesa || null);
     }
     matriz.push(linha);
@@ -92,6 +96,7 @@ const grid = computed(() => {
 
 // --- LÓGICA DE MOVIMENTO UNIVERSAL ---
 const isDraggingMode = ref(false); // Novo estado
+const dialogView = ref(false); // Novo estado
 
 const onPointerDown = (e: PointerEvent, mesa: any) => {
   (e.target as HTMLElement).releasePointerCapture(e.pointerId);
@@ -127,11 +132,11 @@ const onPointerUp = (e: PointerEvent) => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const col = Math.floor(x / (rect.width / ambiente.cols));
-    const row = Math.floor(y / (rect.height / ambiente.rows));
+    const coluna = Math.floor(x / (rect.width / ambiente.colunas));
+    const linha = Math.floor(y / (rect.height / ambiente.linhas));
 
-    if (row >= 0 && row < ambiente.rows && col >= 0 && col < ambiente.cols) {
-      executarMovimento(row, col);
+    if (linha >= 0 && linha < ambiente.linhas && coluna >= 0 && coluna < ambiente.colunas) {
+      executarMovimento(linha, coluna);
     }
   }
 
@@ -139,34 +144,33 @@ const onPointerUp = (e: PointerEvent) => {
   mesaSendoArrastada.value = null;
 };
 
-const executarMovimento = (targetRow: number, targetCol: number) => {
+const executarMovimento = (targetlinha: number, targetCol: number) => {
   const mesaOriginal = mesaSendoArrastada.value;
-  const mesaNoDestino = mesas.value.find(m => m.row === targetRow && m.col === targetCol);
+  const mesaNoDestino = mesas.value.find(m => m.linha === targetlinha && m.coluna === targetCol);
 
   if (mesaNoDestino && mesaNoDestino.id !== mesaOriginal.id) {
-    const oldRow = mesaOriginal.row;
-    const oldCol = mesaOriginal.col;
-    mesaOriginal.row = targetRow;
-    mesaOriginal.col = targetCol;
-    mesaNoDestino.row = oldRow;
-    mesaNoDestino.col = oldCol;
+    const oldlinha = mesaOriginal.linha;
+    const oldCol = mesaOriginal.coluna;
+    mesaOriginal.linha = targetlinha;
+    mesaOriginal.coluna = targetCol;
+    mesaNoDestino.linha = oldlinha;
+    mesaNoDestino.coluna = oldCol;
   } else {
-    mesaOriginal.row = targetRow;
-    mesaOriginal.col = targetCol;
+    mesaOriginal.linha = targetlinha;
+    mesaOriginal.coluna = targetCol;
   }
 };
-
+const mesaSelected = ref<any>(null)
 const handleMesaClick = (mesa: any) => {
   if (isLongPress) return; // Se foi arraste, não muda status
   clearTimeout(timerLongPress);
-
-  mesaComShake.value = mesa.id;
-  mesa.status_descricao = mesa.status_descricao === 'Livre' ? 'Ocupada' : 'Livre';
+  mesaSelected.value = mesa
+  dialogView.value = true
   setTimeout(() => mesaComShake.value = null, 500);
 };
 
 const addMesa = (r: number, c: number) => {
-  console.log(`Adicionando na linha ${r + 1}, col ${c + 1}`);
+  console.log(`Adicionando na linha ${r + 1}, coluna ${c + 1}`);
 };
 </script>
 
@@ -254,7 +258,7 @@ const addMesa = (r: number, c: number) => {
 
 .bg-success { background-color: #4caf50; }
 .bg-error { background-color: #f44336; }
-/* Quando o Long Press ativa, a mesa de origem dá um "pulo" ou encolhe */
+/* Quando o Long Press ativa, a mesa de origem dá um "pulo" ou encolunahe */
 .is-pressed {
   transform: scale(0.9);
   filter: brightness(0.8);

@@ -6,4 +6,6 @@ export interface Mesa {
     status_descricao?: string,
     ambiente_id?: number,
     ambiente_descricao?: string,
+    linha?: number,
+    coluna?: number,
 }

@@ -7,6 +7,8 @@
     <v-card-text>
       <div class="d-flex justify-center gap-3 align-center items-center">
         <v-text-field label="Descrição" variant="outlined" v-model="dados.descricao" />
+        <v-text-field label="Linhas máximas" variant="outlined" v-model="dados.descricao" />
+        <v-text-field label="Colunas máximas" variant="outlined" v-model="dados.descricao" />
       </div>
     </v-card-text>
     <v-card-actions class="justify-space-around">
@@ -24,8 +26,6 @@ import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import type {Ambiente} from "@/models/Registros/Ambiente.ts";
 const dados = ref<Ambiente>({});
-const statusMesaList = ref<any[]>([])
-const ambienteList = ref<any[]>([])
 const snackbar = useSnackbarStore()
 const emit = defineEmits(['close'])
 const props = defineProps<{

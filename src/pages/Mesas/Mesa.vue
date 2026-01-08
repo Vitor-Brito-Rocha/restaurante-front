@@ -10,7 +10,7 @@
     </div>
     <div class="h-75 w-100">
       <CommomTableList v-if="!viewMatriz" :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
-      <MatrizMesaComponent v-else :data="items" :permissoes="permissoes" />
+      <MatrizMesaComponent v-else :data="items" />
     </div>
     <v-dialog v-model="dialogComponent">
       <MesaComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
@@ -31,6 +31,7 @@ import ReloadCreate from "@/components/templates/reload-create.vue";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
 import MatrizMesaComponent from "@/components/mesa/Matriz-Mesa-Component.vue";
 import type Permissao from "@/models/Permissao.ts";
+import {verifyError} from "@/services/system/system.service.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -146,8 +147,7 @@ async function getItemsList() {
     page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")
   } catch (error: any) {
-    const mensagem = error.message == "Network Error" ? 'Erro de conexão, tente novamente mais tarde': error.message
-    snackbar.trigger(`${mensagem}!`, "error")
+    verifyError(error)
   } finally {
     loadingTable.value = false
   }

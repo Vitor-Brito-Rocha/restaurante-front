@@ -26,6 +26,7 @@ import {useSnackbarStore} from "@/stores/snackbar.ts";
 import ClienteComponent from "@/components/registers/clientes/Cliente-Component.vue";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import type {Filter} from "@/models/Filter.ts";
+import {verifyError} from "@/services/system/system.service.ts";
 const dialogComponent = ref(false)
 const loadingTable = ref<boolean>(false)
 const totalItems = ref<number>(0)
@@ -95,8 +96,7 @@ async function getItemsList(){
     snackbar.trigger(`${message}!`, "success")
   }
   catch (error: any) {
-    snackbar.trigger(`${error.message}!`, "error")
-
+  verifyError(error)
   }
   finally {
     loadingTable.value = false

@@ -21,6 +21,7 @@ import ReloadCreate from "@/components/templates/reload-create.vue";
 import {getRoute, verifyPermission} from "@/services/auth/auth.service.ts";
 import CategoriaComponent from "@/components/types/categories/Categoria-Component.vue";
 import type Permissao from "@/models/Permissao.ts";
+import {verifyError} from "@/services/system/system.service.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -71,8 +72,7 @@ async function getItemsList() {
     page.value = Number(pagination.atualPagina);
     snackbar.trigger(`${message}!`, "success")
   } catch (error: any) {
-    const mensagem = error.message == "Network Error" ? 'Erro de conexão, tente novamente mais tarde': error.message
-    snackbar.trigger(`${mensagem}!`, "error")
+    verifyError(error)
   } finally {
     loadingTable.value = false
   }

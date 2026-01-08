@@ -26,6 +26,7 @@ api.interceptors.response.use(
             console.log("Navegador Offline, requisicao impossivel")
             useSnackbarStore().trigger('Erro de conexão, verifique sua internet', "error")
         } else if(error.code == 'ERR_NETWORK'){
+            console.log("Back offline, requisicao impossivel")
             useSnackbarStore().trigger('Erro de conexão, entre em contato com o suporte', "error")
         }
         if (error.response?.status === 401) {
