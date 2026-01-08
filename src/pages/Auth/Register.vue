@@ -16,10 +16,10 @@
                              placeholder="Insira seu nome completo"
                              label="Nome completo"
               />
-              <v-text-field v-maska="'###.###.###-##'"
+              <v-text-field
                             :rules="[rules.required('Preencha o campo corretamente')]"  v-model="cpf" density="comfortable" label="CPF" placeholder="Insira o seu CPF"
               />
-              <v-text-field v-maska="'(##) #####-####'" :rules="[rules.required('Preencha o campo corretamente')]" label="Whatsapp"  v-model="whatsapp" type="text" placeholder="Insira seu WhatsApp"/>
+              <v-text-field :rules="[rules.required('Preencha o campo corretamente')]" label="Whatsapp"  v-model="whatsapp" type="text" placeholder="Insira seu WhatsApp"/>
               <v-text-field  :rules="[rules.required('Preencha o campo corretamente')]" density="comfortable" label="Email" v-model="email" type="email" placeholder="Insira seu email"></v-text-field>
               <v-text-field :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'"
                             :rules="[rules.required('Preencha o campo corretamente')]"
@@ -51,7 +51,6 @@
     </v-container>
 </template>
 <script setup lang="ts">
-import { vMaska } from "maska/vue"
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import {register} from "@/services/auth/auth.service.ts";
