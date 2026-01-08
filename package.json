@@ -22,7 +22,6 @@
   "dependencies": {
     "axios": "^1.11.0",
     "bootstrap": "^5.3.8",
-    "maska": "^3.2.0",
     "pinia": "^3.0.3",
     "socket.io-client": "^4.8.1",
     "vue": "^3.5.18",
