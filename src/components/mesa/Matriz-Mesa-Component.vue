@@ -63,14 +63,16 @@ import {computed, ref, reactive, onBeforeMount} from 'vue';
 import { useTheme } from "vuetify";
 import MesaStatus from "@/components/mesa/Mesa-Status.vue";
 import type {Mesa} from "@/models/Mesa.ts";
+import type {Ambiente} from "@/models/Registros/Ambiente.ts";
 
 const vuetifyTheme = useTheme();
 const gridRef = ref<HTMLElement | null>(null);
-const ambiente = { id: 1, descricao: 'Sala 1', linhas: 4, colunas: 5 };
 const mesas = ref<Mesa[]>([])
 const props = defineProps<{
   data: Mesa[]
+  ambiente?: Ambiente
 }>()
+const ambiente = { id: 1, descricao: 'Sala 1', linhas: props.ambiente?.linha_max ?? 0, colunas: props.ambiente?.coluna_max ?? 0};
 onBeforeMount(()=>{
   mesas.value = props.data
 })

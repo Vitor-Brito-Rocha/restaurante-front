@@ -10,7 +10,9 @@
     </div>
     <div class="h-75 w-100">
       <CommomTableList v-if="!viewMatriz" :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
-      <MatrizMesaComponent v-else :data="items" />
+      <MatrizMesaComponent v-else :ambiente="filtersModel.find(f => f.key === 'ambiente_id')!.items.
+      find(a => a.id === Number(filters?.
+      find(f => f.type === 'ambiente_id')?.value))" :data="items" />
     </div>
     <v-dialog v-model="dialogComponent">
       <MesaComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
