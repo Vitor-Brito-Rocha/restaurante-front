@@ -10,9 +10,7 @@
     </div>
     <div class="h-75 w-100">
       <CommomTableList v-if="!viewMatriz" :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction(null,$event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
-      <MatrizMesaComponent v-else :ambiente="filtersModel.find(f => f.key === 'ambiente_id')!.items.
-      find(a => a.id === Number(filters?.
-      find(f => f.type === 'ambiente_id')?.value))" :data="items" />
+      <MatrizMesaComponent v-else :ambiente="ambienteSelecionado" :data="items" @refresh="verifyGetFunction()" />
     </div>
     <v-dialog v-model="dialogComponent">
       <MesaComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
@@ -21,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import {deleteMesa, getMesasPaginated, searchMesasPaginated, getStatusMesasAll, getAmbienteAll} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
@@ -39,6 +37,11 @@ const items = ref<any[]>([]);
 const dialogComponent = ref(false)
 const loadingTable = ref<boolean>(false)
 const viewMatriz = ref(false)
+const ambienteSelecionado = computed(()=>{
+  return filtersModel.value.find(f => f.key === 'ambiente_id')!.items.
+  find(a => a.id === Number(filters.value?.
+  find(f => f.type === 'ambiente_id')?.value))
+})
 const totalItems = ref<number>(0)
 const headers = [
   {title: 'Código - Número', key: 'id'},
@@ -86,6 +89,7 @@ const filtersModel = ref<FilterSelect[]>([
 ])
 const searchKey = ref<number>(1)
 function resetFilters(){
+  viewMatriz.value = false
   filters.value = null
   page.value = 1
   offset.value = 10
@@ -130,10 +134,10 @@ async function search(model: PadraoManyFilters): Promise<void> {
     items.value = mesas;
     totalItems.value = count;
     page.value = Number(pagination.atualPagina);
-    snackbar.trigger(`${message}!`, "success")
+    snackbar.trigger(`${message}`, "success")
   }
   catch (error: any) {
-    snackbar.trigger(`${error.message}!`, "error")
+    verifyError(error)
   }
   finally {
     loadingTable.value = false
@@ -147,7 +151,7 @@ async function getItemsList() {
     items.value = mesas
     totalItems.value = count;
     page.value = Number(pagination.atualPagina);
-    snackbar.trigger(`${message}!`, "success")
+    snackbar.trigger(`${message}`, "success")
   } catch (error: any) {
     verifyError(error)
   } finally {

@@ -13,8 +13,6 @@ export const findAdressByCEP = async (cep: string) => await fetch(`https://viace
 export const isMobile = (): boolean => window.innerWidth <= 768
 export const verifyError = (error: any) =>{
     if(error.code == 'ERR_NETWORK') return
-    const mensagem = error?.message ? 'Erro de conexão, tente novamente mais tarde': error.message
-    console.log(`${error?.error?.message ? error?.error?.message : mensagem}!`)
-    useSnackbarStore().error(`${error?.error?.message ? error?.error?.message : mensagem}!`)
+    useSnackbarStore().error(`${error?.response?.data?.message ? error.response.data.message : error?.error?.message ? error.error.message : error?.message}!`)
     return
 }

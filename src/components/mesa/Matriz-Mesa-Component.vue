@@ -5,8 +5,8 @@
         class="grid-container"
         :style="{
         backgroundColor: vuetifyTheme.current.value.dark ? '#413e3e' : '#F5F5F5',
-        gridTemplateColumns: `repeat(${ambiente.linhas}, 1fr)`,
-        gridTemplateRows: `repeat(${ambiente.colunas}, 1fr)`
+        gridTemplateRows: `repeat(${props.ambiente?.linha_max!}, 1fr)`,
+        gridTemplateColumns: `repeat(${props.ambiente?.coluna_max!}, 1fr)`,
       }"
         @pointermove="onPointerMove"
         @pointerup="onPointerUp"
@@ -54,28 +54,31 @@
     </div>
   </div>
   <v-dialog v-model="dialogView">
-    <MesaStatus :dados="mesaSelected" @close="dialogView = false" />
+    <MesaStatus :dados="mesaSelected" @update="()=>{$emit('refresh'); dialogView = false}" @close="dialogView = false" />
+  </v-dialog>
+  <v-dialog v-model="dialogView2">
+    <MesaComponent :dados="mesaCreating" @close="()=>{$emit('refresh'); dialogView2 = false; mesaCreating = {}}" />
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-import {computed, ref, reactive, onBeforeMount} from 'vue';
+import {computed, ref, reactive, onBeforeMount, shallowRef, watch} from 'vue';
 import { useTheme } from "vuetify";
 import MesaStatus from "@/components/mesa/Mesa-Status.vue";
 import type {Mesa} from "@/models/Mesa.ts";
 import type {Ambiente} from "@/models/Registros/Ambiente.ts";
-
+import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
+import MesaComponent from "@/components/mesa/Mesa-Component.vue";
+import {verifyError} from "@/services/system/system.service.ts";
 const vuetifyTheme = useTheme();
+const dialogView2 = ref(false)
 const gridRef = ref<HTMLElement | null>(null);
-const mesas = ref<Mesa[]>([])
+const emit = defineEmits(['refresh'])
 const props = defineProps<{
   data: Mesa[]
   ambiente?: Ambiente
 }>()
-const ambiente = { id: 1, descricao: 'Sala 1', linhas: props.ambiente?.linha_max ?? 0, colunas: props.ambiente?.coluna_max ?? 0};
-onBeforeMount(()=>{
-  mesas.value = props.data
-})
+const mesaCreating = ref<Mesa>({});
 const mesaSendoArrastada = ref<any>(null);
 const mesaComShake = ref<number | null>(null);
 const dragVisual = reactive({ active: false, x: 0, y: 0 });
@@ -85,10 +88,10 @@ let timerLongPress: any = null;
 
 const grid = computed(() => {
   const matriz = [];
-  for (let r = 0; r < ambiente.linhas; r++) {
+  for (let r = 1; r <= props.ambiente?.linha_max!; r++) {
     const linha = [];
-    for (let c = 0; c < ambiente.colunas; c++) {
-      const mesa = mesas.value.find(m => m.linha === r && m.coluna === c);
+    for (let c = 1; c <= props.ambiente?.coluna_max!; c++) {
+      const mesa = props.data.find(m => m.linha === r && m.coluna === c);
       linha.push(mesa || null);
     }
     matriz.push(linha);
@@ -134,21 +137,25 @@ const onPointerUp = (e: PointerEvent) => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    const coluna = Math.floor(x / (rect.width / ambiente.colunas));
-    const linha = Math.floor(y / (rect.height / ambiente.linhas));
+    const coluna = Math.floor(x / (rect.width / props.ambiente?.coluna_max!));
+    const linha = Math.floor(y / (rect.height / props.ambiente?.linha_max!));
 
-    if (linha >= 0 && linha < ambiente.linhas && coluna >= 0 && coluna < ambiente.colunas) {
-      executarMovimento(linha, coluna);
+    if (linha >= 0 && linha < props.ambiente?.linha_max! && coluna >= 0 && coluna < props.ambiente?.coluna_max!) {
+      console.log('chamou executar mov')
+      executarMovimento(linha+1, coluna+1);
+      return;
     }
+
   }
 
   dragVisual.active = false;
   mesaSendoArrastada.value = null;
 };
 
-const executarMovimento = (targetlinha: number, targetCol: number) => {
+const executarMovimento = async (targetlinha: number, targetCol: number) => {
   const mesaOriginal = mesaSendoArrastada.value;
-  const mesaNoDestino = mesas.value.find(m => m.linha === targetlinha && m.coluna === targetCol);
+  const mesaNoDestino = props.data.find(m => m.linha === targetlinha && m.coluna === targetCol);
+try{
 
   if (mesaNoDestino && mesaNoDestino.id !== mesaOriginal.id) {
     const oldlinha = mesaOriginal.linha;
@@ -157,11 +164,30 @@ const executarMovimento = (targetlinha: number, targetCol: number) => {
     mesaOriginal.coluna = targetCol;
     mesaNoDestino.linha = oldlinha;
     mesaNoDestino.coluna = oldCol;
+    await Promise.all([
+      editarMesa(mesaOriginal, targetlinha, targetCol),
+      editarMesa(mesaNoDestino, oldlinha, oldCol)
+    ])
   } else {
     mesaOriginal.linha = targetlinha;
     mesaOriginal.coluna = targetCol;
+    await editarMesa(mesaOriginal, targetlinha, targetCol)
   }
+  emit("refresh")
+} catch(error) {
+  verifyError(error)
+}
+
+  dragVisual.active = false;
+  mesaSendoArrastada.value = null;
 };
+async function editarMesa(mesa: any, linha: number, coluna: number) {
+  try{
+    await updateMesa(mesa.id, {linha: linha, coluna: coluna});
+  } catch (error) {
+    verifyError(error)
+  }
+}
 const mesaSelected = ref<any>(null)
 const handleMesaClick = (mesa: any) => {
   if (isLongPress) return; // Se foi arraste, não muda status
@@ -171,7 +197,9 @@ const handleMesaClick = (mesa: any) => {
   setTimeout(() => mesaComShake.value = null, 500);
 };
 
-const addMesa = (r: number, c: number) => {
+const addMesa = async (r: number, c: number) => {
+  mesaCreating.value = {linha: r+1, coluna: c+1, ambiente_id: props.ambiente?.id};
+  dialogView2.value = true
   console.log(`Adicionando na linha ${r + 1}, coluna ${c + 1}`);
 };
 </script>

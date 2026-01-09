@@ -5,13 +5,17 @@
     </v-card-title>
       <v-form @submit.prevent="dados?.id ? editTable() : saveTable()">
         <v-card-text v-if="isMobile()">
-            <v-text-field label="Capacidade" variant="outlined" type="number" v-model="dados.capacidade" />
-            <v-autocomplete label="Status" v-model="dados.status_id" item-value="id" item-title="descricao" :items="statusMesaList" variant="outlined" />
-            <v-autocomplete label="Ambiente" v-model="dados.ambiente_id" item-value="id" item-title="descricao" :items="ambienteList" variant="outlined" />
+          <v-text-field label="Capacidade" variant="outlined" type="number" v-model="dados.capacidade" />
+          <v-text-field label="Posição - Linha" variant="outlined" type="number" v-model="dados.linha" />
+          <v-text-field label="Posição - Coluna" variant="outlined" type="number" v-model="dados.coluna" />
+          <v-autocomplete label="Status" v-model="dados.status_id" item-value="id" item-title="descricao" :items="statusMesaList" variant="outlined" />
+          <v-autocomplete label="Ambiente" v-model="dados.ambiente_id" item-value="id" item-title="descricao" :items="ambienteList" variant="outlined" />
         </v-card-text>
     <v-card-text v-else>
       <div class="d-flex justify-center gap-3 align-center items-center">
         <v-text-field label="Capacidade" variant="outlined" type="number" v-model="dados.capacidade" />
+        <v-text-field label="Posição - Linha" variant="outlined" type="number" v-model="dados.linha" />
+        <v-text-field label="Posição - Coluna" variant="outlined" type="number" v-model="dados.coluna" />
         <v-autocomplete label="Status" v-model="dados.status_id" item-value="id" item-title="descricao" :items="statusMesaList" variant="outlined" />
         <v-autocomplete label="Ambiente" v-model="dados.ambiente_id" item-value="id" item-title="descricao" :items="ambienteList" variant="outlined" />
       </div>
@@ -30,7 +34,7 @@ import {getStatusMesasAll} from "@/services/mesa/status-mesa.service.ts";
 import {getAmbienteAll} from "@/services/cadastro/ambiente/ambiente.service.ts";
 import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
-import {isMobile} from "@/services/system/system.service.ts";
+import {isMobile, verifyError} from "@/services/system/system.service.ts";
 const dados = ref<Mesa>({});
 const statusMesaList = ref<any[]>([])
 const ambienteList = ref<any[]>([])
@@ -46,7 +50,7 @@ onMounted(async () => {
   ])
   statusMesaList.value = status?.statusMesas ?? []
   ambienteList.value = ambiente?.ambientes ?? []
-  if(props.dados?.id){
+  if(props.dados){
   dados.value = props.dados;
   }
 })
@@ -56,7 +60,7 @@ async function saveTable(){
     snackbar.trigger("Mesa criada com sucesso!", "success")
     emit('close')
   } catch (error: any) {
-    snackbar.trigger("Não foi possível criar mesa, tente novamente mais tarde", "error")
+    verifyError(error)
   }
 }
 async function editTable(){
@@ -65,7 +69,7 @@ async function editTable(){
     snackbar.trigger("Mesa atualizada com sucesso!", "success")
     emit('close')
   } catch (error: any) {
-    snackbar.trigger("Não foi possível criar mesa, tente novamente mais tarde", "error")
+    verifyError(error)
   }
 }
 </script>

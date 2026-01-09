@@ -30,24 +30,27 @@ import {isMobile} from "@/services/system/system.service.ts";
 const dados = ref<Mesa>({});
 const statusMesaList = ref<any[]>([])
 const snackbar = useSnackbarStore()
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'update'])
 const props = defineProps<{
   dados?: Mesa;
 }>()
 onBeforeMount(async () => {
+    await getStatus()
   if(props.dados?.id){
     dados.value = props.dados;
-  const status = await getStatusMesasAll()
-  statusMesaList.value = status?.statusMesas ?? []
   } else{
     emit('close')
   }
 })
+async function getStatus() {
+  const status = await getStatusMesasAll()
+  statusMesaList.value = status?.statusMesas ?? []
+}
 async function editTable(){
   try{
     await updateMesa(dados.value.id!, {status_id: dados.value.status_id})
     snackbar.trigger("Status atualizado com sucesso!", "success")
-    emit('close')
+    emit('update')
   } catch (error: any) {
     snackbar.trigger("Não foi possível editar status da mesa, tente novamente mais tarde", "error")
   }
