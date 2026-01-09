@@ -67,7 +67,7 @@ import { useTheme } from "vuetify";
 import MesaStatus from "@/components/mesa/Mesa-Status.vue";
 import type {Mesa} from "@/models/Mesa.ts";
 import type {Ambiente} from "@/models/Registros/Ambiente.ts";
-import {createMesa, updateMesa} from "@/services/mesa/mesa.service.ts";
+import {createMesa, switchMesas, updateMesa} from "@/services/mesa/mesa.service.ts";
 import MesaComponent from "@/components/mesa/Mesa-Component.vue";
 import {verifyError} from "@/services/system/system.service.ts";
 const vuetifyTheme = useTheme();
@@ -164,10 +164,7 @@ try{
     mesaOriginal.coluna = targetCol;
     mesaNoDestino.linha = oldlinha;
     mesaNoDestino.coluna = oldCol;
-    await Promise.all([
-      editarMesa(mesaOriginal, targetlinha, targetCol),
-      editarMesa(mesaNoDestino, oldlinha, oldCol)
-    ])
+    await switchMesas(mesaOriginal.id!, [targetlinha, targetCol], mesaNoDestino.id!, [oldlinha, oldCol])
   } else {
     mesaOriginal.linha = targetlinha;
     mesaOriginal.coluna = targetCol;

@@ -1,7 +1,7 @@
 import api from "@/api-axios.ts";
-import type {Mesa} from "@/models/Mesa.ts";
-import {organizeFilters} from "@/services/system/system.service.ts";
-import type {PadraoManyFilters} from "@/models/PadraoManyFilters.ts";
+import type { Mesa } from "@/models/Mesa.ts";
+import { organizeFilters } from "@/services/system/system.service.ts";
+import type { PadraoManyFilters } from "@/models/PadraoManyFilters.ts";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const resource = "mesa";
@@ -34,13 +34,13 @@ export const getMesasPaginated = async (
  * Busca paginada
  */
 export const searchMesasPaginated = async (model: PadraoManyFilters,
-                                           page: number = 1,
-                                           limit: number = 10): Promise<{
-    mesas: any[],
-    pagination: { atualPagina: number },
-    count: number,
-    message: string
-}> => {
+    page: number = 1,
+    limit: number = 10): Promise<{
+        mesas: any[],
+        pagination: { atualPagina: number },
+        count: number,
+        message: string
+    }> => {
     let params = organizeFilters(model)
     const response = await api.get(
         `${baseUrl}/${resource}?page=${page}&limit=${limit}${params}`
@@ -86,3 +86,20 @@ export const deleteMesa = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };
+
+/**
+ * Trocar mesas
+ */
+export const switchMesas = async (
+    firstMesaId: number,
+    firstNewLocal: [number, number],
+    nextMesaId: number,
+    nextNewLocal: [number, number]
+) => {
+    const response = await api.patch(
+        `${baseUrl}/${resource}/trocar-mesas`,
+        { firstMesaId, firstNewLocal, nextMesaId, nextNewLocal }
+    );
+    return response.data;
+};
+
