@@ -29,7 +29,7 @@ api.interceptors.response.use(
             console.log("Back offline, requisicao impossivel")
             useSnackbarStore().trigger('Erro de conexão, entre em contato com o suporte', "error")
         }
-        if (error.response?.status === 401) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
             logout(); // limpa storage e manda pro /login
         }
         return Promise.reject(error);

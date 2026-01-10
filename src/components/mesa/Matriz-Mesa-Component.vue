@@ -62,12 +62,12 @@
 </template>
 
 <script setup lang="ts">
-import {computed, ref, reactive, onBeforeMount, shallowRef, watch} from 'vue';
+import {computed, ref, reactive} from 'vue';
 import { useTheme } from "vuetify";
 import MesaStatus from "@/components/mesa/Mesa-Status.vue";
 import type {Mesa} from "@/models/Mesa.ts";
 import type {Ambiente} from "@/models/Registros/Ambiente.ts";
-import {createMesa, switchMesas, updateMesa} from "@/services/mesa/mesa.service.ts";
+import {switchMesas, updateMesa} from "@/services/mesa/mesa.service.ts";
 import MesaComponent from "@/components/mesa/Mesa-Component.vue";
 import {verifyError} from "@/services/system/system.service.ts";
 const vuetifyTheme = useTheme();
@@ -164,19 +164,25 @@ try{
     mesaOriginal.coluna = targetCol;
     mesaNoDestino.linha = oldlinha;
     mesaNoDestino.coluna = oldCol;
+    dragVisual.active = false;
+    mesaSendoArrastada.value = null;
     await switchMesas(mesaOriginal.id!, [targetlinha, targetCol], mesaNoDestino.id!, [oldlinha, oldCol])
   } else {
     mesaOriginal.linha = targetlinha;
     mesaOriginal.coluna = targetCol;
+    dragVisual.active = false;
+    mesaSendoArrastada.value = null;
     await editarMesa(mesaOriginal, targetlinha, targetCol)
   }
-  emit("refresh")
 } catch(error) {
   verifyError(error)
-}
-
+} finally {
   dragVisual.active = false;
   mesaSendoArrastada.value = null;
+  emit("refresh")
+}
+
+
 };
 async function editarMesa(mesa: any, linha: number, coluna: number) {
   try{

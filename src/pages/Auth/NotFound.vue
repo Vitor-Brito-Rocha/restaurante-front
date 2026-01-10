@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {logout} from "@/services/auth/auth.service.ts";
+import router from "@/router";
 </script>
 
 <template>
@@ -31,9 +31,9 @@ import {logout} from "@/services/auth/auth.service.ts";
       <v-btn
           color="primary"
           size="large"
-          @click="logout()"
+          @click="router.push('/inicio')"
       >
-        Voltar ao Login
+        Voltar ao início
       </v-btn>
     </v-card>
   </v-container>
