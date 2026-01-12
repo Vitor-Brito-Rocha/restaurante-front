@@ -43,17 +43,20 @@ const emit = defineEmits(['close'])
 const props = defineProps<{
   dados?: Mesa;
 }>()
-onMounted(async () => {
+onMounted(() => {
+  getData()
+  if(props.dados){
+  dados.value = props.dados;
+  }
+})
+async function getData(){
   const [status, ambiente] = await Promise.all([
     getStatusMesasAll(),
     getAmbienteAll()
   ])
   statusMesaList.value = status?.statusMesas ?? []
   ambienteList.value = ambiente?.ambientes ?? []
-  if(props.dados){
-  dados.value = props.dados;
-  }
-})
+}
 async function saveTable(){
   try{
     await createMesa(dados.value)

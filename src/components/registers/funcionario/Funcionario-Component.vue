@@ -152,7 +152,7 @@ import {onMounted, ref} from 'vue'
 import type {Fisica, Funcionario, Juridica} from "@/models/Registros/Funcionario.ts";
 import {createFuncionario, updateFuncionario} from "@/services/cadastro/funcionario/funcionario.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
-import {findAdressByCEP, isMobile} from "@/services/system/system.service.ts";
+import {findAdressByCEP, isMobile, verifyError} from "@/services/system/system.service.ts";
 import type {Endereco} from "@/models/Endereco.ts";
 import {getPerfisAll} from "@/services/tipo/perfil/perfil.service.ts";
 const dados = ref<Funcionario>({})
@@ -166,7 +166,7 @@ const props = defineProps<{
   dados?: Funcionario;
 }>()
 onMounted(async () => {
-  perfisList.value = await getPerfisAll().then(r => r.perfis).catch(() => snackbar.error('Erro ao encontrar perfis, tente novamente mais tarde')) ?? []
+  perfisList.value = await getPerfisAll().then(r => r.perfis).catch((error) => verifyError(error)) ?? []
   if(props.dados?.id){
     dados.value = { ...props.dados }
   }

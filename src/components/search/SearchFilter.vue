@@ -27,7 +27,7 @@
       <template #append-inner>
         <v-icon
             icon="mdi-magnify"
-            :color="searchValue.length > 0 ? 'primary' : 'grey'"
+            :disabled="searchValue.length < 1"
             @click="$emit('searchEvent', model)"
         ></v-icon>
       </template>

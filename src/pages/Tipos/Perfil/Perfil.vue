@@ -38,13 +38,9 @@ const headers = [
   {title: 'Ações', key: 'actions'},
 ]
 const permissoes = ref<Permissao>(verifyPermission(getRoute()))
-onMounted(async ()=>{
-  try {
+onMounted(()=>{
     permissoes.value.customize = true
-      await getItemsList()
-  } catch (e: any) {
-  }
-
+    getItemsList()
 })
 const page = ref<number>(1)
 const offset = ref<number>(10)

@@ -12,8 +12,8 @@
           <component :is="Component" />
         </div>
       </v-main>
-      <v-main v-else class="d-flex mt-7 justify-center align-content-center align-center">
-        <div class="w-100 justify-center d-flex align-center align-content-center h-100">
+      <v-main v-else class="mt-7 justify-center align-content-center align-center">
+        <div class="w-100 justify-center align-center align-content-center h-100">
           <component :is="Component" />
         </div>
       </v-main>

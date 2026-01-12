@@ -21,6 +21,7 @@ import {
   disassociateAction, disassociateModule,
   getPermissoesByPerfil
 } from "@/services/tipo/perfil/permissao-perfil.service.ts";
+import {verifyError} from "@/services/system/system.service.ts";
 const dados = ref<Perfil>({});
 const permissoes = ref<ModuloProfile[]>([])
 const snackbar = useSnackbarStore()
@@ -29,12 +30,20 @@ const emit = defineEmits(['close'])
 const props = defineProps<{
   dados?: Perfil;
 }>()
-onMounted(async () => {
+onMounted(() => {
   if(props.dados?.id){
   dados.value = props.dados;
-  permissoes.value = await getPermissoesByPerfil(dados.value.id!).then(result => result.data)
+  getData()
   }
 })
+async function getData(){
+  try{
+    const response = await getPermissoesByPerfil(dados.value.id!)
+    permissoes.value = response.data
+  } catch (error){
+    verifyError(error)
+  }
+}
 async function cadastrarAcaoAoModulo(body: {modulo_id: number, acao: string}){
   try{
   await associateAction({...body, perfil_id: dados.value.id!})
