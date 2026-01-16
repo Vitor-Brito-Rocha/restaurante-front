@@ -8,7 +8,7 @@ const resource = "categoria";
  * Lista paginada
  */
 export const getCategoriaAll = async (): Promise<{
-    produtos: any[],
+    categorias: any[],
     count: number,
     message: string
 }> => {

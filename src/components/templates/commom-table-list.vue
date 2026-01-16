@@ -21,6 +21,9 @@
     <template v-slot:item.data_ultima_visita="{ item }">
       {{ item.data_ultima_visita ? item.data_ultima_visita : 'Não Informado' }}
     </template>
+    <template v-slot:item.categoria_descricao="{ item }">
+      {{ item.categoria_descricao ? item.categoria_descricao : item.categoria.descricao ? item.categoria.descricao : 'Não Informado' }}
+    </template>
     <template v-slot:item.ativo="{ item }">
       <v-switch
           hide-details

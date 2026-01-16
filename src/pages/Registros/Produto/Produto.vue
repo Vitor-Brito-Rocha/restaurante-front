@@ -32,6 +32,7 @@ const totalItems = ref<number>(0)
 const headers = [
   {title: 'Código', key: 'id'},
   {title: 'Nome', key: 'nome'},
+  {title: 'Descrição', key: 'descricao'},
   {title: 'Preço', key: 'preco'},
   {title: 'Categoria', key: 'categoria_descricao'},
   {title: 'Ativo', key: 'ativo'},

@@ -7,8 +7,8 @@
     <v-card-text>
       <div :class="!isMobile() ? 'd-flex justify-center gap-3 align-center items-center' : 'gap-3'">
         <v-text-field label="Descrição" variant="outlined" v-model="dados.descricao" />
-        <v-text-field label="Linhas máximas" variant="outlined" v-model="dados.linha_max" />
-        <v-text-field label="Colunas máximas" variant="outlined" v-model="dados.coluna_max" />
+        <v-text-field label="Linhas máximas" type="number" variant="outlined" v-model="dados.linha_max" />
+        <v-text-field label="Colunas máximas" variant="outlined" type="number" v-model="dados.coluna_max" />
       </div>
     </v-card-text>
     <v-card-actions class="justify-space-around">
