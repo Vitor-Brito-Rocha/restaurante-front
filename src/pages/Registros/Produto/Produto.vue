@@ -4,7 +4,7 @@
       <reload-create suf="o" tela="Produto" :permissoes="permissoes" @reload="verifyGetFunction()" @create="newClient" />
     </div>
     <div class="h-75 mt-2 mb-2 w-100">
-      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarAmbiente($event)" @editModal="editViewModal" />
+      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarProduto($event)" @updateStatus="updateStatus($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
       <ProdutoComponent :dados="mesaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
@@ -17,12 +17,10 @@ import { ref, onMounted } from 'vue'
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
-import AmbienteComponent from "@/components/registers/ambiente/Ambiente-Component.vue";
-import {deleteAmbiente, getAmbientePaginated} from "@/services/cadastro/ambiente/ambiente.service.ts";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
 import type Permissao from "@/models/Permissao.ts";
 import {verifyError} from "@/services/system/system.service.ts";
-import {getProdutoPaginated} from "@/services/cadastro/produto/produto.service.ts";
+import {changeStatusProduto, deleteProduto, getProdutoPaginated} from "@/services/cadastro/produto/produto.service.ts";
 import ProdutoComponent from "@/components/registers/produto/Produto-Component.vue";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
@@ -52,14 +50,23 @@ function editViewModal(item: any){
   mesaSelected.value = item
   dialogComponent.value = true
 }
-async function deletarAmbiente(id: number){
+async function deletarProduto(id: number){
   try {
-    await deleteAmbiente(id)
-    snackbar.trigger("Sucesso ao excluir ambiente!", "success")
+    await deleteProduto(id)
+    snackbar.trigger("Sucesso ao excluir produto!", "success")
     verifyGetFunction()
   }catch (error: any){
-    snackbar.trigger("Não foi possível excluir esse ambiente, tente novamente mais tarde!", "error")
+    snackbar.trigger("Não foi possível excluir esse produto, tente novamente mais tarde!", "error")
 
+  }
+}
+async function updateStatus(data: {status: boolean, id: number}){
+  try {
+    await changeStatusProduto(data.id)
+  }catch (error: any){
+    verifyError(error)
+  } finally {
+    verifyGetFunction()
   }
 }
 function newClient(){

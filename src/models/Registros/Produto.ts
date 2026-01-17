@@ -3,9 +3,8 @@ export interface Produto {
     id?: number,
     descricao?: string,
     nome?: string,
-    imagem_url?: string,
+    imagem_url?: string | null,
     preco?: number,
     categoria_id?: number,
-    disponivel?: boolean,
-    visibilidade_menu?: boolean,
+    ativo?: boolean,
 }
