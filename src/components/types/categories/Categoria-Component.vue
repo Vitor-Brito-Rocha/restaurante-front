@@ -7,6 +7,7 @@
     <v-card-text>
       <div class="d-flex justify-center gap-3 align-center items-center">
         <v-text-field label="Descrição" variant="outlined" v-model="dados.descricao" />
+        <v-text-field label="Ordenação" variant="outlined" v-model="dados.ordem" />
       </div>
     </v-card-text>
     <v-card-actions class="justify-space-around">

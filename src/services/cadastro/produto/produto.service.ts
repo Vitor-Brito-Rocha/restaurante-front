@@ -52,6 +52,7 @@ export async function createProduto(produto: Produto, imagemFile?: File) {
     // Adiciona os campos do produto
     if (produto.nome) formData.append('nome', produto.nome);
     if (produto.descricao) formData.append('descricao', produto.descricao);
+    if (produto.ordem) formData.append('ordem', produto.ordem.toString());
     if (produto.preco !== undefined) formData.append('preco', produto.preco.toString());
     if (produto.categoria_id) formData.append('categoria_id', produto.categoria_id.toString());
 
@@ -84,6 +85,7 @@ export async function updateProduto(
     if (produto.nome) formData.append('nome', produto.nome);
     if (produto.descricao) formData.append('descricao', produto.descricao);
     if (produto.preco !== undefined) formData.append('preco', produto.preco.toString());
+    if (produto.ordem) formData.append('ordem', produto.ordem.toString());
     if (produto.categoria_id) formData.append('categoria_id', produto.categoria_id.toString());
 
     // Booleanos sempre são enviados

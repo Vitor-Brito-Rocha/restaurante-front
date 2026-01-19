@@ -12,6 +12,14 @@ export const getCategoriasAll = async (): Promise<{
     const response = await api.get(`${baseUrl}/${resource}`);
     return response.data;
 };
+export const getCategoriasForMenu = async (): Promise<{
+    categorias: any[],
+    count: number,
+    message: string
+}> => {
+    const response = await api.get(`${baseUrl}/${resource}/menu`);
+    return response.data;
+};
 export const getCategoriasPaginated = async (
     page: number = 1,
     limit: number = 10

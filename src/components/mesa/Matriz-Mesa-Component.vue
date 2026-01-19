@@ -24,17 +24,18 @@
               v-if="celula"
               class="mesa-content"
               :class="[
-    celula.status_descricao === 'Livre' ? 'bg-success' : 'bg-error',
     {
       'shake': mesaComShake === celula.id,
       'is-pressed': isDraggingMode // Nova classe para feedback
-    }
+    },
+    'bg-'+celula.status_descricao?.toLowerCase()
   ]"
               @pointerdown="onPointerDown($event, celula)"
               @click.stop="handleMesaClick(celula)"
           >
-            <span class="label">M{{ celula.id }}</span>
+            <span class="num_mesa">M{{ celula.id }}</span>
             <span class="capacidade">{{ celula.capacidade }}P</span>
+            <span class="status">{{ celula.status_descricao?.toLowerCase() ?? '' }}</span>
           </div>
 
           <div v-else class="vazio-content" @click="addMesa(r, c)">
@@ -242,7 +243,17 @@ const addMesa = async (r: number, c: number) => {
   touch-action: none;
   user-select: none;
 }
-
+.status{
+  font-size: 12px;
+  text-align: center;
+}
+.num_mesa{
+  font-size: 14px;
+  font-weight: bold;
+}
+.capacidade{
+  font-size: 13px;
+}
 /* Quando o usuário clica e segura, mudamos para o cursor de "pegar" */
 .mesa-content:active {
   cursor: grabbing;
@@ -289,9 +300,10 @@ const addMesa = async (r: number, c: number) => {
   color: #bbb;
 }
 
-.bg-success { background-color: #4caf50; }
-.bg-error { background-color: #f44336; }
-/* Quando o Long Press ativa, a mesa de origem dá um "pulo" ou encolunahe */
+.bg-livre { background-color: #4caf50; }
+.bg-reservada { background-color: #cf7724; }
+.bg-ocupada { background-color: #f44336; }
+.bg-inativa { background-color: #9e9494; }
 .is-pressed {
   transform: scale(0.9);
   filter: brightness(0.8);

@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import {ref, onMounted, computed} from 'vue'
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
@@ -27,11 +27,21 @@ const items = ref<any[]>([]);
 const dialogComponent = ref(false)
 const loadingTable = ref<boolean>(false)
 const totalItems = ref<number>(0)
-const headers = [
+const headers = computed(() => {
+  const base = [
   {title: 'Código', key: 'id'},
   {title: 'Descrição', key: 'descricao'},
-  {title: 'Ações', key: 'actions'},
-]
+  ]
+
+  const hasActions =
+      permissoes.value.edit ||
+      permissoes.value.delete ||
+      permissoes.value.customize
+
+  return hasActions
+      ? [...base, { title: 'Ações', key: 'actions' }]
+      : base
+})
 const permissoes = ref<Permissao>(verifyPermission(getRoute()))
 onMounted(()=>{
   getItemsList()

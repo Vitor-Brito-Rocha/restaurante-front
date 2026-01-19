@@ -15,7 +15,7 @@
       :headers="props.headers"
       :items="props.data"
       fixed-header
-      class="w-100 h-100 rounded border">
+      class="rounded border">
 
       <!--    PARA CLIENTES-->
     <template v-slot:item.data_ultima_visita="{ item }">
@@ -42,7 +42,7 @@
     <template v-slot:item.updatedAt="{ item }">
       {{ item.updatedAt.split('T')[0].split('-').reverse().join('/') + ' ' + item.updatedAt.split('T')[1].split('.')[0] }}
     </template>
-    <template  v-slot:item.actions="{ item }">
+    <template v-slot:item.actions="{ item }">
       <div class="ga-5">
       <v-btn v-if="permissoes.edit" variant="flat" size="small" icon @click="$emit('edit-modal', item)">
         <v-icon icon="mdi-pencil"></v-icon>

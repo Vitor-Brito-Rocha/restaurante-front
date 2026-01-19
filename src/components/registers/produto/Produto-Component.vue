@@ -8,7 +8,11 @@
         <div v-if="isMobile()" class="d-flex justify-center gap-3 align-center items-center">
           <v-text-field label="Nome" variant="outlined" v-model="dados.nome" required />
           <v-text-field label="Descrição" variant="outlined" v-model="dados.descricao" />
-          <v-text-field label="Preço" type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$"  variant="outlined" v-model="dados.preco" required />
+          <v-text-field label="Preço" type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$"  variant="outlined" v-model="dados.preco" required>
+            <template #prepend-inner>
+              R$
+            </template>
+          </v-text-field>
           <v-autocomplete
               :items="categorias"
               item-value="id"
@@ -19,10 +23,11 @@
               required
           />
           <v-switch variant="outlined" v-model="dados.ativo" label="Ativo" />
+          <v-text-field label="Ordenação" variant="outlined" v-model="dados.ordem" />
           <div class="ga-3 d-flex flex-column h-auto w-100">
             <div v-if="previewUrl || dados.imagem_url" class="text-center">
               <v-img
-                  :src="previewUrl || dados.imagem_url"
+                  :src="previewUrl! || dados.imagem_url!"
                   max-width="400"
                   max-height="400"
                   class="mx-auto rounded"
@@ -58,7 +63,11 @@
           <div class="d-flex justify-center gap-3 align-center items-center">
           <v-text-field label="Nome" variant="outlined" v-model="dados.nome" required />
           <v-text-field label="Descrição" variant="outlined" v-model="dados.descricao" />
-          <v-text-field label="Preço" type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$"  variant="outlined" v-model="dados.preco" required />
+            <v-text-field label="Preço" type="number" step="0.01" pattern="^\d*(\.\d{0,2})?$"  variant="outlined" v-model="dados.preco" required>
+              <template #prepend-inner>
+                R$
+              </template>
+            </v-text-field>
           </div>
           <div class="d-flex justify-center gap-3 align-center items-center">
             <v-autocomplete
@@ -71,6 +80,7 @@
               required
           />
           <v-switch variant="outlined" v-model="dados.ativo" label="Ativo" />
+            <v-text-field label="Ordenação" variant="outlined" v-model="dados.ordem" />
           </div>
           <div class="ga-3 d-flex flex-column h-auto w-100">
             <div v-if="previewUrl || dados.imagem_url" class="text-center">
@@ -196,7 +206,7 @@ async function editTable(){
   loading.value = true
   try{
     const file = imagemProduto.value
-    await updateProduto(dados.value.id!, dados.value, file, removerImagemFlag.value)
+    await updateProduto(dados.value.id!, dados.value, file ? file : undefined, removerImagemFlag.value)
     snackbar.trigger("Produto atualizado com sucesso!", "success")
     emit('close')
   } catch (error: any) {

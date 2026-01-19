@@ -16,7 +16,7 @@
   </template>
 
   <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+  import {ref, onMounted, computed} from 'vue'
   import {
     deleteFuncionario,
     getFuncionarioPaginated,
@@ -37,14 +37,24 @@
   const searchModel = ref<Filter>({type: "", value: ""})
   const loadingTable = ref<boolean>(false)
   const totalItems = ref<number>(0)
-  const headers = [
-    {title: 'Nome', key: 'nome'},
-    {title: 'Email', key: 'email'},
-    {title: 'Documento', key: 'documento'},
-    {title: 'Perfil', key: 'tipo_perfil_descricao'},
-    {title: 'Ativo', key: 'ativo'},
-    {title: 'Ações', key: 'actions'},
-  ]
+  const headers = computed(() => {
+    const base = [
+      {title: 'Nome', key: 'nome'},
+      {title: 'Email', key: 'email'},
+      {title: 'Documento', key: 'documento'},
+      {title: 'Perfil', key: 'tipo_perfil_descricao'},
+      {title: 'Ativo', key: 'ativo'},
+    ]
+
+    const hasActions =
+        permissoes.value.edit ||
+        permissoes.value.delete ||
+        permissoes.value.customize
+
+    return hasActions
+        ? [...base, { title: 'Ações', key: 'actions' }]
+        : base
+  })
   const permissoes = ref<Permissao>(verifyPermission(getRoute()))
   onMounted(()=>{
         getItemsList()

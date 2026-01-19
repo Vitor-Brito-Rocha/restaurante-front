@@ -43,14 +43,24 @@ const ambienteSelecionado = computed(()=>{
   find(f => f.type === 'ambiente_id')?.value))
 })
 const totalItems = ref<number>(0)
-const headers = [
-  {title: 'Código - Número', key: 'id'},
-  {title: 'Capacidade', key: 'capacidade'},
-  {title: 'Status', key: 'status_descricao'},
-  {title: 'Ambiente', key: 'ambiente_descricao'},
-  {title: 'Última Atualização', key: 'updatedAt'},
-  {title: 'Ações', key: 'actions'},
-]
+const headers = computed(() => {
+  const base = [
+    {title: 'Código - Número', key: 'id'},
+    {title: 'Capacidade', key: 'capacidade'},
+    {title: 'Status', key: 'status_descricao'},
+    {title: 'Ambiente', key: 'ambiente_descricao'},
+    {title: 'Última Atualização', key: 'updatedAt'},
+  ]
+
+  const hasActions =
+      permissoes.value.edit ||
+      permissoes.value.delete ||
+      permissoes.value.customize
+
+  return hasActions
+      ? [...base, { title: 'Ações', key: 'actions' }]
+      : base
+})
 const permissoes = ref<Permissao>(verifyPermission(getRoute()))
 onMounted(async ()=>{
   try {

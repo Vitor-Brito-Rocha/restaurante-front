@@ -4,9 +4,6 @@ import type {Categoria} from "@/models/Tipos/Categoria.ts";
 const baseUrl = import.meta.env.VITE_BASE_URL;
 const resource = "categoria";
 
-/**
- * Lista paginada
- */
 export const getCategoriaAll = async (): Promise<{
     categorias: any[],
     count: number,

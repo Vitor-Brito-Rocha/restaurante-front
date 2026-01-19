@@ -7,4 +7,5 @@ export interface Produto {
     preco?: number,
     categoria_id?: number,
     ativo?: boolean,
+    ordem?: number,
 }
