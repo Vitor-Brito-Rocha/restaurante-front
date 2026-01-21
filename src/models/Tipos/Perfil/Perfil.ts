@@ -1,6 +1,8 @@
 export interface Perfil {
     id?: number,
     descricao?: string,
+    ativo?: boolean,
+    alteravel?: boolean,
 }
 export type Acoes = {
         Listar: boolean,

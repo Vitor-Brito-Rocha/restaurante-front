@@ -37,13 +37,13 @@
 
     <!-- CONTEÚDO -->
     <v-card-text class="pa-4">
-      <h3 class="text-h6 font-weight-bold mb-2 text-truncate">
+      <h3 class="text-h6 font-weight-bold mb-1 text-truncate">
         {{ produto.nome || 'Sem nome' }}
       </h3>
 
       <p
           v-if="produto.descricao"
-          class="text-body-2 text-medium-emphasis produto-descricao mb-3"
+          class="text-body-2 text-medium-emphasis produto-descricao mb-2"
       >
         {{ produto.descricao }}
       </p>
@@ -85,10 +85,10 @@ function formatarPreco(valor: any): string {
 
 <style scoped>
 .produto-card {
-  max-height: 400px;
-  width: 180px;
-  max-width: 180px;
-  height: 380px;
+  max-height: 375px;
+  width: 250px;
+  max-width: 250px;
+  height: 375px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

@@ -47,3 +47,7 @@ export const deleteCategoria = async (id: number): Promise<any> => {
     const response = await api.delete(`${baseUrl}/${resource}/${id}`);
     return response.data;
 };
+export const changeStatusCategoria = async (id: number): Promise<any> => {
+    const response = await api.patch(`${baseUrl}/${resource}/toggle-status/${id}`);
+    return response.data;
+};

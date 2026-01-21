@@ -4,7 +4,7 @@
       <reload-create suf="a" tela="Categoria" :permissoes="permissoes"  @reload="verifyGetFunction()" @create="newClient" />
     </div>
     <div class="h-75 mt-2 mb-2 w-100">
-      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarCategoria($event)" @editModal="editViewModal" />
+      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="verifyGetFunction($event)" @deleteModal="deletarCategoria($event)" @updateStatus="updateStatus($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
       <CategoriaComponent :dados="categoriaSelected" @close="() => {dialogComponent = false; verifyGetFunction()}" />
@@ -14,7 +14,7 @@
 
 <script setup lang="ts">
 import {ref, onMounted, computed} from 'vue'
-import {getCategoriasPaginated, deleteCategoria} from "@/services/tipo/categoria/categoria.service.ts";
+import {getCategoriasPaginated, deleteCategoria, changeStatusCategoria} from "@/services/tipo/categoria/categoria.service.ts";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
@@ -73,6 +73,15 @@ async function deletarCategoria(id: number){
 function newClient(){
   categoriaSelected.value = {}
   dialogComponent.value = true
+}
+async function updateStatus(data: {status: boolean, id: number}){
+  try {
+    await changeStatusCategoria(data.id)
+  }catch (error: any){
+    verifyError(error)
+  } finally {
+    verifyGetFunction()
+  }
 }
 async function getItemsList() {
   loadingTable.value = true

@@ -44,13 +44,13 @@
     </template>
     <template v-slot:item.actions="{ item }">
       <div class="ga-5">
-      <v-btn v-if="permissoes.edit" variant="flat" size="small" icon @click="$emit('edit-modal', item)">
+      <v-btn v-if="permissoes.edit && (item.alteravel ?? true)" v-tooltip="'Editar'" variant="flat" size="small" icon @click="$emit('edit-modal', item)">
         <v-icon icon="mdi-pencil"></v-icon>
       </v-btn>
-      <v-btn v-if="permissoes.delete" variant="flat" size="small" icon @click="$emit('delete-modal', item.id)">
+      <v-btn v-if="permissoes.delete && (item.alteravel ?? true)" variant="flat" v-tooltip="'Excluir'" size="small" icon @click="$emit('delete-modal', item.id)">
         <v-icon icon="mdi-delete"></v-icon>
       </v-btn>
-      <v-btn v-if="permissoes.customize" variant="flat" size="small" icon @click="$emit('customize-modal', item)">
+      <v-btn v-if="permissoes.customize" variant="flat" size="small" v-tooltip="'Customizar'" icon @click="$emit('customize-modal', item)">
         <v-icon icon="mdi-cog"></v-icon>
       </v-btn>
       </div>
@@ -128,7 +128,7 @@
 
             <v-card-actions class="bg-grey-darken-4 px-3">
               <v-spacer></v-spacer>
-              <v-btn v-if="permissoes.edit" icon="mdi-pencil" size="small" variant="text" @click.stop="$emit('edit-modal', item)"></v-btn>
+              <v-btn v-if="permissoes.edit && (item.alteravel ?? true)" icon="mdi-pencil" size="small" variant="text" @click.stop="$emit('edit-modal', item)"></v-btn>
               <v-btn v-if="permissoes.customize" icon="mdi-cog" size="small" variant="text" @click="$emit('customize-modal', item)"></v-btn>
             </v-card-actions>
           </div>

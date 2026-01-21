@@ -4,7 +4,7 @@
       <reload-create suf="o" tela="Perfil" :permissoes="permissoes" @reload="getItemsList()" @create="newClient" />
     </div>
     <div class="h-75 mt-2 w-100">
-      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="getItemsList" @customizeModal="editPermissions($event)" @deleteModal="deletarMesa($event)" @editModal="editViewModal" />
+      <CommomTableList :data="items" :headers="headers" :permissoes="permissoes" :perPage="offset" :total-items="totalItems" :page="page" :loading="loadingTable" @verify="getItemsList" @customizeModal="editPermissions($event)" @deleteModal="deletarMesa($event)" @updateStatus="updateStatus($event)" @editModal="editViewModal" />
     </div>
     <v-dialog v-model="dialogComponent">
       <PerfilComponent :dados="mesaSelected" @close="() => {dialogComponent = false; getItemsList()}" />
@@ -20,12 +20,13 @@ import {ref, onMounted, computed} from 'vue'
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import CommomTableList from "@/components/templates/commom-table-list.vue";
 import ReloadCreate from "@/components/templates/reload-create.vue";
-import {deletePerfil, getPerfisPaginated} from "@/services/tipo/perfil/perfil.service.ts";
+import {deletePerfil, getPerfisPaginated, updatePerfil} from "@/services/tipo/perfil/perfil.service.ts";
 import PerfilComponent from "@/components/types/profile/Perfil-Component.vue";
 import {getRoute, logout, verifyPermission} from "@/services/auth/auth.service.ts";
 import PerfilPermissoesComponent from "@/components/types/profile/Perfil-Permissoes-Component.vue";
 import type Permissao from "@/models/Permissao.ts";
 import {verifyError} from "@/services/system/system.service.ts";
+import {changeStatusCategoria} from "@/services/tipo/categoria/categoria.service.ts";
 const snackbar = useSnackbarStore()
 const items = ref<any[]>([]);
 const dialogComponent = ref(false)
@@ -53,6 +54,15 @@ onMounted(()=>{
     permissoes.value.customize = true
     getItemsList()
 })
+async function updateStatus(data: {status: boolean, id: number}){
+  try {
+    await updatePerfil(data.id, {ativo: data.status})
+  }catch (error: any){
+    verifyError(error)
+  } finally {
+    getItemsList()
+  }
+}
 const page = ref<number>(1)
 const offset = ref<number>(10)
 const mesaSelected = ref<any>({})

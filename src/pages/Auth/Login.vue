@@ -46,6 +46,7 @@ import {onMounted, ref} from "vue";
 import {useSnackbarStore} from "@/stores/snackbar.ts";
 import {login} from "@/services/auth/auth.service.ts";
 import router from "@/router";
+import {verifyError} from "@/services/system/system.service.ts";
 const email = ref("");
 const senha = ref("");
 const rules = {
@@ -73,9 +74,7 @@ const Login = async () => {
     snackbar.trigger("Sucesso! Bem-vindo ao sistema Restaurante", "success")
   }
   catch (error: any) {
-    if(error.code != "ERR_NETWORK"){
-    snackbar.trigger("Erro ao se autenticar", "error")
-    }
+    verifyError(error)
   }
   finally {
     loading.value = false;
