@@ -1,20 +1,31 @@
-<!-- MenuView.vue -->
 <template>
   <v-container fluid class="pa-6">
-    <!-- HEADER -->
+    <!-- HEADER COM BUSCA -->
     <v-row class="mb-6">
-      <v-col cols="12" md="8">
-        <h1 class="text-h4 font-weight-bold">Nosso Cardápio 🍽️</h1>
+      <v-col cols="12" md="6">
+        <h1 class="text-h4 font-weight-bold mb-2">Nosso Cardápio 🍽️</h1>
+        <p class="text-body-2 text-medium-emphasis">
+          Descubra nossos deliciosos produtos
+        </p>
       </v-col>
-      <v-col cols="12" md="4" class="d-flex justify-end align-center">
+      <v-col cols="12" md="6" class="d-flex align-center gap-3">
+        <v-text-field
+            v-model="searchQuery"
+            placeholder="Busque por um produto"
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            density="comfortable"
+            hide-details
+            clearable
+            class="flex-grow-1"
+        />
         <v-btn
             color="primary"
-            prepend-icon="mdi-refresh"
+            icon="mdi-refresh"
             @click="carregarMenu"
             :loading="loading"
-        >
-          Atualizar
-        </v-btn>
+            variant="tonal"
+        />
       </v-col>
     </v-row>
 
@@ -33,58 +44,60 @@
     <div v-else>
       <v-card
           v-if="categoriasOrdenadas.length > 0"
-          class="border rounded sticky-nav mb-6"
-          elevation="2"
+          class="border rounded-lg sticky-nav mb-6"
+          elevation="1"
       >
-        <v-card-text class="pa-4">
-          <v-btn-group class="d-flex justify-center flex-wrap ga-4">
+        <v-card-text class="pa-3">
+          <div class="d-flex align-center gap-2 overflow-x-auto categoria-nav">
             <v-btn
-                class="text-gray-800 border"
                 v-for="categoria in categoriasOrdenadas"
                 :key="categoria.id"
-                :base-color="categoriaAtiva === categoria.id ? 'primary' : 'default'"
+                :color="categoriaAtiva === categoria.id ? 'primary' : 'default'"
                 :variant="categoriaAtiva === categoria.id ? 'flat' : 'outlined'"
                 @click="scrollToCategoria(categoria.id!)"
+                rounded="pill"
+                size="default"
+                class="text-none px-5"
             >
               {{ categoria.descricao || 'Sem categoria' }}
             </v-btn>
-          </v-btn-group>
+          </div>
         </v-card-text>
       </v-card>
 
-      <!-- LISTA CONTÍNUA DE CATEGORIAS E PRODUTOS -->
       <div v-if="categoriasOrdenadas.length > 0" ref="menuContainer">
         <div
             v-for="categoria in categoriasOrdenadas"
             :key="categoria.id"
             :ref="el => setCategoriaRef(categoria.id!, el)"
-            class="categoria-section mb-8"
+            class="categoria-section mb-10"
         >
-          <!-- TÍTULO DA CATEGORIA -->
-          <v-card class="border mb-4" rounded="l" elevation="0">
-            <v-card-text class="pa-4">
-              <h2 class="text-h5 font-weight-bold">
-                {{ categoria.descricao || 'Sem categoria' }}
-              </h2>
-              <p class="text-medium-emphasis text-body-2 mt-1">
-                {{ getProdutosPorCategoria(categoria.id).length }}
-                {{ getProdutosPorCategoria(categoria.id).length === 1 ? 'produto' : 'produtos' }}
-              </p>
-            </v-card-text>
-          </v-card>
+          <!-- CABEÇALHO DA CATEGORIA -->
+          <div class="mb-5">
+            <h2 class="text-h5 font-weight-bold mb-1">
+              {{ categoria.descricao || 'Sem categoria' }}
+            </h2>
+            <p class="text-body-2 text-medium-emphasis">
+              {{ categoria.observacoes || getCategoriaDescricao(categoria) }}
+            </p>
+          </div>
 
-          <!-- PRODUTOS DA CATEGORIA -->
-          <v-row no-gutters v-if="getProdutosPorCategoria(categoria.id).length > 0">
+          <!-- GRID DE PRODUTOS -->
+          <v-row v-if="getProdutosPorCategoria(categoria.id).length > 0">
             <v-col
                 v-for="produto in getProdutosPorCategoria(categoria.id)"
                 :key="produto.id"
+                cols="12"
+                sm="6"
+                md="4"
+                lg="3"
             >
-              <ProdutoCard :produto="produto" />
+              <ProdutoCard :produto="produto" @adicionar="addProduto($event)" />
             </v-col>
           </v-row>
 
           <!-- CATEGORIA VAZIA -->
-          <v-card v-else class="border rounded" elevation="0">
+          <v-card v-else class="border rounded-lg" elevation="0">
             <v-card-text class="text-center py-8">
               <v-icon size="48" color="grey-lighten-1">mdi-food-off</v-icon>
               <p class="text-body-1 text-medium-emphasis mt-3">
@@ -98,7 +111,7 @@
       <!-- MENSAGEM VAZIA GERAL -->
       <v-row v-else>
         <v-col cols="12">
-          <v-card class="border" rounded="xl" elevation="0">
+          <v-card class="border rounded-lg" elevation="0">
             <v-card-text class="text-center py-12">
               <v-icon size="64" color="grey-lighten-1">mdi-food-off</v-icon>
               <p class="text-h6 text-medium-emphasis mt-4">
@@ -125,7 +138,7 @@ const snackbar = useSnackbarStore()
 const loading = ref<boolean>(false)
 const produtos = ref<Produto[]>([])
 const categorias = ref<Categoria[]>([])
-const totalItems = ref<number>(0)
+const searchQuery = ref<string>('')
 const categoriaAtiva = ref<number | undefined>(undefined)
 const menuContainer = ref<HTMLElement | null>(null)
 const categoriaRefs = ref<Record<number, HTMLElement>>({})
@@ -134,13 +147,27 @@ const categoriaRefs = ref<Record<number, HTMLElement>>({})
 const categoriasOrdenadas = computed(() => {
   return [...categorias.value]?.sort((a, b) => (a.ordem || 0) - (b.ordem || 0))
 })
-
-// Produtos por categoria
+function addProduto(event: any){
+  return event
+}
+// Produtos por categoria com filtro de busca
 const produtosPorCategoria = computed(() => {
   const grupos: Record<number, Produto[]> = {}
 
   produtos.value.forEach(produto => {
     const catId = produto.categoria_id || 0
+
+    // Filtro de busca
+    if (searchQuery.value) {
+      const query = searchQuery.value.toLowerCase()
+      const nome = (produto.nome || '').toLowerCase()
+      const descricao = (produto.descricao || '').toLowerCase()
+
+      if (!nome.includes(query) && !descricao.includes(query)) {
+        return
+      }
+    }
+
     if (!grupos[catId]) {
       grupos[catId] = []
     }
@@ -159,6 +186,11 @@ function getProdutosPorCategoria(categoriaId?: number): Produto[] {
       .sort((a, b) => (a.ordem || 0) - (b.ordem || 0))
 }
 
+function getCategoriaDescricao(categoria: Categoria): string {
+  const count = getProdutosPorCategoria(categoria.id).length
+  return `${count} ${count === 1 ? 'produto disponível' : 'produtos disponíveis'}`
+}
+
 // Guarda as referências dos elementos de categoria
 function setCategoriaRef(categoriaId: number, el: any) {
   if (el) {
@@ -170,7 +202,7 @@ function setCategoriaRef(categoriaId: number, el: any) {
 function scrollToCategoria(categoriaId: number) {
   const elemento = categoriaRefs.value[categoriaId]
   if (elemento) {
-    const offset = 120 // Offset para compensar a barra de navegação sticky
+    const offset = 140
     const elementPosition = elemento.getBoundingClientRect().top
     const offsetPosition = elementPosition + window.pageYOffset - offset
 
@@ -185,7 +217,7 @@ function scrollToCategoria(categoriaId: number) {
 
 // Detecta qual categoria está visível durante o scroll
 function handleScroll() {
-  const scrollPosition = window.scrollY + 200 // Offset para trigger mais cedo
+  const scrollPosition = window.scrollY + 200
 
   for (const categoria of categoriasOrdenadas.value) {
     const elemento = categoriaRefs.value[categoria.id!]
@@ -208,7 +240,6 @@ async function carregarMenu() {
     produtos.value = menu
     categorias.value = cats
 
-    // Define a primeira categoria como ativa
     if (cats.length > 0 && !categoriaAtiva.value) {
       const primeiraCategoria = [...cats].sort((a, b) => (a.ordem || 0) - (b.ordem || 0))[0]
       categoriaAtiva.value = primeiraCategoria.id
@@ -235,12 +266,22 @@ onUnmounted(() => {
 <style scoped>
 .sticky-nav {
   position: sticky;
-  top: 64px; /* Ajuste conforme a altura do seu header */
+  top: 64px;
   z-index: 10;
   background-color: rgb(var(--v-theme-surface));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.categoria-nav {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.categoria-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .categoria-section {
-  scroll-margin-top: 140px; /* Espaço para a navegação sticky */
+  scroll-margin-top: 160px;
 }
 </style>
